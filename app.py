@@ -15,7 +15,7 @@ BG = "https://image.tmdb.org/t/p/original"
 
 # 🚀 AQUI FICA O LINK DO SEU MOTOR (KOYEB)
 # Troque pela URL real do seu aplicativo no Koyeb
-KOYEB_URL = "https://seu-app-koyeb.koyeb.app"
+KOYEB_URL = "https://brave-jonis-meu-bot-cinema-7ce7d584.koyeb.app"
 
 SERVIDORES = [
     {"host": "http://cinevexio.top:80", "user": "175473583", "pass": "643238922"},
