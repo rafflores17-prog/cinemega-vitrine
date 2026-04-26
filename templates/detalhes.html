@@ -4,6 +4,11 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>{{ filme.title }} - {{ nome_site }}</title>
+
+<script>(function(s){s.dataset.zone='10920011',s.src='https://n6wxm.com/vignette.min.js'})([document.documentElement, document.body].filter(Boolean).pop().appendChild(document.createElement('script')))</script>
+
+<script>(function(s){s.dataset.zone='10920008',s.src='https://nap5k.com/tag.min.js'})([document.documentElement, document.body].filter(Boolean).pop().appendChild(document.createElement('script')))</script>
+
 <style>
     * { -webkit-tap-highlight-color: transparent; box-sizing: border-box; }
     body { margin: 0; background: #000; color: #fff; font-family: sans-serif; overflow-x: hidden; }
@@ -11,42 +16,33 @@
     .container { padding: 15px; max-width: 600px; margin: 0 auto; text-align: center; }
     .back-btn { background: #e50914; color: #fff; text-decoration: none; font-size: 13px; font-weight: bold; float: left; padding: 8px 24px; border-radius: 50px; }
     
-    /* Info Estilo IMDB */
     .capinha { width: 130px; border-radius: 10px; margin: 40px auto 10px; display: block; box-shadow: 0 0 20px rgba(0,0,0,0.5); }
     .info-topo { font-size: 12px; color: #aaa; margin-bottom: 10px; }
     .nota-estrela { color: #ffcc00; font-weight: bold; font-size: 16px; }
-
     .tag-genero { background: rgba(255,204,0,0.1); padding: 3px 8px; border-radius: 4px; font-size: 10px; color: #ffcc00; border: 1px solid rgba(255,204,0,0.3); margin: 2px; display: inline-block; }
 
-    /* PLAYER E BOTÃO CENTRAL */
     .player-box { width: 100%; aspect-ratio: 16/9; background: #000; border-radius: 12px; margin: 15px 0; overflow: hidden; border: 1px solid #333; position: relative; }
-    video { width: 100%; height: 100%; object-fit: contain; }
+    video, iframe { width: 100%; height: 100%; object-fit: contain; }
 
-    .btn-central {
+    /* Camada de Play Centralizada 👇 */
+    #camada-play {
         position: absolute;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        z-index: 10;
-        pointer-events: none;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
+        top: 0; left: 0; width: 100%; height: 100%;
+        display: flex; flex-direction: column;
+        justify-content: center; align-items: center;
+        z-index: 10; background: rgba(0,0,0,0.5);
+        cursor: pointer;
     }
     
-    .setinha { font-size: 24px; animation: bounce 1s infinite; }
-    .balao-clique { background: #ffcc00; color: #000; padding: 5px 12px; border-radius: 10px; font-weight: bold; font-size: 11px; box-shadow: 0 4px 15px rgba(0,0,0,0.5); }
+    .setinha { font-size: 35px; animation: bounce 1s infinite; margin-bottom: 8px; }
+    .balao-clique { background: #ffcc00; color: #000; padding: 10px 20px; border-radius: 12px; font-weight: bold; font-size: 13px; box-shadow: 0 5px 15px rgba(0,0,0,0.6); }
 
-    @keyframes bounce {
-        0%, 100% { transform: translateY(0); }
-        50% { transform: translateY(-10px); }
-    }
+    @keyframes bounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-12px); } }
 
-    .btn-externo { display: block; width: 100%; padding: 15px; background: #007bff; color: #fff; text-decoration: none; border-radius: 50px; font-weight: bold; margin: 15px 0; font-size: 14px; }
+    .btn-externo { display: block; width: 100%; padding: 15px; background: #333; color: #ccc; text-decoration: none; border-radius: 50px; font-weight: bold; margin: 15px 0; font-size: 12px; border: 1px solid #444; }
     .rec-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-top: 15px; }
     .rec-card { text-decoration: none; color: #fff; font-size: 10px; }
     .rec-card img { width: 100%; border-radius: 8px; margin-bottom: 5px; }
-    .divisor { border: none; height: 1px; background: #333; margin: 20px 0; }
 </style>
 </head>
 <body>
@@ -66,11 +62,11 @@
         {% endfor %}
     </div>
 
-    <div class="divisor"></div>
+    <div style="border-bottom: 1px solid #333; margin: 20px 0;"></div>
 
     <div class="player-box">
         {% if play_link %}
-            <div class="btn-central">
+            <div id="camada-play" onclick="iniciarVideo()">
                 <span class="setinha">👇</span>
                 <div class="balao-clique">CLIQUE PARA ASSISTIR 🍿</div>
             </div>
@@ -82,24 +78,47 @@
         {% endif %}
     </div>
 
-    <a href="{{ play_link }}" target="_blank" class="btn-externo">📲 ABRIR NO PLAYER EXTERNO (VLC/MX)</a>
+    <a href="{{ play_link }}" target="_blank" class="btn-externo">📲 Abrir em Player Externo</a>
+
+    {% if trailer_key %}
+        <div style="margin-top: 30px;">
+            <h3 style="font-size: 14px; color: #ffcc00; text-align: left;">📺 TRAILER / TEASER</h3>
+            <div class="player-box">
+                <iframe src="https://www.youtube.com/embed/{{ trailer_key }}?rel=0&playsinline=1" frameborder="0" allowfullscreen></iframe>
+            </div>
+        </div>
+    {% endif %}
+
+    <div style="border-bottom: 1px solid #333; margin: 25px 0;"></div>
 
     <div style="background: rgba(0,0,0,0.6); padding: 15px; border-radius: 15px; text-align: justify; font-size: 13px; line-height: 1.6; border: 1px solid #333;">
         <strong style="color:#ffcc00;">SINOPSE:</strong><br>
         {{ filme.overview or "Sinopse não disponível." }}
     </div>
 
-    <div class="divisor"></div>
-
-    <h3 style="font-size: 14px; color: #ffcc00; text-align: left;">🎬 VOCÊ PODE GOSTAR:</h3>
-    <div class="rec-grid">
-        {% for rec in recomendados %}
-            <a href="/filme/{{ rec.id }}" class="rec-card">
-                <img src="{{ img }}{{ rec.poster_path }}" alt="{{ rec.title }}">
-                <p>{{ rec.title[:12] }}...</p>
-            </a>
-        {% endfor %}
+    <div style="margin-top: 30px;">
+        <h3 style="font-size: 14px; color: #ffcc00; text-align: left;">🎬 VOCÊ PODE GOSTAR:</h3>
+        <div class="rec-grid">
+            {% for rec in recomendados %}
+                <a href="/filme/{{ rec.id }}" class="rec-card">
+                    <img src="{{ img }}{{ rec.poster_path }}" alt="{{ rec.title }}">
+                    <p>{{ rec.title[:12] }}...</p>
+                </a>
+            {% endfor %}
+        </div>
     </div>
 </div>
+
+<script>
+    function iniciarVideo() {
+        const video = document.getElementById('player');
+        const camada = document.getElementById('camada-play');
+        camada.style.display = 'none';
+        video.play();
+        
+        // 🚀 AD 3: OnClick disparado ao dar o play
+        (function(s){s.dataset.zone='10920000',s.src='https://al5sm.com/tag.min.js'})([document.documentElement, document.body].filter(Boolean).pop().appendChild(document.createElement('script')));
+    }
+</script>
 </body>
 </html>
