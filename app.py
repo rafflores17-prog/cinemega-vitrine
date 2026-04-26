@@ -9,7 +9,7 @@ TMDB_API_KEY = "c90fb79a2f7d756a49bee848bce5f413"
 IMG = "https://image.tmdb.org/t/p/w500"
 BG = "https://image.tmdb.org/t/p/original"
 
-# 🛡️ LINK DO SEU MOTOR NO KOYEB
+# 🛡️ URL DO SEU MOTOR NO KOYEB
 MOTOR_URL = "https://brave-jonis-meu-bot-cinema-7ce7d584.koyeb.app"
 
 @app.route("/")
@@ -24,17 +24,30 @@ def home():
 @app.route("/filme/<int:id>")
 def detalhes(id):
     try:
-        # Busca dados do filme
-        data = requests.get(f"https://api.themoviedb.org/3/movie/{id}?api_key={TMDB_API_KEY}&language=pt-BR&append_to_response=videos", timeout=10).json()
-        titulo = data.get('title', '')
+        # Busca detalhes, trailers e recomendações tudo de uma vez
+        url_detalhes = f"https://api.themoviedb.org/3/movie/{id}?api_key={TMDB_API_KEY}&language=pt-BR&append_to_response=videos,recommendations"
+        data = requests.get(url_detalhes, timeout=10).json()
         
-        # 🔗 GERA O LINK QUE CHAMA A BUSCA NO MOTOR
-        # O Motor vai receber o título, procurar no filmes.db e já devolver o vídeo pelo Proxy
+        titulo = data.get('title', '')
+        # O link de play aponta para o buscador do seu motor
         play_link = f"{MOTOR_URL}/buscar?titulo={quote(titulo)}"
         
+        # Pega o primeiro trailer do YouTube disponível
         trailer = next((v['key'] for v in data.get('videos', {}).get('results', []) if v['type'] == 'Trailer'), None)
-        return render_template("detalhes.html", filme=data, img=IMG, bg=BG, play_link=play_link, nome_site=NOME_SITE, trailer_key=trailer)
-    except: return "Erro ao carregar detalhes", 404
+        
+        # Pega até 6 filmes recomendados
+        recomendados = data.get('recommendations', {}).get('results', [])[:6]
+        
+        return render_template("detalhes.html", 
+                               filme=data, 
+                               img=IMG, 
+                               bg=BG, 
+                               play_link=play_link, 
+                               trailer_key=trailer, 
+                               recomendados=recomendados,
+                               nome_site=NOME_SITE)
+    except:
+        return "Erro ao carregar detalhes", 404
 
 @app.route('/sw.js')
 def sw(): return send_from_directory('.', 'sw.js', mimetype='application/javascript')
