@@ -15,83 +15,49 @@ s.src='https://n6wxm.com/vignette.min.js'
 </script>
 
 <style>
-/* 🛡️ PROTEÇÃO DISCRETA */
-* { 
-    -webkit-tap-highlight-color: transparent; 
-    box-sizing: border-box; 
-    -webkit-touch-callout: none; /* Bloqueia menu no iOS/Chrome */
-    user-select: none;
-}
-
-/* 🖼️ IMPEDE SELEÇÃO DE IMAGEM (UC BROWSER) */
-img { 
-    pointer-events: none !important; 
-    -webkit-user-drag: none; 
-}
-
-html, body { 
-    margin: 0; padding: 0; background: #000; color: #fff; 
-    font-family: sans-serif; width: 100%; overflow-x: hidden; 
-}
+* { -webkit-tap-highlight-color: transparent; box-sizing: border-box; -webkit-touch-callout: none; user-select: none; }
+img { pointer-events: none !important; -webkit-user-drag: none; }
+html, body { margin: 0; padding: 0; background: #000; color: #fff; font-family: sans-serif; width: 100%; overflow-x: hidden; }
 
 .fundo-animado {
     position: fixed; top: 0; left: 0; width: 100%; height: 100%;
     background: url('{{ bg }}{{ filme.backdrop_path }}') center/cover;
-    filter: blur(25px) brightness(0.2); z-index: -1;
+    filter: blur(25px) brightness(0.15); z-index: -1;
 }
 
 .container { padding: 15px; max-width: 600px; margin: 0 auto; text-align: center; }
 
-.back-btn { 
-    background: #e50914; color: #fff; text-decoration: none; font-size: 13px; 
-    font-weight: bold; float: left; margin-bottom: 15px; padding: 8px 16px; 
-    border-radius: 6px;
-}
+.back-btn { background: #e50914; color: #fff; text-decoration: none; font-size: 13px; font-weight: bold; float: left; margin-bottom: 15px; padding: 8px 16px; border-radius: 6px; }
 
-.capinha {
-    width: 170px; border-radius: 12px; box-shadow: 0 10px 30px rgba(0,0,0,0.8);
-    margin: 45px auto 10px auto; display: block; border: 1px solid rgba(255,255,255,0.2);
-}
+.capinha { width: 160px; border-radius: 12px; box-shadow: 0 10px 30px rgba(0,0,0,0.8); margin: 40px auto 10px auto; display: block; border: 1px solid rgba(255,255,255,0.1); }
 
-.info-topo { font-size: 13px; color: #00ff88; font-weight: bold; margin-bottom: 15px; }
+/* ✨ NOVAS INFOS NO TOPO */
+.meta-info { font-size: 12px; color: #bbb; margin-bottom: 15px; display: flex; justify-content: center; gap: 10px; flex-wrap: wrap; }
+.badge { background: rgba(255,255,255,0.1); padding: 3px 8px; border-radius: 4px; color: #00ff88; font-weight: bold; }
+.genero { color: #ffcc00; }
 
-/* 🎬 AJUSTE DO PLAYER E TRAILER (CORRIGIDO) */
 .player-box {
     width: 100%; aspect-ratio: 16/9; background: #000; border-radius: 12px;
     margin: 15px 0; overflow: hidden; border: 1px solid #333; position: relative;
-    display: flex; align-items: center; justify-content: center;
 }
 
-iframe, video { width: 100%; height: 100%; object-fit: contain; border: none; }
+iframe, video { width: 100%; height: 100%; object-fit: contain; background: #000; }
 
 .aviso-play {
     position: absolute; top: 12px; left: 50%; transform: translateX(-50%);
     background: #ffcc00; color: #000; padding: 6px 18px; border-radius: 25px;
-    font-size: 12px; font-weight: bold; z-index: 5; pointer-events: none; 
-    animation: pulsar 1.5s infinite;
+    font-size: 11px; font-weight: bold; z-index: 5; pointer-events: none;
 }
 
-@keyframes pulsar { 0% { opacity: 0.8; } 50% { opacity: 1; } 100% { opacity: 0.8; } }
+.btn-secundario { display: block; width: 100%; padding: 15px; background: #007bff; color: #fff; text-decoration: none; border-radius: 50px; font-weight: bold; font-size: 15px; margin: 15px auto; text-align: center; box-shadow: 0 4px 15px rgba(0,0,123,0.3); }
 
-.btn-secundario {
-    display: block; width: 100%; padding: 15px; background: #007bff; color: #fff; 
-    text-decoration: none; border-radius: 50px; font-weight: bold; font-size: 15px; 
-    margin: 15px auto; text-align: center;
-}
+.sinopse-box { background: rgba(0,0,0,0.8); padding: 20px; border-radius: 15px; text-align: justify; font-size: 14px; line-height: 1.6; border: 1px solid rgba(255,255,255,0.1); margin: 25px 0; }
 
-.sinopse-box {
-    background: rgba(0,0,0,0.8); padding: 20px; border-radius: 15px; text-align: justify;
-    font-size: 14px; line-height: 1.6; border: 1px solid rgba(255,255,255,0.1); margin: 25px 0;
-}
+.divisor { border: none; height: 1px; background: linear-gradient(to right, transparent, #333, transparent); margin: 30px 0; }
 
-.sinopse-label { display: block; color: #ffcc00; font-weight: bold; margin-bottom: 8px; font-size: 11px; text-transform: uppercase; }
-
-.divisor { border: none; height: 1px; background: #333; margin: 30px 0; }
-
-/* RELACIONADOS */
 .grid-relacionados { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
 .card-rel { text-decoration: none; color: #bbb; font-size: 10px; text-align: center; }
-.card-rel img { width: 100%; border-radius: 10px; border: 1px solid #222; }
+.card-rel img { width: 100%; border-radius: 10px; border: 1px solid #222; margin-bottom: 5px; }
 </style>
 </head>
 
@@ -105,14 +71,23 @@ iframe, video { width: 100%; height: 100%; object-fit: contain; border: none; }
 
     <img src="{{ img }}{{ filme.poster_path }}" class="capinha">
 
-    <h1 style="font-size: 24px; margin: 10px 0 5px 0; font-weight: 900;">{{ filme.title }}</h1>
+    <h1 style="font-size: 26px; margin: 10px 0 5px 0; font-weight: 900; letter-spacing: -1px;">{{ filme.title }}</h1>
 
-    <div class="info-topo">
-        ⭐ {{ "%.1f"|format(filme.vote_average) }} | {{ filme.release_date[:4] }} | FULL HD
+    <div class="meta-info">
+        <span class="badge">⭐ {{ "%.1f"|format(filme.vote_average) }}</span>
+        <span>{{ filme.release_date[:4] }}</span>
+        <span class="genero">
+            {% if filme.genres %}
+                {{ filme.genres[0].name }}
+            {% else %}
+                Cinema
+            {% endif %}
+        </span>
+        <span>FULL HD</span>
     </div>
 
     {% if trailer_key %}
-        <p class="sinopse-label">🎞️ Trailer Oficial</p>
+        <p style="color:#666; font-size:10px; text-transform:uppercase; font-weight:bold; letter-spacing:1px;">🎞️ Assista ao Trailer</p>
         <div class="player-box">
             <iframe src="https://www.youtube.com/embed/{{ trailer_key }}?rel=0&playsinline=1" allowfullscreen></iframe>
         </div>
@@ -120,32 +95,48 @@ iframe, video { width: 100%; height: 100%; object-fit: contain; border: none; }
 
     <div class="divisor"></div>
 
-    <p class="sinopse-label">🎬 Assistir Filme</p>
+    <p style="color:#ffcc00; font-size:11px; text-transform:uppercase; font-weight:bold;">🎬 Player Principal</p>
     
     {% if play_link %}
         <div class="player-box">
-            <div class="aviso-play">🍿 Clique aqui para assistir</div>
-            <video id="player" controls playsinline poster="{{ bg }}{{ filme.backdrop_path }}" controlsList="nodownload">
+            <div class="aviso-play">🍿 Clique aqui para iniciar</div>
+            <video id="player" controls playsinline 
+                   poster="{{ bg }}{{ filme.backdrop_path }}" 
+                   preload="metadata" 
+                   crossorigin="anonymous">
                 <source src="{{ play_link }}" type="video/mp4">
             </video>
         </div>
-        <a href="{{ play_link }}" target="_blank" class="btn-secundario">📲 ABRIR NO PLAYER EXTERNO</a>
+        <a href="{{ play_link }}" target="_blank" class="btn-secundario">📲 ABRIR NO PLAYER EXTERNO (BAIXAR)</a>
     {% else %}
-        <div class="btn-secundario" style="background:#333; opacity:0.6;">🎬 CONTEÚDO EM MANUTENÇÃO</div>
+        <div class="btn-secundario" style="background:#333; opacity:0.6;">🎬 CONTEÚDO INDISPONÍVEL</div>
     {% endif %}
 
     <div class="sinopse-box">
-        <span class="sinopse-label">Sinopse</span>
-        {{ filme.overview or "A sinopse ainda não está disponível." }}
+        <span style="display:block; color:#ffcc00; font-size:11px; text-transform:uppercase; margin-bottom:8px; font-weight:bold;">Sinopse</span>
+        {{ filme.overview or "A sinopse deste título ainda não está disponível." }}
     </div>
 
     <div class="divisor"></div>
-    <div style="text-align:left; font-weight:bold; margin-bottom:15px;">🔥 Filmes Semelhantes</div>
+    <div style="text-align:left; font-size:18px; font-weight:bold; margin-bottom:15px; color:#fff;">🔥 Você também pode gostar</div>
     <div class="grid-relacionados" id="relacionados-grid"></div>
 </div>
 
 <script>
-// BLOQUEIO QUE NÃO QUEBRA O PLAYER
+// 🔨 CORREÇÃO PARA LINKS DE TV (LIVE STREAM)
+const player = document.getElementById('player');
+if (player) {
+    // Se o vídeo travar ou der erro de tempo por ser "Live", tenta resetar
+    player.addEventListener('error', function() {
+        console.log("Mestre, o link parece ser uma transmissão ao vivo ou está instável.");
+    }, true);
+
+    // Garante que o play comece do zero se for um arquivo gravado
+    player.ontimeupdate = function() {
+        if (player.currentTime < 0) player.currentTime = 0;
+    };
+}
+
 document.addEventListener('contextmenu', event => event.preventDefault());
 
 async function carregarRelacionados() {
@@ -158,7 +149,7 @@ async function carregarRelacionados() {
             if(item.poster_path) {
                 grid.innerHTML += `
                     <a href="/filme/${item.id}" class="card-rel">
-                        <img src="https://image.tmdb.org/t/p/w200${item.poster_path}" alt="${item.title}">
+                        <img src="https://image.tmdb.org/t/p/w200${item.poster_path}">
                         <span>${item.title}</span>
                     </a>
                 `;
