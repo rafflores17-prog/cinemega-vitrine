@@ -6,7 +6,6 @@
 <title>{{ filme.title }} - {{ nome_site }}</title>
 
 <style>
-/* BLOQUEIOS E ESTILO BASE */
 * { -webkit-tap-highlight-color: transparent; box-sizing: border-box; -webkit-touch-callout: none; user-select: none; }
 img { pointer-events: none !important; -webkit-user-drag: none; }
 html, body { margin: 0; padding: 0; background: #000; color: #fff; font-family: sans-serif; width: 100%; overflow-x: hidden; }
@@ -18,13 +17,10 @@ html, body { margin: 0; padding: 0; background: #000; color: #fff; font-family: 
 }
 
 .container { padding: 15px; max-width: 600px; margin: 0 auto; text-align: center; }
-
 .back-btn { background: #e50914; color: #fff; text-decoration: none; font-size: 13px; font-weight: bold; float: left; margin-bottom: 15px; padding: 8px 24px; border-radius: 50px; box-shadow: 0 4px 15px rgba(229, 9, 20, 0.3); }
-
 .capinha { width: 160px; border-radius: 12px; box-shadow: 0 10px 40px rgba(0,0,0,0.9); margin: 45px auto 15px auto; display: block; border: 1px solid rgba(255,255,255,0.1); }
 
-/* 📊 ÁREA DE INFOS PREMIUM */
-.meta-grid { display: flex; justify-content: center; gap: 15px; margin-bottom: 20px; font-size: 12px; color: #ccc; flex-wrap: wrap; }
+.meta-grid { display: flex; justify-content: center; gap: 12px; margin-bottom: 20px; font-size: 12px; color: #ccc; flex-wrap: wrap; }
 .badge-nota { background: #00ff88; color: #000; padding: 2px 8px; border-radius: 4px; font-weight: bold; }
 .badge-item { background: rgba(255,255,255,0.1); padding: 2px 8px; border-radius: 4px; }
 
@@ -32,7 +28,6 @@ html, body { margin: 0; padding: 0; background: #000; color: #fff; font-family: 
     width: 100%; aspect-ratio: 16/9; background: #000; border-radius: 12px;
     margin: 15px 0; overflow: hidden; border: 1px solid #333; position: relative;
 }
-
 iframe, video { width: 100%; height: 100%; object-fit: contain; }
 
 .aviso-play {
@@ -42,9 +37,7 @@ iframe, video { width: 100%; height: 100%; object-fit: contain; }
 }
 
 .btn-externo { display: block; width: 100%; padding: 16px; background: #007bff; color: #fff; text-decoration: none; border-radius: 50px; font-weight: bold; font-size: 14px; margin: 15px auto; box-shadow: 0 5px 20px rgba(0,123,255,0.3); }
-
 .sinopse-box { background: rgba(0,0,0,0.7); padding: 20px; border-radius: 20px; text-align: justify; font-size: 14px; line-height: 1.6; border: 1px solid rgba(255,255,255,0.05); margin: 25px 0; }
-
 .divisor { border: none; height: 1px; background: linear-gradient(to right, transparent, #444, transparent); margin: 30px 0; }
 
 .grid-relacionados { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
@@ -54,7 +47,6 @@ iframe, video { width: 100%; height: 100%; object-fit: contain; }
 </head>
 
 <body oncontextmenu="return false;">
-
 <div class="fundo-animado"></div>
 
 <div class="container">
@@ -62,15 +54,12 @@ iframe, video { width: 100%; height: 100%; object-fit: contain; }
     <div style="clear: both;"></div>
 
     <img src="{{ img }}{{ filme.poster_path }}" class="capinha">
-
     <h1 style="font-size: 28px; margin: 10px 0 8px 0; font-weight: 900; letter-spacing: -1px;">{{ filme.title }}</h1>
 
     <div class="meta-grid">
         <span class="badge-nota">⭐ {{ "%.1f"|format(filme.vote_average) }}</span>
         <span class="badge-item">{{ filme.release_date[:4] }}</span>
-        {% if filme.runtime %}
-            <span class="badge-item">{{ filme.runtime }} min</span>
-        {% endif %}
+        {% if filme.runtime %}<span class="badge-item">{{ filme.runtime }} min</span>{% endif %}
         <span style="color:#ffcc00; font-weight:bold;">
             {% if filme.genres %} {{ filme.genres[0].name }} {% endif %}
         </span>
@@ -83,22 +72,21 @@ iframe, video { width: 100%; height: 100%; object-fit: contain; }
     {% endif %}
 
     <div class="divisor"></div>
-
-    <p style="color:#ffcc00; font-size:11px; text-transform:uppercase; font-weight:bold; letter-spacing:1px;">🎬 Assistir agora</p>
+    <p style="color:#ffcc00; font-size:11px; text-transform:uppercase; font-weight:bold;">🎬 Player Principal</p>
     
     {% if play_link %}
         <div class="player-box">
-            <div class="aviso-play">🍿 Toque para dar o Play</div>
+            <div class="aviso-play">🍿 Toque para o Play</div>
             <video id="player" controls playsinline 
                    poster="{{ bg }}{{ filme.backdrop_path }}" 
-                   preload="auto" 
+                   preload="metadata" 
                    crossorigin="anonymous">
                 <source src="{{ play_link }}" type="video/mp4">
             </video>
         </div>
-        <a href="{{ play_link }}" target="_blank" class="btn-externo">📲 ABRIR NO PLAYER EXTERNO / DOWNLOAD</a>
+        <a href="{{ play_link }}" target="_blank" class="btn-externo">📲 PLAYER EXTERNO / DOWNLOAD</a>
     {% else %}
-        <div class="btn-externo" style="background:#222;">🎬 FILME EM MANUTENÇÃO</div>
+        <div class="btn-externo" style="background:#222;">🎬 EM MANUTENÇÃO</div>
     {% endif %}
 
     <div class="sinopse-box">
@@ -107,19 +95,14 @@ iframe, video { width: 100%; height: 100%; object-fit: contain; }
     </div>
 
     <div class="divisor"></div>
-    <div style="text-align:left; font-size:18px; font-weight:bold; margin-bottom:15px;">🔥 Sugestões para você</div>
     <div class="grid-relacionados" id="relacionados-grid"></div>
 </div>
 
 <script>
-// FORÇA O VÍDEO A COMEÇAR DO ZERO (SE O LINK PERMITIR)
 const player = document.getElementById('player');
 if (player) {
-    player.addEventListener('loadeddata', () => {
-        player.currentTime = 0;
-    });
+    player.addEventListener('loadeddata', () => { player.currentTime = 0; });
 }
-
 document.addEventListener('contextmenu', e => e.preventDefault());
 
 async function carregarRelacionados() {
@@ -130,11 +113,7 @@ async function carregarRelacionados() {
         grid.innerHTML = '';
         data.results.slice(0, 9).forEach(item => {
             if(item.poster_path) {
-                grid.innerHTML += `
-                    <a href="/filme/${item.id}" class="card-rel">
-                        <img src="https://image.tmdb.org/t/p/w200${item.poster_path}">
-                        <span>${item.title}</span>
-                    </a>`;
+                grid.innerHTML += `<a href="/filme/${item.id}" class="card-rel"><img src="https://image.tmdb.org/t/p/w200${item.poster_path}"><span>${item.title}</span></a>`;
             }
         });
     } catch(e) {}
