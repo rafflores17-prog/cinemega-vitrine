@@ -38,7 +38,7 @@ body { margin: 0; padding: 0; background: #000; color: #fff; font-family: sans-s
 }
 
 .capinha {
-    width: 175px; border-radius: 12px; box-shadow: 0 10px 30px rgba(0,0,0,0.8);
+    width: 170px; border-radius: 12px; box-shadow: 0 10px 30px rgba(0,0,0,0.8);
     margin: 45px auto 10px auto; display: block; border: 1px solid rgba(255,255,255,0.2);
 }
 
@@ -51,40 +51,36 @@ body { margin: 0; padding: 0; background: #000; color: #fff; font-family: sans-s
 }
 
 .aviso-play {
-    position: absolute; top: 10px; left: 50%; transform: translateX(-50%);
-    background: rgba(0,0,0,0.6); padding: 5px 15px; border-radius: 20px;
-    font-size: 11px; color: #fff; z-index: 5; pointer-events: none; border: 1px solid rgba(255,255,255,0.2);
+    position: absolute; top: 12px; left: 50%; transform: translateX(-50%);
+    background: #ffcc00; color: #000; padding: 6px 18px; border-radius: 25px;
+    font-size: 12px; font-weight: bold; z-index: 5; pointer-events: none; 
+    box-shadow: 0 0 15px #ffcc00; animation: pulsar 1.5s infinite;
 }
+
+@keyframes pulsar { 0% { opacity: 0.8; transform: translateX(-50%) scale(1); } 50% { opacity: 1; transform: translateX(-50%) scale(1.05); } 100% { opacity: 0.8; transform: translateX(-50%) scale(1); } }
 
 video, iframe { width: 100%; height: 100%; border: none; background: #000; }
 
-/* BOTÕES */
-.btn-baixar-topo {
-    display: inline-block; background: rgba(255,255,255,0.1); color: #ccc;
-    text-decoration: none; font-size: 11px; padding: 5px 12px; border-radius: 4px;
-    margin-bottom: 5px; border: 1px solid #333;
-}
-
 .btn-secundario {
-    display: block; width: 100%; padding: 14px;
-    background: #222; color: #fff; text-decoration: none; border-radius: 50px;
-    font-weight: bold; font-size: 15px; margin: 10px auto; border: 1px solid #444; 
-    text-align: center;
+    display: block; width: 100%; padding: 15px;
+    background: #007bff; color: #fff; text-decoration: none; border-radius: 50px;
+    font-weight: bold; font-size: 15px; margin: 15px auto; border: none; 
+    text-align: center; box-shadow: 0 4px 15px rgba(0,123,255,0.3);
 }
 
 .sinopse-box {
-    background: rgba(0,0,0,0.7); padding: 20px; border-radius: 15px; text-align: justify;
-    font-size: 14px; line-height: 1.5; border: 1px solid rgba(255,255,255,0.1); margin: 20px 0;
+    background: rgba(0,0,0,0.8); padding: 20px; border-radius: 15px; text-align: justify;
+    font-size: 14px; line-height: 1.6; border: 1px solid rgba(255,255,255,0.1); margin: 25px 0;
 }
 
-.sinopse-label { display: block; color: #888; font-weight: bold; margin-bottom: 8px; font-size: 11px; text-transform: uppercase; }
+.sinopse-label { display: block; color: #ffcc00; font-weight: bold; margin-bottom: 8px; font-size: 11px; text-transform: uppercase; letter-spacing: 1px; }
 
-/* RELACIONADOS */
-.relacionados-titulo { text-align: left; font-size: 18px; font-weight: bold; margin: 20px 0 10px 0; color: #fff; }
-.grid-relacionados { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
-.card-rel { text-decoration: none; color: #fff; font-size: 10px; }
-.card-rel img { width: 100%; border-radius: 8px; border: 1px solid #333; }
-.card-rel span { display: block; margin-top: 5px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.divisor { border: none; height: 1px; background: linear-gradient(to right, transparent, #333, transparent); margin: 30px 0; }
+.relacionados-titulo { text-align: left; font-size: 18px; font-weight: bold; margin: 0 0 15px 0; color: #fff; }
+.grid-relacionados { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+.card-rel { text-decoration: none; color: #bbb; font-size: 10px; text-align: center; }
+.card-rel img { width: 100%; border-radius: 10px; border: 1px solid #222; }
+.card-rel span { display: block; margin-top: 6px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 </style>
 </head>
 
@@ -106,38 +102,38 @@ video, iframe { width: 100%; height: 100%; border: none; background: #000; }
     </div>
 
     {% if trailer_key %}
-        <p class="sinopse-label" style="margin-top:20px;">Assista ao Trailer</p>
+        <p class="sinopse-label">🎞️ Trailer Oficial</p>
         <div class="player-box">
             <iframe src="https://www.youtube.com/embed/{{ trailer_key }}?rel=0&playsinline=1" allowfullscreen></iframe>
         </div>
     {% endif %}
 
-    <p class="sinopse-label" style="margin-top:20px;">Filme Completo</p>
+    <div class="divisor"></div>
+
+    <p class="sinopse-label">🎬 Assistir Filme</p>
     
     {% if play_link %}
-        <a href="{{ play_link }}" target="_blank" class="btn-baixar-topo">📥 Opção de Download</a>
-
         <div class="player-box">
-            <div class="aviso-play">▶ Clique para assistir agora</div>
+            <div class="aviso-play">🍿 Clique aqui para assistir</div>
             <video id="player" controls playsinline poster="{{ bg }}{{ filme.backdrop_path }}" controlsList="nodownload">
                 <source src="{{ play_link }}" type="video/mp4">
             </video>
         </div>
         
-        <a href="{{ play_link }}" target="_blank" class="btn-secundario">📥 ABRIR NO PLAYER EXTERNO</a>
+        <a href="{{ play_link }}" target="_blank" class="btn-secundario">📲 ABRIR NO PLAYER EXTERNO</a>
     {% else %}
-        <div class="btn-secundario" style="background:#444; border:none; opacity:0.5;">🎬 FILME EM MANUTENÇÃO</div>
+        <div class="btn-secundario" style="background:#333; opacity:0.6;">🎬 CONTEÚDO EM MANUTENÇÃO</div>
     {% endif %}
 
     <div class="sinopse-box">
         <span class="sinopse-label">Sinopse</span>
-        {{ filme.overview or "A sinopse deste filme ainda não foi traduzida para o português." }}
+        {{ filme.overview or "A sinopse deste filme ainda não foi traduzida." }}
     </div>
 
-    <div class="relacionados-titulo">Mais como este</div>
-    <div class="grid-relacionados" id="relacionados-grid">
-        <p style="font-size:12px; color:#555;">Carregando sugestões...</p>
-    </div>
+    <div class="divisor"></div>
+
+    <div class="relacionados-titulo">🔥 Filmes que você pode gostar</div>
+    <div class="grid-relacionados" id="relacionados-grid"></div>
 
 </div>
 
@@ -148,8 +144,7 @@ async function carregarRelacionados() {
         const data = await res.json();
         const grid = document.getElementById('relacionados-grid');
         grid.innerHTML = '';
-        
-        data.results.slice(0, 6).forEach(item => {
+        data.results.slice(0, 9).forEach(item => {
             if(item.poster_path) {
                 grid.innerHTML += `
                     <a href="/filme/${item.id}" class="card-rel">
@@ -159,9 +154,7 @@ async function carregarRelacionados() {
                 `;
             }
         });
-    } catch(e) {
-        document.getElementById('relacionados-grid').innerHTML = '<p>Erro ao carregar recomendações.</p>';
-    }
+    } catch(e) { console.log("Erro ao carregar recomendados"); }
 }
 carregarRelacionados();
 </script>
