@@ -4,12 +4,12 @@ import re
 import os
 import sqlite3
 import random
+import glob # 🚀 Importante para ler vários arquivos
 from urllib.parse import quote
 
 app = Flask(__name__)
 
 NOME_SITE = "Cine Mega"
-SITE_URL = "https://www.cinemega.online"
 TMDB_API_KEY = "c90fb79a2f7d756a49bee848bce5f413"
 IMG = "https://image.tmdb.org/t/p/w500"
 BG = "https://image.tmdb.org/t/p/original"
@@ -21,7 +21,6 @@ SERVIDORES = [
     {"host": "http://stmax.top:80", "user": "lucas6043", "pass": "px2926br"}
 ]
 
-# 🚀 OS AGENTES QUE FAZEM O VÍDEO RODAR
 AGENTES_VIP = [
     "EPPIPROPLAYER/1.0.8 (Linux;Android 14) AndroidXMedia3/1.5.1",
     "purpleplayer/1.2.82",
@@ -31,33 +30,35 @@ AGENTES_VIP = [
 
 def buscar_filme(titulo):
     try:
-        # Busca simplificada: apenas a primeira palavra para não ter erro de acento ou traço
         palavra_chave = titulo.split()[0].strip()
-        
-        conn = sqlite3.connect('filmes.db')
-        c = conn.cursor()
-        # Busca sem filtros agressivos, apenas tirando o Cine Sky que a gente sabe que buga
-        query = "SELECT url FROM playlist WHERE nome LIKE ? AND nome NOT LIKE '%Cine Sky%' LIMIT 1"
-        c.execute(query, (f"%{palavra_chave}%",))
-        resultado = c.fetchone()
-        conn.close()
-
         agente = random.choice(AGENTES_VIP)
 
-        if resultado:
-            url_raw = resultado[0]
-            # Codificamos apenas a URL do vídeo para o proxy não se perder
-            return f"{KOYEB_URL}/proxy?url={quote(url_raw, safe='')}&user_agent={quote(agente)}"
+        # 🔍 BUSCA EM TODOS OS BANCOS (data1.db até data12.db)
+        bancos = glob.glob("data*.db") # Procura qualquer arquivo que comece com 'data'
+        
+        for db_nome in bancos:
+            try:
+                conn = sqlite3.connect(db_nome)
+                c = conn.cursor()
+                query = "SELECT url FROM playlist WHERE nome LIKE ? AND nome NOT LIKE '%Cine Sky%' LIMIT 1"
+                c.execute(query, (f"%{palavra_chave}%",))
+                resultado = c.fetchone()
+                conn.close()
 
-        # Se não achou no DB, busca direta na API (Modo Raiz)
+                if resultado:
+                    return f"{KOYEB_URL}/proxy?url={quote(resultado[0], safe='')}&user_agent={quote(agente)}"
+            except:
+                continue
+
+        # 🔍 SE NÃO ACHOU NOS 12 BANCOS, VAI NA API (Backup)
         for srv in SERVIDORES:
             try:
                 url_api = f"{srv['host']}/player_api.php?username={srv['user']}&password={srv['pass']}&action=get_vod_streams"
                 r = requests.get(url_api, timeout=4).json()
                 for item in r:
                     if palavra_chave.lower() in item.get('name', '').lower():
-                        video_url = f"{srv['host']}/movie/{srv['user']}/{srv['pass']}/{item.get('stream_id')}.mp4"
-                        return f"{KOYEB_URL}/proxy?url={quote(video_url, safe='')}&user_agent={quote(agente)}"
+                        v_url = f"{srv['host']}/movie/{srv['user']}/{srv['pass']}/{item.get('stream_id')}.mp4"
+                        return f"{KOYEB_URL}/proxy?url={quote(v_url, safe='')}&user_agent={quote(agente)}"
             except: continue
     except: pass
     return None
@@ -80,11 +81,8 @@ def detalhes(id):
         return render_template("detalhes.html", filme=data, img=IMG, bg=BG, play_link=play_link, nome_site=NOME_SITE, trailer_key=trailer)
     except: return "Erro ao carregar", 404
 
-# Rotas padrões
 @app.route('/sw.js')
 def sw(): return send_from_directory('.', 'sw.js', mimetype='application/javascript')
-@app.route('/robots.txt')
-def robots(): return Response("User-agent: *\nAllow: /", mimetype="text/plain")
 
 if __name__ == "__main__":
     app.run(host='0.0.0.0', port=5000)
