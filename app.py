@@ -3,6 +3,7 @@ import requests
 import re
 import os
 import sqlite3
+import random
 from urllib.parse import quote
 
 app = Flask(__name__)
@@ -16,7 +17,16 @@ KOYEB_URL = "https://brave-jonis-meu-bot-cinema-7ce7d584.koyeb.app"
 
 SERVIDORES = [
     {"host": "http://cinevexio.top:80", "user": "175473583", "pass": "643238922"},
-    {"host": "http://serv99.xyz:8880", "user": "1764371", "pass": "2419902"}
+    {"host": "http://serv99.xyz:8880", "user": "1764371", "pass": "2419902"},
+    {"host": "http://stmax.top:80", "user": "lucas6043", "pass": "px2926br"}
+]
+
+# 🚀 OS AGENTES VIP VOLTARAM
+AGENTES_VIP = [
+    "EPPIPROPLAYER/1.0.8 (Linux;Android 14) AndroidXMedia3/1.5.1",
+    "purpleplayer/1.2.82",
+    "Dalvik/2.1.0 (Linux; U; Android 14; 2312FPCA6G Build/UP1A.231005.007)",
+    "Dart/3.11 (dart:io)"
 ]
 
 def buscar_filme(titulo):
@@ -29,32 +39,30 @@ def buscar_filme(titulo):
         conn = sqlite3.connect('filmes.db')
         c = conn.cursor()
         
-        # Busca no banco filtrando VOD e ignorando lixo
-        query = """
-            SELECT url FROM playlist 
-            WHERE nome LIKE ? 
-            AND url LIKE '%.mp4%' 
-            AND nome NOT LIKE '%Cine Sky%' 
-            AND nome NOT LIKE '%24h%'
-            LIMIT 1
-        """
+        # SQL OTIMIZADO: Prioriza MP4 e ignora lixo
+        query = "SELECT url FROM playlist WHERE nome LIKE ? AND url LIKE '%.mp4%' AND nome NOT LIKE '%Cine Sky%' LIMIT 1"
         c.execute(query, (f"%{termo_limpo}%",))
         resultado = c.fetchone()
         conn.close()
 
-        if resultado:
-            # 🛡️ quote() codifica a URL para o Proxy não dar erro 502/504
-            return f"{KOYEB_URL}/proxy?url={quote(resultado[0], safe='')}"
+        agente = random.choice(AGENTES_VIP) # Escolha aleatória para não ser bloqueado
 
-        # Busca rápida via API se não houver no banco
-        srv = SERVIDORES[0]
-        url_api = f"{srv['host']}/player_api.php?username={srv['user']}&password={srv['pass']}&action=get_vod_streams"
-        r = requests.get(url_api, timeout=3).json()
-        for item in r:
-            if termo_limpo.lower() in item.get('name', '').lower():
-                stream_id = item.get('stream_id')
-                video_url = f"{srv['host']}/movie/{srv['user']}/{srv['pass']}/{stream_id}.mp4"
-                return f"{KOYEB_URL}/proxy?url={quote(video_url, safe='')}"
+        if resultado:
+            # Codifica a URL e passa o Agente VIP para o Proxy
+            url_final = quote(resultado[0], safe='')
+            return f"{KOYEB_URL}/proxy?url={url_final}&user_agent={quote(agente)}"
+
+        # Busca rápida nas APIs se não tiver no banco
+        for srv in SERVIDORES:
+            try:
+                url_api = f"{srv['host']}/player_api.php?username={srv['user']}&password={srv['pass']}&action=get_vod_streams"
+                r = requests.get(url_api, timeout=4).json()
+                for item in r:
+                    if termo_limpo.lower() in item.get('name', '').lower():
+                        stream_id = item.get('stream_id')
+                        video_url = f"{srv['host']}/movie/{srv['user']}/{srv['pass']}/{stream_id}.mp4"
+                        return f"{KOYEB_URL}/proxy?url={quote(video_url, safe='')}&user_agent={quote(agente)}"
+            except: continue
     except: pass
     return None
 
@@ -74,20 +82,10 @@ def detalhes(id):
         play_link = buscar_filme(data.get('title', ''))
         trailer = next((v['key'] for v in data.get('videos', {}).get('results', []) if v['type'] == 'Trailer'), None)
         return render_template("detalhes.html", filme=data, img=IMG, bg=BG, play_link=play_link, nome_site=NOME_SITE, trailer_key=trailer)
-    except:
-        return "Erro ao carregar detalhes", 404
+    except: return "Erro", 404
 
 @app.route('/sw.js')
 def sw(): return send_from_directory('.', 'sw.js', mimetype='application/javascript')
-
-@app.route('/robots.txt')
-def robots(): return Response("User-agent: *\nAllow: /", mimetype="text/plain")
-
-@app.after_request
-def add_cache_headers(response):
-    if request.path.endswith((".js", ".css", ".png", ".jpg", ".jpeg", ".webp")):
-        response.headers["Cache-Control"] = "public, max-age=86400"
-    return response
 
 if __name__ == "__main__":
     app.run(host='0.0.0.0', port=5000)
