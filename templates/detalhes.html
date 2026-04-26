@@ -10,43 +10,43 @@
     .fundo { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: url('{{ bg }}{{ filme.backdrop_path }}') center/cover; filter: blur(25px) brightness(0.2); z-index: -1; }
     .container { padding: 15px; max-width: 600px; margin: 0 auto; text-align: center; }
     .back-btn { background: #e50914; color: #fff; text-decoration: none; font-size: 13px; font-weight: bold; float: left; padding: 8px 24px; border-radius: 50px; }
-    .capinha { width: 140px; border-radius: 10px; margin: 40px auto 10px; display: block; box-shadow: 0 0 20px rgba(0,0,0,0.5); }
     
-    /* Gêneros (Comédia, Terror...) */
-    .generos-box { display: flex; justify-content: center; gap: 8px; flex-wrap: wrap; margin-bottom: 15px; }
-    .tag-genero { background: rgba(255,255,255,0.1); padding: 4px 10px; border-radius: 4px; font-size: 11px; color: #ffcc00; border: 1px solid rgba(255,204,0,0.3); }
+    /* Info Estilo IMDB */
+    .capinha { width: 130px; border-radius: 10px; margin: 40px auto 10px; display: block; box-shadow: 0 0 20px rgba(0,0,0,0.5); }
+    .info-topo { font-size: 12px; color: #aaa; margin-bottom: 10px; }
+    .nota-estrela { color: #ffcc00; font-weight: bold; font-size: 16px; }
 
-    .player-box { width: 100%; aspect-ratio: 16/9; background: #000; border-radius: 12px; margin-bottom: 15px; overflow: hidden; border: 1px solid #333; position: relative; }
-    
-    /* Ajuste para Tela Cheia (Não corta a imagem) */
-    video { width: 100%; height: 100%; object-fit: contain; background: #000; }
+    .tag-genero { background: rgba(255,204,0,0.1); padding: 3px 8px; border-radius: 4px; font-size: 10px; color: #ffcc00; border: 1px solid rgba(255,204,0,0.3); margin: 2px; display: inline-block; }
 
-    /* Botão Fofinho Fora de Centro */
-    .btn-fofo {
+    /* PLAYER E BOTÃO CENTRAL */
+    .player-box { width: 100%; aspect-ratio: 16/9; background: #000; border-radius: 12px; margin: 15px 0; overflow: hidden; border: 1px solid #333; position: relative; }
+    video { width: 100%; height: 100%; object-fit: contain; }
+
+    .btn-central {
         position: absolute;
-        top: 15%;
-        right: 10%; /* Fora do centro */
-        background: #ffcc00;
-        color: #000;
-        padding: 6px 12px;
-        border-radius: 20px;
-        font-size: 10px;
-        font-weight: bold;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
         z-index: 10;
-        box-shadow: 0 4px 10px rgba(0,0,0,0.5);
-        pointer-events: none; /* Não atrapalha o clique no vídeo */
-        animation: flutuar 3s ease-in-out infinite;
+        pointer-events: none;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
     }
-    @keyframes flutuar {
-        0%, 100% { transform: translateY(0) rotate(-5deg); }
-        50% { transform: translateY(-5px) rotate(5deg); }
+    
+    .setinha { font-size: 24px; animation: bounce 1s infinite; }
+    .balao-clique { background: #ffcc00; color: #000; padding: 5px 12px; border-radius: 10px; font-weight: bold; font-size: 11px; box-shadow: 0 4px 15px rgba(0,0,0,0.5); }
+
+    @keyframes bounce {
+        0%, 100% { transform: translateY(0); }
+        50% { transform: translateY(-10px); }
     }
 
-    .btn-externo { display: block; width: 100%; padding: 16px; background: #007bff; color: #fff; text-decoration: none; border-radius: 50px; font-weight: bold; margin-bottom: 20px; }
+    .btn-externo { display: block; width: 100%; padding: 15px; background: #007bff; color: #fff; text-decoration: none; border-radius: 50px; font-weight: bold; margin: 15px 0; font-size: 14px; }
     .rec-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-top: 15px; }
     .rec-card { text-decoration: none; color: #fff; font-size: 10px; }
     .rec-card img { width: 100%; border-radius: 8px; margin-bottom: 5px; }
-    .divisor { border: none; height: 1px; background: #333; margin: 25px 0; }
+    .divisor { border: none; height: 1px; background: #333; margin: 20px 0; }
 </style>
 </head>
 <body>
@@ -54,9 +54,13 @@
 <div class="container">
     <a href="/" class="back-btn">⬅</a>
     <img src="{{ img }}{{ filme.poster_path }}" class="capinha">
-    <h1 style="font-size: 22px; margin-bottom: 10px;">{{ filme.title }}</h1>
+    <h1 style="font-size: 22px; margin: 10px 0 5px;">{{ filme.title }}</h1>
     
-    <div class="generos-box">
+    <div class="info-topo">
+        <span class="nota-estrela">★ {{ nota }}</span> | {{ duracao }} | {{ filme.release_date[:4] }}
+    </div>
+
+    <div>
         {% for g in generos %}
             <span class="tag-genero">{{ g }}</span>
         {% endfor %}
@@ -66,7 +70,10 @@
 
     <div class="player-box">
         {% if play_link %}
-            <div class="btn-fofo">✨ Clique para assistir 🍿</div>
+            <div class="btn-central">
+                <span class="setinha">👇</span>
+                <div class="balao-clique">CLIQUE PARA ASSISTIR 🍿</div>
+            </div>
             <video id="player" controls playsinline poster="{{ bg }}{{ filme.backdrop_path }}" preload="none">
                 <source src="{{ play_link }}" type="video/mp4">
             </video>
@@ -75,9 +82,9 @@
         {% endif %}
     </div>
 
-    <a href="{{ play_link }}" target="_blank" class="btn-externo">📲 PLAYER EXTERNO / DOWNLOAD</a>
+    <a href="{{ play_link }}" target="_blank" class="btn-externo">📲 ABRIR NO PLAYER EXTERNO (VLC/MX)</a>
 
-    <div style="background: rgba(0,0,0,0.5); padding: 15px; border-radius: 15px; text-align: justify; font-size: 13px; line-height: 1.5;">
+    <div style="background: rgba(0,0,0,0.6); padding: 15px; border-radius: 15px; text-align: justify; font-size: 13px; line-height: 1.6; border: 1px solid #333;">
         <strong style="color:#ffcc00;">SINOPSE:</strong><br>
         {{ filme.overview or "Sinopse não disponível." }}
     </div>
