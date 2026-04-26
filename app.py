@@ -28,12 +28,13 @@ def detalhes(id):
         titulo = data.get('title', '')
         play_link = f"{MOTOR_URL}/buscar?titulo={quote(titulo)}"
         
-        # Dados extras estilo IMDB
         generos = [g['name'] for g in data.get('genres', [])]
         duracao = f"{data.get('runtime', 0)} min"
         nota = round(data.get('vote_average', 0), 1)
         
-        trailer = next((v['key'] for v in data.get('videos', {}).get('results', []) if v['type'] == 'Trailer'), None)
+        videos = data.get('videos', {}).get('results', [])
+        trailer = next((v['key'] for v in videos if v['site'] == 'YouTube'), None)
+        
         recomendados = data.get('recommendations', {}).get('results', [])[:6]
         
         return render_template("detalhes.html", 
