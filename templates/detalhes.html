@@ -10,39 +10,42 @@
     .fundo { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: url('{{ bg }}{{ filme.backdrop_path }}') center/cover; filter: blur(25px) brightness(0.2); z-index: -1; }
     .container { padding: 15px; max-width: 600px; margin: 0 auto; text-align: center; }
     .back-btn { background: #e50914; color: #fff; text-decoration: none; font-size: 13px; font-weight: bold; float: left; padding: 8px 24px; border-radius: 50px; }
-    .capinha { width: 150px; border-radius: 10px; margin: 40px auto 10px; display: block; box-shadow: 0 0 20px rgba(0,0,0,0.5); }
+    .capinha { width: 140px; border-radius: 10px; margin: 40px auto 10px; display: block; box-shadow: 0 0 20px rgba(0,0,0,0.5); }
     
-    /* Botão Amarelo de Aviso */
-    .aviso-amarelo {
-        background: #ffcc00;
-        color: #000;
-        padding: 8px 15px;
-        border-radius: 50px;
-        font-size: 11px;
-        font-weight: bold;
-        display: inline-block;
-        margin: 15px 0;
-        animation: pulse 2s infinite;
-    }
-    @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.05); } 100% { transform: scale(1); } }
+    /* Gêneros (Comédia, Terror...) */
+    .generos-box { display: flex; justify-content: center; gap: 8px; flex-wrap: wrap; margin-bottom: 15px; }
+    .tag-genero { background: rgba(255,255,255,0.1); padding: 4px 10px; border-radius: 4px; font-size: 11px; color: #ffcc00; border: 1px solid rgba(255,204,0,0.3); }
 
     .player-box { width: 100%; aspect-ratio: 16/9; background: #000; border-radius: 12px; margin-bottom: 15px; overflow: hidden; border: 1px solid #333; position: relative; }
-    iframe, video { width: 100%; height: 100%; object-fit: contain; }
     
-    /* Poster dentro do Play */
-    video {
-        background-image: url('{{ bg }}{{ filme.backdrop_path }}');
-        background-size: cover;
-        background-position: center;
+    /* Ajuste para Tela Cheia (Não corta a imagem) */
+    video { width: 100%; height: 100%; object-fit: contain; background: #000; }
+
+    /* Botão Fofinho Fora de Centro */
+    .btn-fofo {
+        position: absolute;
+        top: 15%;
+        right: 10%; /* Fora do centro */
+        background: #ffcc00;
+        color: #000;
+        padding: 6px 12px;
+        border-radius: 20px;
+        font-size: 10px;
+        font-weight: bold;
+        z-index: 10;
+        box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+        pointer-events: none; /* Não atrapalha o clique no vídeo */
+        animation: flutuar 3s ease-in-out infinite;
+    }
+    @keyframes flutuar {
+        0%, 100% { transform: translateY(0) rotate(-5deg); }
+        50% { transform: translateY(-5px) rotate(5deg); }
     }
 
     .btn-externo { display: block; width: 100%; padding: 16px; background: #007bff; color: #fff; text-decoration: none; border-radius: 50px; font-weight: bold; margin-bottom: 20px; }
-    .sinopse { background: rgba(0,0,0,0.5); padding: 15px; border-radius: 15px; text-align: justify; font-size: 14px; line-height: 1.5; margin-bottom: 30px; }
-    
-    /* Recomendados */
     .rec-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-top: 15px; }
     .rec-card { text-decoration: none; color: #fff; font-size: 10px; }
-    .rec-card img { width: 100%; border-radius: 8px; border: 1px solid #333; margin-bottom: 5px; }
+    .rec-card img { width: 100%; border-radius: 8px; margin-bottom: 5px; }
     .divisor { border: none; height: 1px; background: #333; margin: 25px 0; }
 </style>
 </head>
@@ -51,22 +54,19 @@
 <div class="container">
     <a href="/" class="back-btn">⬅</a>
     <img src="{{ img }}{{ filme.poster_path }}" class="capinha">
-    <h1 style="font-size: 24px; margin-bottom: 5px;">{{ filme.title }}</h1>
-    <p style="font-size: 12px; color: #ccc;">⭐ {{ "%.1f"|format(filme.vote_average) }} | {{ filme.release_date[:4] }}</p>
-
-    {% if trailer_key %}
-        <p style="color:#ffcc00; font-size:10px; margin-top:20px; font-weight:bold;">📺 ASSISTIR TRAILER</p>
-        <div class="player-box">
-            <iframe src="https://www.youtube.com/embed/{{ trailer_key }}" frameborder="0" allowfullscreen></iframe>
-        </div>
-    {% endif %}
+    <h1 style="font-size: 22px; margin-bottom: 10px;">{{ filme.title }}</h1>
+    
+    <div class="generos-box">
+        {% for g in generos %}
+            <span class="tag-genero">{{ g }}</span>
+        {% endfor %}
+    </div>
 
     <div class="divisor"></div>
 
-    <div class="aviso-amarelo">⚠️ CLIQUE PARA COMEÇAR O FILME</div>
-    
     <div class="player-box">
         {% if play_link %}
+            <div class="btn-fofo">✨ Clique para assistir 🍿</div>
             <video id="player" controls playsinline poster="{{ bg }}{{ filme.backdrop_path }}" preload="none">
                 <source src="{{ play_link }}" type="video/mp4">
             </video>
@@ -77,19 +77,19 @@
 
     <a href="{{ play_link }}" target="_blank" class="btn-externo">📲 PLAYER EXTERNO / DOWNLOAD</a>
 
-    <div class="sinopse">
+    <div style="background: rgba(0,0,0,0.5); padding: 15px; border-radius: 15px; text-align: justify; font-size: 13px; line-height: 1.5;">
         <strong style="color:#ffcc00;">SINOPSE:</strong><br>
         {{ filme.overview or "Sinopse não disponível." }}
     </div>
 
     <div class="divisor"></div>
 
-    <h3 style="font-size: 14px; color: #ffcc00; text-align: left;">🎬 FILMES QUE VOCÊ PODE GOSTAR:</h3>
+    <h3 style="font-size: 14px; color: #ffcc00; text-align: left;">🎬 VOCÊ PODE GOSTAR:</h3>
     <div class="rec-grid">
         {% for rec in recomendados %}
             <a href="/filme/{{ rec.id }}" class="rec-card">
                 <img src="{{ img }}{{ rec.poster_path }}" alt="{{ rec.title }}">
-                <p>{{ rec.title[:15] }}...</p>
+                <p>{{ rec.title[:12] }}...</p>
             </a>
         {% endfor %}
     </div>
