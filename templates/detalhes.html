@@ -15,119 +15,97 @@ s.src='https://n6wxm.com/vignette.min.js'
 </script>
 
 <style>
-/* 🔒 BLOQUEIO TOTAL DE CÓPIA E SELEÇÃO */
+/* 🛡️ PROTEÇÃO DISCRETA */
 * { 
-    -webkit-touch-callout: none !important; 
-    -webkit-user-select: none !important; 
-    user-select: none !important; 
     -webkit-tap-highlight-color: transparent; 
     box-sizing: border-box; 
+    -webkit-touch-callout: none; /* Bloqueia menu no iOS/Chrome */
+    user-select: none;
 }
 
-/* 📱 AJUSTE PARA PÁGINA NÃO FICAR "SAMBANDO" */
+/* 🖼️ IMPEDE SELEÇÃO DE IMAGEM (UC BROWSER) */
+img { 
+    pointer-events: none !important; 
+    -webkit-user-drag: none; 
+}
+
 html, body { 
-    margin: 0; 
-    padding: 0; 
-    background: #000; 
-    color: #fff; 
-    font-family: sans-serif; 
-    width: 100%;
-    overflow-x: hidden; /* Trava o balanço lateral */
-    position: relative;
+    margin: 0; padding: 0; background: #000; color: #fff; 
+    font-family: sans-serif; width: 100%; overflow-x: hidden; 
 }
 
 .fundo-animado {
     position: fixed; top: 0; left: 0; width: 100%; height: 100%;
     background: url('{{ bg }}{{ filme.backdrop_path }}') center/cover;
-    filter: blur(25px) brightness(0.2);
-    z-index: -1;
-    animation: movimentoFundo 20s infinite alternate linear;
+    filter: blur(25px) brightness(0.2); z-index: -1;
 }
 
-@keyframes movimentoFundo { from { transform: scale(1); } to { transform: scale(1.1); } }
-
-.container { 
-    padding: 15px; 
-    width: 100%;
-    max-width: 800px; /* Melhora a visão no PC/TV */
-    margin: 0 auto; 
-    text-align: center; 
-}
+.container { padding: 15px; max-width: 600px; margin: 0 auto; text-align: center; }
 
 .back-btn { 
     background: #e50914; color: #fff; text-decoration: none; font-size: 13px; 
     font-weight: bold; float: left; margin-bottom: 15px; padding: 8px 16px; 
-    border-radius: 6px; box-shadow: 0 4px 10px rgba(229, 9, 20, 0.4);
+    border-radius: 6px;
 }
 
 .capinha {
     width: 170px; border-radius: 12px; box-shadow: 0 10px 30px rgba(0,0,0,0.8);
     margin: 45px auto 10px auto; display: block; border: 1px solid rgba(255,255,255,0.2);
-    pointer-events: none; /* Impede segurar na imagem */
 }
 
 .info-topo { font-size: 13px; color: #00ff88; font-weight: bold; margin-bottom: 15px; }
 
+/* 🎬 AJUSTE DO PLAYER E TRAILER (CORRIGIDO) */
 .player-box {
-    width: 100%; 
-    max-width: 700px; /* Limite para não esticar demais na TV */
-    aspect-ratio: 16/9; background: #000; border-radius: 12px;
-    margin: 10px auto; overflow: hidden; border: 1px solid #333; position: relative;
+    width: 100%; aspect-ratio: 16/9; background: #000; border-radius: 12px;
+    margin: 15px 0; overflow: hidden; border: 1px solid #333; position: relative;
+    display: flex; align-items: center; justify-content: center;
 }
+
+iframe, video { width: 100%; height: 100%; object-fit: contain; border: none; }
 
 .aviso-play {
     position: absolute; top: 12px; left: 50%; transform: translateX(-50%);
     background: #ffcc00; color: #000; padding: 6px 18px; border-radius: 25px;
     font-size: 12px; font-weight: bold; z-index: 5; pointer-events: none; 
-    box-shadow: 0 0 15px #ffcc00; animation: pulsar 1.5s infinite;
+    animation: pulsar 1.5s infinite;
 }
 
-@keyframes pulsar { 0% { opacity: 0.8; transform: translateX(-50%) scale(1); } 50% { opacity: 1; transform: translateX(-50%) scale(1.05); } 100% { opacity: 0.8; transform: translateX(-50%) scale(1); } }
-
-video, iframe { width: 100%; height: 100%; border: none; background: #000; }
+@keyframes pulsar { 0% { opacity: 0.8; } 50% { opacity: 1; } 100% { opacity: 0.8; } }
 
 .btn-secundario {
-    display: block; width: 100%; max-width: 400px; padding: 15px;
-    background: #007bff; color: #fff; text-decoration: none; border-radius: 50px;
-    font-weight: bold; font-size: 15px; margin: 15px auto; border: none; 
-    text-align: center; box-shadow: 0 4px 15px rgba(0,123,255,0.3);
+    display: block; width: 100%; padding: 15px; background: #007bff; color: #fff; 
+    text-decoration: none; border-radius: 50px; font-weight: bold; font-size: 15px; 
+    margin: 15px auto; text-align: center;
 }
 
 .sinopse-box {
     background: rgba(0,0,0,0.8); padding: 20px; border-radius: 15px; text-align: justify;
-    font-size: 15px; line-height: 1.6; border: 1px solid rgba(255,255,255,0.1); margin: 25px auto;
-    max-width: 700px;
+    font-size: 14px; line-height: 1.6; border: 1px solid rgba(255,255,255,0.1); margin: 25px 0;
 }
 
-.sinopse-label { display: block; color: #ffcc00; font-weight: bold; margin-bottom: 8px; font-size: 11px; text-transform: uppercase; letter-spacing: 1px; }
+.sinopse-label { display: block; color: #ffcc00; font-weight: bold; margin-bottom: 8px; font-size: 11px; text-transform: uppercase; }
 
-.divisor { border: none; height: 1px; background: linear-gradient(to right, transparent, #333, transparent); margin: 30px 0; }
+.divisor { border: none; height: 1px; background: #333; margin: 30px 0; }
 
-/* GRID RELACIONADOS - Otimizado para TV/PC também */
-.grid-relacionados { 
-    display: grid; 
-    grid-template-columns: repeat(3, 1fr); 
-    gap: 12px; 
-}
-@media (min-width: 768px) { .grid-relacionados { grid-template-columns: repeat(6, 1fr); } }
-
+/* RELACIONADOS */
+.grid-relacionados { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
 .card-rel { text-decoration: none; color: #bbb; font-size: 10px; text-align: center; }
-.card-rel img { width: 100%; border-radius: 10px; border: 1px solid #222; pointer-events: none; }
+.card-rel img { width: 100%; border-radius: 10px; border: 1px solid #222; }
 </style>
 </head>
 
-<body oncontextmenu="return false;" ondragstart="return false;" onselectstart="return false;">
+<body oncontextmenu="return false;">
 
 <div class="fundo-animado"></div>
 
 <div class="container">
-
     <a href="/" class="back-btn">⬅ VOLTAR</a>
     <div style="clear: both;"></div>
 
     <img src="{{ img }}{{ filme.poster_path }}" class="capinha">
 
-    <h1 style="font-size: 28px; margin: 10px 0 5px 0; font-weight: 900;">{{ filme.title }}</h1>
+    <h1 style="font-size: 24px; margin: 10px 0 5px 0; font-weight: 900;">{{ filme.title }}</h1>
 
     <div class="info-topo">
         ⭐ {{ "%.1f"|format(filme.vote_average) }} | {{ filme.release_date[:4] }} | FULL HD
@@ -151,7 +129,6 @@ video, iframe { width: 100%; height: 100%; border: none; background: #000; }
                 <source src="{{ play_link }}" type="video/mp4">
             </video>
         </div>
-        
         <a href="{{ play_link }}" target="_blank" class="btn-secundario">📲 ABRIR NO PLAYER EXTERNO</a>
     {% else %}
         <div class="btn-secundario" style="background:#333; opacity:0.6;">🎬 CONTEÚDO EM MANUTENÇÃO</div>
@@ -159,21 +136,17 @@ video, iframe { width: 100%; height: 100%; border: none; background: #000; }
 
     <div class="sinopse-box">
         <span class="sinopse-label">Sinopse</span>
-        {{ filme.overview or "A sinopse deste filme ainda não foi traduzida." }}
+        {{ filme.overview or "A sinopse ainda não está disponível." }}
     </div>
 
     <div class="divisor"></div>
-
-    <div class="relacionados-titulo" style="text-align:left; font-weight:bold; margin-bottom:15px;">🔥 Filmes Semelhantes</div>
+    <div style="text-align:left; font-weight:bold; margin-bottom:15px;">🔥 Filmes Semelhantes</div>
     <div class="grid-relacionados" id="relacionados-grid"></div>
-
 </div>
 
 <script>
-// Desabilitar teclas de atalho (F12, Ctrl+U, etc)
-document.onkeydown = function(e) {
-    if(e.keyCode == 123 || (e.ctrlKey && e.shiftKey && e.keyCode == 73) || (e.ctrlKey && e.keyCode == 85)) return false;
-};
+// BLOQUEIO QUE NÃO QUEBRA O PLAYER
+document.addEventListener('contextmenu', event => event.preventDefault());
 
 async function carregarRelacionados() {
     try {
@@ -181,7 +154,7 @@ async function carregarRelacionados() {
         const data = await res.json();
         const grid = document.getElementById('relacionados-grid');
         grid.innerHTML = '';
-        data.results.slice(0, 12).forEach(item => {
+        data.results.slice(0, 9).forEach(item => {
             if(item.poster_path) {
                 grid.innerHTML += `
                     <a href="/filme/${item.id}" class="card-rel">
@@ -191,7 +164,7 @@ async function carregarRelacionados() {
                 `;
             }
         });
-    } catch(e) { console.log("Erro"); }
+    } catch(e) {}
 }
 carregarRelacionados();
 </script>
