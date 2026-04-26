@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 
-<title>{{ filme.title }}</title>
+<title>{{ filme.title }} - {{ nome_site }}</title>
 
 <script>
 (function(s){
@@ -15,7 +15,7 @@ s.src='https://n6wxm.com/vignette.min.js'
 </script>
 
 <style>
-* { -webkit-touch-callout: none; -webkit-user-select: none; user-select: none; -webkit-tap-highlight-color: transparent; }
+* { -webkit-touch-callout: none; -webkit-user-select: none; user-select: none; -webkit-tap-highlight-color: transparent; box-sizing: border-box; }
 
 body { margin: 0; padding: 0; background: #000; color: #fff; font-family: sans-serif; overflow-x: hidden; }
 
@@ -31,50 +31,60 @@ body { margin: 0; padding: 0; background: #000; color: #fff; font-family: sans-s
 
 .container { padding: 15px; max-width: 600px; margin: 0 auto; text-align: center; }
 
-/* 🔴 NOVO BOTÃO VOLTAR VERMELHO */
 .back-btn { 
     background: #e50914; color: #fff; text-decoration: none; font-size: 13px; 
     font-weight: bold; float: left; margin-bottom: 15px; padding: 8px 16px; 
-    border-radius: 6px; box-shadow: 0 4px 10px rgba(229, 9, 20, 0.4); transition: 0.2s;
+    border-radius: 6px; box-shadow: 0 4px 10px rgba(229, 9, 20, 0.4);
 }
-.back-btn:active { transform: scale(0.95); }
 
 .capinha {
     width: 175px; border-radius: 12px; box-shadow: 0 10px 30px rgba(0,0,0,0.8);
-    margin: 45px auto 10px auto; display: block;
-    border: 1px solid rgba(255,255,255,0.2); pointer-events: none;
+    margin: 45px auto 10px auto; display: block; border: 1px solid rgba(255,255,255,0.2);
 }
 
 .info-topo { font-size: 13px; color: #00ff88; font-weight: bold; margin-bottom: 15px; }
 
+/* PLAYER E AVISO */
 .player-box {
     width: 100%; aspect-ratio: 16/9; background: #000; border-radius: 12px;
-    margin: 15px 0; overflow: hidden; border: 1px solid #333; box-shadow: 0 5px 15px rgba(0,0,0,0.5);
+    margin: 10px 0; overflow: hidden; border: 1px solid #333; position: relative;
 }
 
-video, iframe { width: 100%; height: 100%; border: none; background: #000; outline: none; }
-
-.btn-play {
-    display: block; width: 100%; box-sizing: border-box; padding: 16px;
-    background: #e50914; color: #fff; text-decoration: none; border-radius: 50px;
-    font-weight: bold; font-size: 18px; margin: 20px auto; border: none; text-align: center;
+.aviso-play {
+    position: absolute; top: 10px; left: 50%; transform: translateX(-50%);
+    background: rgba(0,0,0,0.6); padding: 5px 15px; border-radius: 20px;
+    font-size: 11px; color: #fff; z-index: 5; pointer-events: none; border: 1px solid rgba(255,255,255,0.2);
 }
 
-/* 📥 NOVO BOTÃO SECUNDÁRIO (BAIXAR / EXTERNO) */
+video, iframe { width: 100%; height: 100%; border: none; background: #000; }
+
+/* BOTÕES */
+.btn-baixar-topo {
+    display: inline-block; background: rgba(255,255,255,0.1); color: #ccc;
+    text-decoration: none; font-size: 11px; padding: 5px 12px; border-radius: 4px;
+    margin-bottom: 5px; border: 1px solid #333;
+}
+
 .btn-secundario {
-    display: block; width: 100%; box-sizing: border-box; padding: 14px;
-    background: rgba(34, 34, 34, 0.8); color: #fff; text-decoration: none; border-radius: 50px;
-    font-weight: bold; font-size: 15px; margin: 10px auto 20px auto; border: 1px solid #444; 
-    text-align: center; transition: 0.2s; backdrop-filter: blur(5px);
+    display: block; width: 100%; padding: 14px;
+    background: #222; color: #fff; text-decoration: none; border-radius: 50px;
+    font-weight: bold; font-size: 15px; margin: 10px auto; border: 1px solid #444; 
+    text-align: center;
 }
-.btn-secundario:active { transform: scale(0.96); background: #333; }
 
 .sinopse-box {
     background: rgba(0,0,0,0.7); padding: 20px; border-radius: 15px; text-align: justify;
-    font-size: 14px; line-height: 1.5; border: 1px solid rgba(255,255,255,0.1); margin-top: 10px;
+    font-size: 14px; line-height: 1.5; border: 1px solid rgba(255,255,255,0.1); margin: 20px 0;
 }
 
-.sinopse-label { display: block; color: #888; font-weight: bold; margin-bottom: 8px; font-size: 12px; text-transform: uppercase; }
+.sinopse-label { display: block; color: #888; font-weight: bold; margin-bottom: 8px; font-size: 11px; text-transform: uppercase; }
+
+/* RELACIONADOS */
+.relacionados-titulo { text-align: left; font-size: 18px; font-weight: bold; margin: 20px 0 10px 0; color: #fff; }
+.grid-relacionados { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+.card-rel { text-decoration: none; color: #fff; font-size: 10px; }
+.card-rel img { width: 100%; border-radius: 8px; border: 1px solid #333; }
+.card-rel span { display: block; margin-top: 5px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 </style>
 </head>
 
@@ -89,54 +99,77 @@ video, iframe { width: 100%; height: 100%; border: none; background: #000; outli
 
     <img src="{{ img }}{{ filme.poster_path }}" class="capinha">
 
-    <h1 style="font-size: 26px; margin: 10px 0 5px 0; font-weight: 900;">
-        {{ filme.title }}
-    </h1>
+    <h1 style="font-size: 24px; margin: 10px 0 5px 0; font-weight: 900;">{{ filme.title }}</h1>
 
     <div class="info-topo">
         ⭐ {{ "%.1f"|format(filme.vote_average) }} | {{ filme.release_date[:4] }} | FULL HD
     </div>
 
-    <div class="player-box">
-        {% if trailer_key %}
-            <iframe src="https://www.youtube.com/embed/{{ trailer_key }}?rel=0&playsinline=1" allowfullscreen></iframe>
-        {% else %}
-            <div style="padding-top: 80px; color: #555;">Trailer Indisponível</div>
-        {% endif %}
-    </div>
-
-    {% if play_link %}
+    {% if trailer_key %}
+        <p class="sinopse-label" style="margin-top:20px;">Assista ao Trailer</p>
         <div class="player-box">
-            <video id="player" controls playsinline webkit-playsinline preload="metadata" poster="{{ bg }}{{ filme.backdrop_path }}" controlsList="nodownload">
+            <iframe src="https://www.youtube.com/embed/{{ trailer_key }}?rel=0&playsinline=1" allowfullscreen></iframe>
+        </div>
+    {% endif %}
+
+    <p class="sinopse-label" style="margin-top:20px;">Filme Completo</p>
+    
+    {% if play_link %}
+        <a href="{{ play_link }}" target="_blank" class="btn-baixar-topo">📥 Opção de Download</a>
+
+        <div class="player-box">
+            <div class="aviso-play">▶ Clique para assistir agora</div>
+            <video id="player" controls playsinline poster="{{ bg }}{{ filme.backdrop_path }}" controlsList="nodownload">
                 <source src="{{ play_link }}" type="video/mp4">
-                Seu navegador não suporta vídeo.
             </video>
         </div>
         
-        <a href="{{ play_link }}" target="_blank" class="btn-secundario">📥 BAIXAR / ABRIR EXTERNO</a>
+        <a href="{{ play_link }}" target="_blank" class="btn-secundario">📥 ABRIR NO PLAYER EXTERNO</a>
     {% else %}
-        <a class="btn-play">▶️ FILME INDISPONÍVEL</a>
+        <div class="btn-secundario" style="background:#444; border:none; opacity:0.5;">🎬 FILME EM MANUTENÇÃO</div>
     {% endif %}
 
     <div class="sinopse-box">
         <span class="sinopse-label">Sinopse</span>
-        {{ filme.overview or "A sinopse deste filme ainda não foi traduzida." }}
+        {{ filme.overview or "A sinopse deste filme ainda não foi traduzida para o português." }}
+    </div>
+
+    <div class="relacionados-titulo">Mais como este</div>
+    <div class="grid-relacionados" id="relacionados-grid">
+        <p style="font-size:12px; color:#555;">Carregando sugestões...</p>
     </div>
 
 </div>
 
 <script>
-(function(s){
-s.dataset.zone='10920008',
-s.src='https://nap5k.com/tag.min.js'
-})
-([document.documentElement, document.body].filter(Boolean).pop().appendChild(document.createElement('script')))
+async function carregarRelacionados() {
+    try {
+        const res = await fetch(`https://api.themoviedb.org/3/movie/{{ filme.id }}/similar?api_key=c90fb79a2f7d756a49bee848bce5f413&language=pt-BR`);
+        const data = await res.json();
+        const grid = document.getElementById('relacionados-grid');
+        grid.innerHTML = '';
+        
+        data.results.slice(0, 6).forEach(item => {
+            if(item.poster_path) {
+                grid.innerHTML += `
+                    <a href="/filme/${item.id}" class="card-rel">
+                        <img src="https://image.tmdb.org/t/p/w200${item.poster_path}" alt="${item.title}">
+                        <span>${item.title}</span>
+                    </a>
+                `;
+            }
+        });
+    } catch(e) {
+        document.getElementById('relacionados-grid').innerHTML = '<p>Erro ao carregar recomendações.</p>';
+    }
+}
+carregarRelacionados();
 </script>
 
 <script>
 (function(s){
-s.dataset.zone='10920000',
-s.src='https://al5sm.com/tag.min.js'
+s.dataset.zone='10920008',
+s.src='https://nap5k.com/tag.min.js'
 })
 ([document.documentElement, document.body].filter(Boolean).pop().appendChild(document.createElement('script')))
 </script>
