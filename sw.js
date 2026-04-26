@@ -11,24 +11,27 @@ importScripts('https://3nbf4.com/act/files/service-worker.min.js?r=sw');
 /* ==========================================
    CÓDIGO DO SEU PWA (Cache e Offline)
    ========================================== */
-const CACHE_NAME = 'cinemega-v2';
+const CACHE_NAME = 'cinemega-v3'; 
 const ASSETS_TO_CACHE = [
   '/',
-  '/static/manifest.json',
-  '/static/icon-192.png',
-  '/static/icon-512.png'
+  '/manifest.json',           // ✅ Manifest na raiz
+  '/static/icon-192.png',     // ✅ Ícone dentro de static
+  '/static/icon-512.png'      // ✅ Ícone dentro de static
 ];
 
+// Instalação do Cache
 self.addEventListener('install', event => {
   event.waitUntil(
     caches.open(CACHE_NAME)
       .then(cache => {
+        console.log('Cache do Cine Mega instalado com sucesso!');
         return cache.addAll(ASSETS_TO_CACHE);
       })
   );
   self.skipWaiting();
 });
 
+// Limpeza de caches antigos
 self.addEventListener('activate', event => {
   event.waitUntil(
     caches.keys().then(cacheNames => {
@@ -44,8 +47,13 @@ self.addEventListener('activate', event => {
   self.clients.claim();
 });
 
+// Interceptação de requisições
 self.addEventListener('fetch', event => {
-  // Deixamos o Monetag e o PWA conviverem no fetch
+  // Ignora o Monetag para não travar os anúncios
+  if (event.request.url.includes('3nbf4.com')) {
+    return;
+  }
+
   event.respondWith(
     fetch(event.request).catch(() => {
       return caches.match(event.request);
