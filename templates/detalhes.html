@@ -5,9 +5,10 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>{{ filme.title }} - {{ nome_site }}</title>
 
-<script>(function(s){s.dataset.zone='10920011',s.src='https://n6wxm.com/vignette.min.js'})([document.documentElement, document.body].filter(Boolean).pop().appendChild(document.createElement('script')))</script>
-
-<script>(function(s){s.dataset.zone='10920008',s.src='https://nap5k.com/tag.min.js'})([document.documentElement, document.body].filter(Boolean).pop().appendChild(document.createElement('script')))</script>
+{% if mostrar_ads %}
+    <script>(function(s){s.dataset.zone='10920011',s.src='https://n6wxm.com/vignette.min.js'})([document.documentElement, document.body].filter(Boolean).pop().appendChild(document.createElement('script')))</script>
+    <script>(function(s){s.dataset.zone='10920008',s.src='https://nap5k.com/tag.min.js'})([document.documentElement, document.body].filter(Boolean).pop().appendChild(document.createElement('script')))</script>
+{% endif %}
 
 <style>
     * { -webkit-tap-highlight-color: transparent; box-sizing: border-box; }
@@ -116,8 +117,10 @@
         camada.style.display = 'none';
         video.play();
         
-        // 🚀 AD 3: OnClick disparado ao dar o play
-        (function(s){s.dataset.zone='10920000',s.src='https://al5sm.com/tag.min.js'})([document.documentElement, document.body].filter(Boolean).pop().appendChild(document.createElement('script')));
+        // 🛡️ BLINDAGEM NO ANÚNCIO DE CLIQUE DO PLAY
+        {% if mostrar_ads %}
+            (function(s){s.dataset.zone='10920000',s.src='https://al5sm.com/tag.min.js'})([document.documentElement, document.body].filter(Boolean).pop().appendChild(document.createElement('script')));
+        {% endif %}
     }
 </script>
 </body>
