@@ -10,6 +10,17 @@ IMG = "https://image.tmdb.org/t/p/w500"
 BG = "https://image.tmdb.org/t/p/original"
 MOTOR_URL = "https://brave-jonis-meu-bot-cinema-7ce7d584.koyeb.app"
 
+# 🛡️ O VIGIA: ESCONDE ANÚNCIOS NO APP E MOSTRA NO NAVEGADOR
+@app.context_processor
+def controle_de_anuncios():
+    """ Detecta se o acesso vem do aplicativo (WebView) ou do Chrome/PC """
+    user_agent = request.headers.get('User-Agent', '').lower()
+    # A sigla 'wv' significa WebView (o sistema usado pelo aplicativo Android/TV)
+    is_app = 'wv' in user_agent
+    
+    # Retorna 'mostrar_ads = True' para o site normal, e 'False' para o App
+    return dict(mostrar_ads=not is_app)
+
 @app.route("/")
 def home():
     q = request.args.get("q")
