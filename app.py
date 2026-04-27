@@ -55,5 +55,10 @@ def detalhes(id):
         return render_template("detalhes.html", filme=data, img=IMG, bg=BG, play_link=play_link, trailer_key=trailer, recomendados=recomendados, generos=generos, duracao=duracao, nota=nota, nome_site=NOME_SITE)
     except: return "Erro", 404
 
+     @app.route('/ads.txt')
+def ads_txt():
+    return send_from_directory('static', 'ads.txt')
+
+
 if __name__ == "__main__":
     app.run(host='0.0.0.0', port=5000)
