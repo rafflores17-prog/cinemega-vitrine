@@ -14,25 +14,30 @@ MOTOR_URL = "https://brave-jonis-meu-bot-cinema-7ce7d584.koyeb.app"
 def home():
     q = request.args.get("q")
     if q:
-        # Se for busca, foca apenas no resultado da pesquisa
         url = f"https://api.themoviedb.org/3/search/movie?api_key={TMDB_API_KEY}&language=pt-BR&query={q}"
         try:
             res = requests.get(url, timeout=10).json().get("results", [])
         except: res = []
         return render_template("index.html", filmes=res, img=IMG, bg=BG, nome_site=NOME_SITE, busca=True)
     
-    # Se for Home Normal, carrega o Nível Pro
     try:
-        # 🎬 Destaques (Banner topo)
+        # 🎬 Destaques (Banner Topo - Agora pegando 5 filmes para rodar)
         destaques = requests.get(f"https://api.themoviedb.org/3/movie/now_playing?api_key={TMDB_API_KEY}&language=pt-BR").json().get("results", [])[:5]
         # 🔥 Populares
         populares = requests.get(f"https://api.themoviedb.org/3/movie/popular?api_key={TMDB_API_KEY}&language=pt-BR").json().get("results", [])
-        # 🍿 Terror (Exemplo de trilho por gênero)
+        # 🤡 Comédia (ID 35)
+        comedia = requests.get(f"https://api.themoviedb.org/3/discover/movie?api_key={TMDB_API_KEY}&language=pt-BR&with_genres=35").json().get("results", [])
+        # 🚀 Ficção Científica (ID 878)
+        ficcao = requests.get(f"https://api.themoviedb.org/3/discover/movie?api_key={TMDB_API_KEY}&language=pt-BR&with_genres=878").json().get("results", [])
+        # 👻 Terror (ID 27)
         terror = requests.get(f"https://api.themoviedb.org/3/discover/movie?api_key={TMDB_API_KEY}&language=pt-BR&with_genres=27").json().get("results", [])
     except:
-        destaques, populares, terror = [], [], []
+        destaques, populares, comedia, ficcao, terror = [], [], [], [], []
         
-    return render_template("index.html", destaques=destaques, populares=populares, terror=terror, img=IMG, bg=BG, nome_site=NOME_SITE, busca=False)
+    return render_template("index.html", 
+                           destaques=destaques, populares=populares, 
+                           comedia=comedia, ficcao=ficcao, terror=terror,
+                           img=IMG, bg=BG, nome_site=NOME_SITE, busca=False)
 
 @app.route("/filme/<int:id>")
 def detalhes(id):
