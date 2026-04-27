@@ -55,9 +55,12 @@ def detalhes(id):
         return render_template("detalhes.html", filme=data, img=IMG, bg=BG, play_link=play_link, trailer_key=trailer, recomendados=recomendados, generos=generos, duracao=duracao, nota=nota, nome_site=NOME_SITE)
     except: return "Erro", 404
 
-     @app.route('/ads.txt')
+     
+    @app.route('/ads.txt')
 def ads_txt():
-    return send_from_directory('static', 'ads.txt')
+    # Aqui o Flask joga o texto direto na cara do Google, sem precisar de arquivo!
+    return "google.com, pub-2866002449649160, DIRECT, f08c47fec0942fa0", 200, {'Content-Type': 'text/plain'}
+
 
 
 if __name__ == "__main__":
