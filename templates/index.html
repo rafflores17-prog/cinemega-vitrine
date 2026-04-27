@@ -12,11 +12,11 @@
 
         body { background: #000; color: #fff; font-family: 'Segoe UI', sans-serif; margin: 0; padding: 0; overflow-x: hidden; }
 
-        /* HEADER FIXO */
+        /* HEADER FIXO COM LINK PARA HOME */
         .topo-fixo {
             position: fixed; top: 0; width: 100%; z-index: 1000;
             background: rgba(0, 0, 0, 0.95); backdrop-filter: blur(15px);
-            border-bottom: 2px solid #e50914;
+            border-bottom: 2px solid #e50914; padding-bottom: 0px;
         }
         .header { text-align: center; padding: 10px 0; }
         .header a { text-decoration: none; outline: none; }
@@ -29,11 +29,11 @@
         }
         .search-input { width: 100%; background: transparent; border: none; color: #fff; padding: 10px; outline: none; font-size: 16px; }
 
-        /* ABAS DE CATEGORIAS */
+        /* 🔥 ABAS DE CATEGORIAS (MENU DESLIZANTE) */
         .menu-categorias {
             display: flex; overflow-x: auto; gap: 10px; padding: 10px 15px;
             background: rgba(10, 10, 10, 0.95); border-top: 1px solid #222;
-            scrollbar-width: none;
+            scrollbar-width: none; -ms-overflow-style: none;
         }
         .menu-categorias::-webkit-scrollbar { display: none; }
         .aba {
@@ -41,42 +41,69 @@
             border-radius: 20px; font-size: 12px; font-weight: bold;
             white-space: nowrap; transition: 0.3s; border: 1px solid #333; outline: none;
         }
-        
-        /* ESPAÇAMENTO DO CONTEÚDO */
-        .content-wrapper { margin-top: 185px; padding-bottom: 50px; }
+        .aba:active { transform: scale(0.95); }
+        .aba:hover, .aba.ativa { background: #e50914; color: #fff; border-color: #e50914; }
 
-        /* BANNER */
-        .banner-container { padding: 0 15px; margin-bottom: 25px; }
+        .content-wrapper { margin-top: 190px; padding-bottom: 50px; }
+
+        /* 🔥 BANNER CAROUSEL */
+        .banner-container { padding: 0 15px; margin-bottom: 25px; position: relative; }
         .banner-slide { 
             display: none; width: 100%; height: 220px; border-radius: 15px; 
-            overflow: hidden; animation: fadeIn 1s; outline: none;
+            position: relative; overflow: hidden; animation: fadeIn 1s; outline: none;
         }
-        .banner-slide a { display: block; width: 100%; height: 100%; outline: none; }
-        .banner-img { width: 100%; height: 100%; background-size: cover; background-position: center; display: flex; align-items: flex-end; padding: 20px; }
+        .banner-slide a { display: block; width: 100%; height: 100%; text-decoration: none; outline: none; }
+        .banner-img { 
+            width: 100%; height: 100%; background-size: cover; background-position: center; 
+            display: flex; align-items: flex-end; padding: 20px;
+        }
+        .banner-img::after { 
+            content: ''; position: absolute; bottom: 0; left: 0; width: 100%; height: 70%; 
+            background: linear-gradient(transparent, rgba(0,0,0,0.9)); 
+        }
         .banner-active { display: block !important; }
-        .btn-assistir { display: inline-block; background: #e50914; color: #fff; padding: 6px 20px; border-radius: 50px; margin-top: 10px; font-weight: bold; font-size: 12px; }
+        .banner-info { z-index: 5; position: relative; }
+        .banner-info h2 { font-size: 20px; margin: 0; color: #fff; text-shadow: 2px 2px 4px #000; }
+        .btn-assistir { 
+            display: inline-block; background: #e50914; color: #fff; 
+            padding: 6px 20px; border-radius: 50px; margin-top: 10px; 
+            font-weight: bold; font-size: 12px;
+        }
 
-        /* TRILHOS */
-        .secao-titulo { font-size: 16px; margin: 25px 15px 10px; color: #ffcc00; font-weight: bold; text-transform: uppercase; }
-        .trilho { display: flex; overflow-x: auto; gap: 12px; padding: 0 15px 10px; scrollbar-width: none; }
+        /* 🍿 TRILHOS HORIZONTAIS */
+        .secao-titulo { font-size: 16px; margin: 25px 15px 10px; color: #ffcc00; font-weight: bold; display: flex; align-items: center; text-transform: uppercase; }
+        .secao-titulo::before { content: ''; width: 4px; height: 16px; background: #e50914; margin-right: 10px; border-radius: 2px; }
+        
+        .trilho {
+            display: flex; overflow-x: auto; gap: 12px; padding: 0 15px 10px;
+            scrollbar-width: none;
+        }
         .trilho::-webkit-scrollbar { display: none; }
 
-        .card-pro { min-width: 125px; position: relative; transition: 0.2s; outline: none; display: block; }
+        .card-pro { min-width: 125px; position: relative; transition: 0.3s; outline: none; display: block; text-decoration: none; color: inherit; }
         .card-pro img { width: 100%; border-radius: 10px; border: 1px solid #222; display: block; }
-        .card-nota { position: absolute; top: 5px; right: 5px; background: rgba(229,9,20,0.9); color: #fff; font-size: 9px; padding: 2px 6px; border-radius: 5px; }
+        .card-nota { position: absolute; top: 5px; right: 5px; background: rgba(229,9,20,0.9); color: #fff; font-size: 9px; padding: 2px 6px; border-radius: 5px; font-weight: bold; }
 
         .grid-busca { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; padding: 15px; }
 
-        /* ✨ O SEGREDO DO FIRESTICK: FOCO ULTRA VISÍVEL ✨ */
-        a:focus, .card-pro:focus, .aba:focus, .banner-slide a:focus {
-            outline: 5px solid #fff !important; /* Borda branca bem grossa */
-            transform: scale(1.1); /* Aumenta o tamanho do filme selecionado */
-            box-shadow: 0 0 30px #e50914 !important; /* Brilho vermelho forte */
-            z-index: 999;
-            position: relative;
+        /* 🔥 NAVEGAÇÃO PARA TV BOX / FIRESTICK / CONTROLE REMOTO 🔥 */
+        a:focus, button:focus, input:focus, .card-pro:focus, .aba:focus, .banner-slide a:focus {
+            outline: 4px solid #fff !important;
+            transform: scale(1.08) !important;
+            box-shadow: 0 0 20px rgba(229, 9, 20, 0.9) !important;
+            border-radius: 12px;
+            transition: all 0.2s ease-in-out;
+            z-index: 10;
+            background: rgba(229, 9, 20, 0.2); /* Ajuda a destacar nas abas e busca */
         }
 
-        .footer-seo { background: #050505; padding: 25px 20px; font-size: 10px; color: #555; border-top: 1px solid #1a1a1a; margin-top: 50px; }
+        /* RODAPÉ DE BLINDAGEM SEO/DMCA */
+        .footer-seo {
+            background: #050505; padding: 25px 20px; text-align: justify;
+            font-size: 10px; color: #555; border-top: 1px solid #1a1a1a;
+            margin-top: 50px; line-height: 1.5;
+        }
+        .footer-seo h3 { color: #888; font-size: 12px; margin-bottom: 10px; text-transform: uppercase; }
 
         @keyframes fadeIn { from { opacity: 0.5; } to { opacity: 1; } }
     </style>
@@ -85,22 +112,25 @@
 
     <div class="topo-fixo">
         <div class="header">
-            <a href="/" tabindex="1"><h1>{{ nome_site }}</h1></a>
+            <a href="/"><h1>{{ nome_site }}</h1></a>
         </div>
         <div class="search-container">
             <form action="/">
                 <div class="search-box">
-                    <input type="text" name="q" class="search-input" placeholder="Pesquisar..." tabindex="2">
+                    <span>🔍</span>
+                    <input type="text" name="q" class="search-input" placeholder="Pesquisar no Cine Mega...">
                 </div>
             </form>
         </div>
         <div class="menu-categorias">
-            <a href="/" class="aba ativa" tabindex="3">Início</a>
-            <a href="/genero/28" class="aba" tabindex="4">Ação</a>
-            <a href="/genero/35" class="aba" tabindex="5">Comédia</a>
-            <a href="/genero/27" class="aba" tabindex="6">Terror</a>
-            <a href="/genero/878" class="aba" tabindex="7">Ficção</a>
-            <a href="/genero/16" class="aba" tabindex="8">Animação</a>
+            <a href="/" class="aba ativa">Início</a>
+            <a href="/genero/28" class="aba">Ação</a>
+            <a href="/genero/35" class="aba">Comédia</a>
+            <a href="/genero/27" class="aba">Terror</a>
+            <a href="/genero/878" class="aba">Ficção</a>
+            <a href="/genero/16" class="aba">Animação</a>
+            <a href="/genero/18" class="aba">Drama</a>
+            <a href="/genero/14" class="aba">Fantasia</a>
         </div>
     </div>
 
@@ -110,7 +140,7 @@
             <div class="banner-container">
                 {% for d in destaques %}
                 <div class="banner-slide">
-                    <a href="/filme/{{ d.id }}" tabindex="9">
+                    <a href="/filme/{{ d.id }}">
                         <div class="banner-img" style="background-image: url('{{ bg }}{{ d.backdrop_path }}');">
                             <div class="banner-info">
                                 <h2>{{ d.title }}</h2>
@@ -125,7 +155,7 @@
             <div class="secao-titulo">🔥 Em Alta</div>
             <div class="trilho">
                 {% for filme in populares %}
-                <a href="/filme/{{ filme.id }}" class="card-pro" tabindex="10">
+                <a href="/filme/{{ filme.id }}" class="card-pro">
                     <div class="card-nota">★ {{ filme.vote_average|round(1) }}</div>
                     <img src="{{ img }}{{ filme.poster_path }}">
                 </a>
@@ -135,7 +165,25 @@
             <div class="secao-titulo">🤡 Comédia</div>
             <div class="trilho">
                 {% for filme in comedia %}
-                <a href="/filme/{{ filme.id }}" class="card-pro" tabindex="11">
+                <a href="/filme/{{ filme.id }}" class="card-pro">
+                    <img src="{{ img }}{{ filme.poster_path }}">
+                </a>
+                {% endfor %}
+            </div>
+
+            <div class="secao-titulo">🚀 Ficção</div>
+            <div class="trilho">
+                {% for filme in ficcao %}
+                <a href="/filme/{{ filme.id }}" class="card-pro">
+                    <img src="{{ img }}{{ filme.poster_path }}">
+                </a>
+                {% endfor %}
+            </div>
+
+            <div class="secao-titulo">👻 Terror</div>
+            <div class="trilho">
+                {% for filme in terror %}
+                <a href="/filme/{{ filme.id }}" class="card-pro">
                     <img src="{{ img }}{{ filme.poster_path }}">
                 </a>
                 {% endfor %}
@@ -144,26 +192,37 @@
             <div class="secao-titulo">{{ titulo_busca }}</div>
             <div class="grid-busca">
                 {% for filme in filmes %}
-                <a href="/filme/{{ filme.id }}" class="card-pro" tabindex="12">
+                <a href="/filme/{{ filme.id }}" class="card-pro">
                     <img src="{{ img }}{{ filme.poster_path }}">
+                    <p style="font-size: 11px; text-align: center; margin-top: 5px; color: #ccc;">{{ filme.title }}</p>
                 </a>
                 {% endfor %}
+            </div>
+            <div style="text-align: center; margin-top: 20px;">
+                <a href="/" style="color: #e50914; font-weight: bold; text-decoration: none; display: inline-block; padding: 10px;">← Voltar para a Home</a>
             </div>
         {% endif %}
 
     </div>
 
     <div class="footer-seo">
-        <p>Cine Mega - Motor de Busca Automatizado</p>
+        <h3>Aviso Legal (DMCA)</h3>
+        <p>O <strong>{{ nome_site }}</strong> é um motor de busca automatizado que indexa conteúdos encontrados livremente na internet. Nosso sistema utiliza inteligência artificial e robôs para catalogar metadados, operando de forma 100% legal como um indexador automático.</p>
+        <p>Não armazenamos, hospedamos ou transmitimos nenhum arquivo de vídeo ou mídia em nossos servidores. Todo o conteúdo exibido é provido por plataformas terceiras. O uso deste site e a visualização dos links são de total responsabilidade do usuário.</p>
+        <p>Qualquer violação de direitos autorais deve ser tratada diretamente com os distribuidores que hospedam os arquivos. Em caso de dúvidas ou reclamações, entre em contato com nossa equipe.</p>
     </div>
 
     <script>
+        // Banner Automático - 8 Segundos
         let slideIndex = 0;
         showSlides();
+
         function showSlides() {
             let slides = document.getElementsByClassName("banner-slide");
             if (slides.length > 0) {
-                for (let i = 0; i < slides.length; i++) { slides[i].classList.remove("banner-active"); }
+                for (let i = 0; i < slides.length; i++) {
+                    slides[i].classList.remove("banner-active");
+                }
                 slideIndex++;
                 if (slideIndex > slides.length) {slideIndex = 1}
                 slides[slideIndex-1].classList.add("banner-active");
