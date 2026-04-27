@@ -16,22 +16,38 @@
         .topo-fixo {
             position: fixed; top: 0; width: 100%; z-index: 1000;
             background: rgba(0, 0, 0, 0.95); backdrop-filter: blur(15px);
-            border-bottom: 2px solid #e50914; padding-bottom: 10px;
+            border-bottom: 2px solid #e50914; padding-bottom: 0px; /* Ajustado para caber o menu */
         }
         .header { text-align: center; padding: 10px 0; }
         .header a { text-decoration: none; }
         .header h1 { color: #e50914; margin: 0; font-size: 26px; letter-spacing: 3px; text-transform: uppercase; font-weight: 900; }
         
-        .search-container { padding: 0 15px; }
+        .search-container { padding: 0 15px 10px; }
         .search-box {
             display: flex; align-items: center; background: #1a1a1a;
             border: 1px solid #333; border-radius: 50px; padding: 5px 15px;
         }
         .search-input { width: 100%; background: transparent; border: none; color: #fff; padding: 10px; outline: none; font-size: 16px; }
 
-        .content-wrapper { margin-top: 145px; padding-bottom: 50px; }
+        /* 🔥 NOVO: ABAS DE CATEGORIAS (MENU DESLIZANTE) */
+        .menu-categorias {
+            display: flex; overflow-x: auto; gap: 10px; padding: 10px 15px;
+            background: rgba(10, 10, 10, 0.95); border-top: 1px solid #222;
+            scrollbar-width: none; -ms-overflow-style: none;
+        }
+        .menu-categorias::-webkit-scrollbar { display: none; }
+        .aba {
+            background: #222; color: #ccc; padding: 6px 16px; text-decoration: none;
+            border-radius: 20px; font-size: 12px; font-weight: bold;
+            white-space: nowrap; transition: 0.3s; border: 1px solid #333;
+        }
+        .aba:active { transform: scale(0.95); }
+        .aba:hover, .aba.ativa { background: #e50914; color: #fff; border-color: #e50914; }
 
-        /* 🔥 BANNER CAROUSEL CORRIGIDO */
+        /* O margin-top aumentou para 190px para dar espaço pro menu novo não cobrir o banner */
+        .content-wrapper { margin-top: 190px; padding-bottom: 50px; }
+
+        /* 🔥 BANNER CAROUSEL */
         .banner-container { padding: 0 15px; margin-bottom: 25px; position: relative; }
         .banner-slide { 
             display: none; width: 100%; height: 220px; border-radius: 15px; 
@@ -71,6 +87,14 @@
 
         .grid-busca { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; padding: 15px; }
 
+        /* 🔥 NOVO: RODAPÉ DE BLINDAGEM SEO/DMCA */
+        .footer-seo {
+            background: #050505; padding: 25px 20px; text-align: justify;
+            font-size: 10px; color: #555; border-top: 1px solid #1a1a1a;
+            margin-top: 50px; line-height: 1.5;
+        }
+        .footer-seo h3 { color: #888; font-size: 12px; margin-bottom: 10px; text-transform: uppercase; }
+
         @keyframes fadeIn { from { opacity: 0.5; } to { opacity: 1; } }
     </style>
 </head>
@@ -87,6 +111,16 @@
                     <input type="text" name="q" class="search-input" placeholder="Pesquisar no Cine Mega...">
                 </div>
             </form>
+        </div>
+        <div class="menu-categorias">
+            <a href="/" class="aba ativa">Início</a>
+            <a href="/genero/28" class="aba">Ação</a>
+            <a href="/genero/35" class="aba">Comédia</a>
+            <a href="/genero/27" class="aba">Terror</a>
+            <a href="/genero/878" class="aba">Ficção</a>
+            <a href="/genero/16" class="aba">Animação</a>
+            <a href="/genero/18" class="aba">Drama</a>
+            <a href="/genero/14" class="aba">Fantasia</a>
         </div>
     </div>
 
@@ -145,7 +179,7 @@
                 {% endfor %}
             </div>
         {% else %}
-            <div class="secao-titulo">🔍 Resultados</div>
+            <div class="secao-titulo">{{ titulo_busca }}</div>
             <div class="grid-busca">
                 {% for filme in filmes %}
                 <a href="/filme/{{ filme.id }}" class="card-pro">
@@ -159,6 +193,13 @@
             </div>
         {% endif %}
 
+    </div>
+
+    <div class="footer-seo">
+        <h3>Aviso Legal (DMCA)</h3>
+        <p>O <strong>{{ nome_site }}</strong> é um motor de busca automatizado que indexa conteúdos encontrados livremente na internet. Nosso sistema utiliza inteligência artificial e robôs para catalogar metadados, operando de forma 100% legal como um indexador automático.</p>
+        <p>Não armazenamos, hospedamos ou transmitimos nenhum arquivo de vídeo ou mídia em nossos servidores. Todo o conteúdo exibido é provido por plataformas terceiras. O uso deste site e a visualização dos links são de total responsabilidade do usuário.</p>
+        <p>Qualquer violação de direitos autorais deve ser tratada diretamente com os distribuidores que hospedam os arquivos. Em caso de dúvidas ou reclamações, entre em contato com nossa equipe.</p>
     </div>
 
     <script>
