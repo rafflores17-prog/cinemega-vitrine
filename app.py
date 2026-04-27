@@ -21,15 +21,10 @@ def home():
         return render_template("index.html", filmes=res, img=IMG, bg=BG, nome_site=NOME_SITE, busca=True)
     
     try:
-        # 🎬 Destaques (Banner Topo - Agora pegando 5 filmes para rodar)
         destaques = requests.get(f"https://api.themoviedb.org/3/movie/now_playing?api_key={TMDB_API_KEY}&language=pt-BR").json().get("results", [])[:5]
-        # 🔥 Populares
         populares = requests.get(f"https://api.themoviedb.org/3/movie/popular?api_key={TMDB_API_KEY}&language=pt-BR").json().get("results", [])
-        # 🤡 Comédia (ID 35)
         comedia = requests.get(f"https://api.themoviedb.org/3/discover/movie?api_key={TMDB_API_KEY}&language=pt-BR&with_genres=35").json().get("results", [])
-        # 🚀 Ficção Científica (ID 878)
         ficcao = requests.get(f"https://api.themoviedb.org/3/discover/movie?api_key={TMDB_API_KEY}&language=pt-BR&with_genres=878").json().get("results", [])
-        # 👻 Terror (ID 27)
         terror = requests.get(f"https://api.themoviedb.org/3/discover/movie?api_key={TMDB_API_KEY}&language=pt-BR&with_genres=27").json().get("results", [])
     except:
         destaques, populares, comedia, ficcao, terror = [], [], [], [], []
@@ -53,15 +48,13 @@ def detalhes(id):
         trailer = next((v['key'] for v in videos if v['site'] == 'YouTube'), None)
         recomendados = data.get('recommendations', {}).get('results', [])[:6]
         return render_template("detalhes.html", filme=data, img=IMG, bg=BG, play_link=play_link, trailer_key=trailer, recomendados=recomendados, generos=generos, duracao=duracao, nota=nota, nome_site=NOME_SITE)
-    except: return "Erro", 404
+    except: 
+        return "Erro", 404
 
-     
-    @app.route('/ads.txt')
+# ✅ ROTA DO ADS.TXT - DEVE FICAR COLADA NA MARGEM ESQUERDA!
+@app.route('/ads.txt')
 def ads_txt():
-    # Aqui o Flask joga o texto direto na cara do Google, sem precisar de arquivo!
     return "google.com, pub-2866002449649160, DIRECT, f08c47fec0942fa0", 200, {'Content-Type': 'text/plain'}
-
-
 
 if __name__ == "__main__":
     app.run(host='0.0.0.0', port=5000)
