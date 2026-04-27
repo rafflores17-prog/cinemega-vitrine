@@ -18,7 +18,7 @@ def home():
         try:
             res = requests.get(url, timeout=10).json().get("results", [])
         except: res = []
-        return render_template("index.html", filmes=res, img=IMG, bg=BG, nome_site=NOME_SITE, busca=True)
+        return render_template("index.html", filmes=res, img=IMG, bg=BG, nome_site=NOME_SITE, busca=True, titulo_busca="🔍 Resultados da Busca")
     
     try:
         destaques = requests.get(f"https://api.themoviedb.org/3/movie/now_playing?api_key={TMDB_API_KEY}&language=pt-BR").json().get("results", [])[:5]
@@ -33,6 +33,26 @@ def home():
                            destaques=destaques, populares=populares, 
                            comedia=comedia, ficcao=ficcao, terror=terror,
                            img=IMG, bg=BG, nome_site=NOME_SITE, busca=False)
+
+# 🔥 NOVA ROTA: FILTROS POR GÊNERO NAS ABAS
+@app.route("/genero/<int:gen_id>")
+def genero(gen_id):
+    nomes_generos = {
+        28: "Ação", 12: "Aventura", 16: "Animação", 35: "Comédia", 
+        80: "Crime", 99: "Documentário", 18: "Drama", 10751: "Família", 
+        14: "Fantasia", 36: "História", 27: "Terror", 10402: "Música", 
+        9648: "Mistério", 10749: "Romance", 878: "Ficção Científica", 
+        10770: "Cinema TV", 53: "Thriller", 10752: "Guerra", 37: "Faroeste"
+    }
+    nome_gen = nomes_generos.get(gen_id, "Filmes")
+    
+    url = f"https://api.themoviedb.org/3/discover/movie?api_key={TMDB_API_KEY}&language=pt-BR&with_genres={gen_id}"
+    try:
+        res = requests.get(url, timeout=10).json().get("results", [])
+    except: res = []
+    
+    # Ele usa a mesma tela de busca, mas com o título alterado para o nome do gênero
+    return render_template("index.html", filmes=res, img=IMG, bg=BG, nome_site=NOME_SITE, busca=True, titulo_busca=f"📌 Gênero: {nome_gen}")
 
 @app.route("/filme/<int:id>")
 def detalhes(id):
@@ -51,7 +71,7 @@ def detalhes(id):
     except: 
         return "Erro", 404
 
-# ✅ ROTA DO ADS.TXT - DEVE FICAR COLADA NA MARGEM ESQUERDA!
+# ✅ ROTA DO ADS.TXT
 @app.route('/ads.txt')
 def ads_txt():
     return "google.com, pub-2866002449649160, DIRECT, f08c47fec0942fa0", 200, {'Content-Type': 'text/plain'}
