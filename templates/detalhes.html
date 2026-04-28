@@ -5,9 +5,6 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>{{ filme.title }} - {{ nome_site }}</title>
 
-<link rel="stylesheet" href="https://cdn.plyr.io/3.7.8/plyr.css" />
-<script src="https://cdn.plyr.io/3.7.8/plyr.polyfilled.js"></script>
-
 {% if mostrar_ads %}
 <script>(function(s){s.dataset.zone='10920011',s.src='https://n6wxm.com/vignette.min.js'})([document.documentElement, document.body].filter(Boolean).pop().appendChild(document.createElement('script')))</script>
 <script>(function(s){s.dataset.zone='10920008',s.src='https://nap5k.com/tag.min.js'})([document.documentElement, document.body].filter(Boolean).pop().appendChild(document.createElement('script')))</script>
@@ -15,79 +12,44 @@
 
 <style>
     * { -webkit-tap-highlight-color: transparent; box-sizing: border-box; }
-    body { margin: 0; background: #000; color: #fff; font-family: 'Segoe UI', Roboto, sans-serif; overflow-x: hidden; }
-    
+    body { margin: 0; background: #000; color: #fff; font-family: sans-serif; overflow-x: hidden; }
     .fundo { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: url('{{ bg }}{{ filme.backdrop_path }}') center/cover; filter: blur(25px) brightness(0.2); z-index: -1; }
+    .container { padding: 15px; max-width: 600px; margin: 0 auto; text-align: center; }
+    .back-btn { background: #e50914; color: #fff; text-decoration: none; font-size: 13px; font-weight: bold; float: left; padding: 8px 24px; border-radius: 50px; }
     
-    .container { padding: 15px; max-width: 800px; margin: 0 auto; text-align: center; }
-    
-    .back-btn { background: #e50914; color: #fff; text-decoration: none; font-size: 13px; font-weight: bold; float: left; padding: 10px 20px; border-radius: 50px; }
-    
-    .capinha { width: 140px; border-radius: 12px; margin: 50px auto 15px; display: block; box-shadow: 0 10px 30px rgba(0,0,0,0.8); border: 1px solid rgba(255,255,255,0.1); }
-    
-    .info-topo { font-size: 14px; color: #ccc; margin-bottom: 12px; }
-    .nota-estrela { color: #ffcc00; font-weight: bold; font-size: 18px; }
-    
-    .tag-genero { background: rgba(229, 9, 20, 0.2); padding: 5px 12px; border-radius: 6px; font-size: 11px; color: #ff4d4d; border: 1px solid rgba(229, 9, 20, 0.4); margin: 3px; display: inline-block; font-weight: bold; }
+    .capinha { width: 130px; border-radius: 10px; margin: 40px auto 10px; display: block; box-shadow: 0 0 20px rgba(0,0,0,0.5); }
+    .info-topo { font-size: 12px; color: #aaa; margin-bottom: 10px; }
+    .nota-estrela { color: #ffcc00; font-weight: bold; font-size: 16px; }
+    .tag-genero { background: rgba(255,204,0,0.1); padding: 3px 8px; border-radius: 4px; font-size: 10px; color: #ffcc00; border: 1px solid rgba(255,204,0,0.3); margin: 2px; display: inline-block; }
 
-    /* Container do Player com Camada de Vidro */
-    .player-wrapper { 
-        position: relative; 
-        margin: 20px 0; 
-        border-radius: 15px; 
-        overflow: hidden; 
-        box-shadow: 0 20px 50px rgba(0,0,0,0.9); 
-        border: 1px solid #222; 
-        background: #000; 
-    }
-    
-    /* A Camada de Vidro (Invisível) */
+    /* Container do Player Clássico */
+    .player-box { width: 100%; aspect-ratio: 16/9; background: #000; border-radius: 12px; margin: 15px 0; overflow: hidden; border: 1px solid #333; position: relative; }
+    video { width: 100%; height: 100%; object-fit: contain; }
+
+    /* Camada de Play Blindada 👇 */
     #camada-vidro {
         position: absolute;
-        top: 0; left: 0;
-        width: 100%; height: 100%;
-        z-index: 100;
+        top: 0; left: 0; width: 100%; height: 100%;
+        display: flex; flex-direction: column;
+        justify-content: center; align-items: center;
+        z-index: 999; background: rgba(0,0,0,0.6);
         cursor: pointer;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        background: rgba(0,0,0,0.1);
     }
+    
+    .balao-clique { background: #e50914; color: #fff; padding: 12px 25px; border-radius: 50px; font-weight: bold; font-size: 14px; box-shadow: 0 5px 15px rgba(229, 9, 20, 0.5); }
 
-    .balao-play {
-        background: #e50914;
-        color: #fff;
-        padding: 12px 24px;
-        border-radius: 50px;
-        font-weight: bold;
-        font-size: 14px;
-        box-shadow: 0 5px 15px rgba(229, 9, 20, 0.4);
-        animation: pulse 1.5s infinite;
-    }
-
-    @keyframes pulse {
-        0% { transform: scale(1); }
-        50% { transform: scale(1.05); }
-        100% { transform: scale(1); }
-    }
-
-    :root { --plyr-color-main: #e50914; }
-
-    .btn-externo { display: block; width: 100%; padding: 16px; background: linear-gradient(45deg, #111, #222); color: #fff; text-decoration: none; border-radius: 12px; font-weight: bold; margin: 20px 0; font-size: 14px; border: 1px solid #333; }
-
-    .aviso-uc { background: rgba(255, 204, 0, 0.1); border: 1px dashed #ffcc00; padding: 12px; border-radius: 12px; margin: 15px 0; font-size: 12px; color: #ffcc00; }
-
-    .rec-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-top: 20px; }
-    .rec-card { text-decoration: none; color: #fff; font-size: 11px; }
-    .rec-card img { width: 100%; border-radius: 10px; margin-bottom: 8px; border: 1px solid #222; }
+    .btn-externo { display: block; width: 100%; padding: 15px; background: #1a1a1a; color: #ccc; text-decoration: none; border-radius: 50px; font-weight: bold; margin: 15px 0; font-size: 12px; border: 1px solid #333; }
+    .rec-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-top: 15px; }
+    .rec-card { text-decoration: none; color: #fff; font-size: 10px; }
+    .rec-card img { width: 100%; border-radius: 8px; margin-bottom: 5px; }
 </style>
 </head>
 <body>
 <div class="fundo"></div>
 <div class="container">
-    <a href="/" class="back-btn">⬅ VOLTAR</a>
+    <a href="/" class="back-btn">⬅</a>
     <img src="{{ img }}{{ filme.poster_path }}" class="capinha">
-    <h1 style="font-size: 26px; margin: 15px 0 5px; font-weight: 900;">{{ filme.title }}</h1>
+    <h1 style="font-size: 22px; margin: 10px 0 5px;">{{ filme.title }}</h1>
     
     <div class="info-topo">
         <span class="nota-estrela">★ {{ nota }}</span> | {{ duracao }} | {{ filme.release_date[:4] }}
@@ -99,34 +61,34 @@
         {% endfor %}
     </div>
 
-    <div class="aviso-uc">
-        🚀 <b>DICA:</b> No Chrome pode travar a imagem. Use o <b>UC Browser</b> ou <b>VLC</b> para fluidez total!
+    <div class="player-box">
+        {% if play_link %}
+            <div id="camada-vidro" onclick="liberarPlayer()">
+                <div class="balao-clique">ASSISTIR AGORA 🍿</div>
+            </div>
+            
+            <video id="player" controls playsinline poster="{{ bg }}{{ filme.backdrop_path }}" preload="metadata">
+                <source src="{{ play_link }}" type="video/mp4">
+            </video>
+        {% else %}
+            <div style="padding: 40px; color:#666;">🎬 FILME EM MANUTENÇÃO</div>
+        {% endif %}
     </div>
 
-    <div class="player-wrapper">
-        <div id="camada-vidro">
-            <div class="balao-play">CLIQUE PARA ASSISTIR 🍿</div>
-        </div>
+    <a href="{{ play_link }}" target="_blank" class="btn-externo">📲 Abrir no VLC / MX Player</a>
 
-        <video id="player" playsinline controls data-poster="{{ bg }}{{ filme.backdrop_path }}" preload="auto">
-            <source src="{{ play_link }}" type="video/mp4" />
-        </video>
+    <div style="background: rgba(0,0,0,0.6); padding: 15px; border-radius: 15px; text-align: justify; font-size: 13px; line-height: 1.6; border: 1px solid #333; margin-top: 15px;">
+        <strong style="color:#ffcc00;">SINOPSE:</strong><br>
+        {{ filme.overview or "Sinopse não disponível." }}
     </div>
 
-    <a href="{{ play_link }}" target="_blank" class="btn-externo">📲 ABRIR NO PLAYER EXTERNO (VLC/MX)</a>
-
-    <div style="background: rgba(0,0,0,0.7); padding: 20px; border-radius: 15px; text-align: justify; font-size: 14px; line-height: 1.6; border: 1px solid #222;">
-        <strong style="color:#e50914;">SINOPSE:</strong><br>
-        <span style="color: #bbb;">{{ filme.overview or "Sinopse não disponível." }}</span>
-    </div>
-
-    <div style="margin-top: 40px; text-align: left;">
-        <h3 style="font-size: 18px; color: #fff; border-left: 4px solid #e50914; padding-left: 10px;">🎬 VOCÊ PODE GOSTAR:</h3>
+    <div style="margin-top: 30px;">
+        <h3 style="font-size: 14px; color: #ffcc00; text-align: left;">🎬 VOCÊ PODE GOSTAR:</h3>
         <div class="rec-grid">
             {% for rec in recomendados %}
                 <a href="/filme/{{ rec.id }}" class="rec-card">
                     <img src="{{ img }}{{ rec.poster_path }}" alt="{{ rec.title }}">
-                    <p style="text-align: center;">{{ rec.title[:15] }}...</p>
+                    <p>{{ rec.title[:12] }}...</p>
                 </a>
             {% endfor %}
         </div>
@@ -134,35 +96,19 @@
 </div>
 
 <script>
-    // Inicializa o Player
-    const player = new Plyr('#player', {
-        controls: ['play-large', 'play', 'progress', 'current-time', 'mute', 'volume', 'fullscreen'],
-        tooltips: { controls: true, seek: true }
-    });
-
-    // LÓGICA DA CAMADA DE VIDRO (ANTI-AGRESSIVA)
-    const camadaVidro = document.getElementById('camada-vidro');
-
-    camadaVidro.addEventListener('click', () => {
-        // 1. Abre a propaganda em nova aba (apenas UMA vez)
+    function liberarPlayer() {
+        const video = document.getElementById('player');
+        const camada = document.getElementById('camada-vidro');
+        
+        // 🚀 Dispara a propaganda no primeiro clique
         {% if mostrar_ads %}
         (function(s){s.dataset.zone='10920000',s.src='https://al5sm.com/tag.min.js'})([document.documentElement, document.body].filter(Boolean).pop().appendChild(document.createElement('script')));
         {% endif %}
 
-        // 2. Dá o Play no Vídeo
-        player.play();
-
-        // 3. REMOVE A CAMADA FISICAMENTE (O utilizador agora interage direto com o Play)
-        camadaVidro.remove();
-        console.log("Camada removida. Utilizador livre de anúncios no player.");
-    });
-
-    // Força o carregamento prioritário
-    window.addEventListener('DOMContentLoaded', () => {
-        const v = document.querySelector('video');
-        v.setAttribute('preload', 'auto');
-        v.setAttribute('autobuffer', 'true');
-    });
+        // Remove a camada e dá o play
+        camada.style.display = 'none';
+        video.play();
+    }
 </script>
 </body>
 </html>
