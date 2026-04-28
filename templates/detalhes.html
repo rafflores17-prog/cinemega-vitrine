@@ -5,6 +5,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>{{ filme.title }} - {{ nome_site }}</title>
 
+<script src="https://cdn.jsdelivr.net/npm/dplayer/dist/DPlayer.min.js"></script>
+
 {% if mostrar_ads %}
 <script>(function(s){s.dataset.zone='10920011',s.src='https://n6wxm.com/vignette.min.js'})([document.documentElement, document.body].filter(Boolean).pop().appendChild(document.createElement('script')))</script>
 <script>(function(s){s.dataset.zone='10920008',s.src='https://nap5k.com/tag.min.js'})([document.documentElement, document.body].filter(Boolean).pop().appendChild(document.createElement('script')))</script>
@@ -22,23 +24,23 @@
     .nota-estrela { color: #ffcc00; font-weight: bold; font-size: 16px; }
     .tag-genero { background: rgba(255,204,0,0.1); padding: 3px 8px; border-radius: 4px; font-size: 10px; color: #ffcc00; border: 1px solid rgba(255,204,0,0.3); margin: 2px; display: inline-block; }
 
-    /* Container do Player Clássico */
-    .player-box { width: 100%; aspect-ratio: 16/9; background: #000; border-radius: 12px; margin: 15px 0; overflow: hidden; border: 1px solid #333; position: relative; }
-    video { width: 100%; height: 100%; object-fit: contain; }
+    /* 🎛️ BOTÕES DOS PLAYERS */
+    .botoes-servidores { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; margin: 15px 0; }
+    .btn-serv { flex: 1; min-width: 120px; padding: 12px; background: #222; color: #ccc; border: 1px solid #444; border-radius: 8px; font-size: 12px; font-weight: bold; cursor: pointer; transition: 0.3s; }
+    .btn-serv.ativo { background: #e50914; color: #fff; border-color: #ff4d4d; box-shadow: 0 0 10px rgba(229, 9, 20, 0.5); }
+    .btn-serv:hover { background: #333; }
 
-    /* Camada de Play Blindada 👇 */
-    #camada-vidro {
-        position: absolute;
-        top: 0; left: 0; width: 100%; height: 100%;
-        display: flex; flex-direction: column;
-        justify-content: center; align-items: center;
-        z-index: 999; background: rgba(0,0,0,0.6);
-        cursor: pointer;
-    }
-    
+    /* Area do Player */
+    .player-box { width: 100%; aspect-ratio: 16/9; background: #000; border-radius: 12px; margin: 10px 0; overflow: hidden; border: 1px solid #333; position: relative; }
+    video, #dplayer-container { width: 100%; height: 100%; object-fit: contain; }
+
+    /* Camada de Vidro (Ads) */
+    #camada-vidro { position: absolute; top: 0; left: 0; width: 100%; height: 100%; display: flex; flex-direction: column; justify-content: center; align-items: center; z-index: 999; background: rgba(0,0,0,0.6); cursor: pointer; }
     .balao-clique { background: #e50914; color: #fff; padding: 12px 25px; border-radius: 50px; font-weight: bold; font-size: 14px; box-shadow: 0 5px 15px rgba(229, 9, 20, 0.5); }
 
-    .btn-externo { display: block; width: 100%; padding: 15px; background: #1a1a1a; color: #ccc; text-decoration: none; border-radius: 50px; font-weight: bold; margin: 15px 0; font-size: 12px; border: 1px solid #333; }
+    .btn-externo { display: block; width: 100%; padding: 15px; background: #1a1a1a; color: #ccc; text-decoration: none; border-radius: 50px; font-weight: bold; margin: 15px 0; font-size: 12px; border: 1px solid #333; cursor: pointer; transition: 0.3s; }
+    .btn-externo:hover { background: #333; color: #fff; }
+
     .rec-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-top: 15px; }
     .rec-card { text-decoration: none; color: #fff; font-size: 10px; }
     .rec-card img { width: 100%; border-radius: 8px; margin-bottom: 5px; }
@@ -61,13 +63,20 @@
         {% endfor %}
     </div>
 
-    <div class="player-box">
+    {% if play_link %}
+    <div class="botoes-servidores">
+        <button class="btn-serv ativo" id="btn-nativo" onclick="mudarPlayer('nativo')">▶ Player Principal</button>
+        <button class="btn-serv" id="btn-turbo" onclick="mudarPlayer('turbo')">⚡ Player Turbo</button>
+    </div>
+    {% endif %}
+
+    <div class="player-box" id="caixa-video">
         {% if play_link %}
-            <div id="camada-vidro" onclick="liberarPlayer()">
+            <div id="camada-vidro" onclick="liberarEPlay()">
                 <div class="balao-clique">ASSISTIR AGORA 🍿</div>
             </div>
             
-            <video id="player" controls playsinline poster="{{ bg }}{{ filme.backdrop_path }}" preload="metadata">
+            <video id="player-nativo" controls playsinline poster="{{ bg }}{{ filme.backdrop_path }}" preload="metadata">
                 <source src="{{ play_link }}" type="video/mp4">
             </video>
         {% else %}
@@ -75,7 +84,11 @@
         {% endif %}
     </div>
 
-    <a href="{{ play_link }}" target="_blank" class="btn-externo">📲 Abrir no VLC / MX Player</a>
+    {% if play_link %}
+    <button onclick="abrirNoCelular('{{ play_link }}')" class="btn-externo">
+        📲 Abrir no Player Externo (VLC / MX)
+    </button>
+    {% endif %}
 
     <div style="background: rgba(0,0,0,0.6); padding: 15px; border-radius: 15px; text-align: justify; font-size: 13px; line-height: 1.6; border: 1px solid #333; margin-top: 15px;">
         <strong style="color:#ffcc00;">SINOPSE:</strong><br>
@@ -96,18 +109,77 @@
 </div>
 
 <script>
-    function liberarPlayer() {
-        const video = document.getElementById('player');
+    const linkFilme = "{{ play_link }}";
+    const capaFilme = "{{ bg }}{{ filme.backdrop_path }}";
+    let dplayerInstancia = null;
+
+    // 1. Função da Camada de Vidro (Ads + Play Nativo)
+    function liberarEPlay() {
         const camada = document.getElementById('camada-vidro');
         
-        // 🚀 Dispara a propaganda no primeiro clique
         {% if mostrar_ads %}
         (function(s){s.dataset.zone='10920000',s.src='https://al5sm.com/tag.min.js'})([document.documentElement, document.body].filter(Boolean).pop().appendChild(document.createElement('script')));
         {% endif %}
 
-        // Remove a camada e dá o play
         camada.style.display = 'none';
-        video.play();
+        
+        const nativo = document.getElementById('player-nativo');
+        if(nativo) nativo.play();
+    }
+
+    // 2. Função para Trocar de Player (Nativo <-> Turbo Chinês)
+    function mudarPlayer(tipo) {
+        document.getElementById('btn-nativo').classList.remove('ativo');
+        document.getElementById('btn-turbo').classList.remove('ativo');
+        
+        const caixa = document.getElementById('caixa-video');
+        
+        // Remove a camada de anúncio se trocar, para não atrapalhar
+        const camada = document.getElementById('camada-vidro');
+        if(camada) camada.style.display = 'none';
+
+        if (tipo === 'nativo') {
+            document.getElementById('btn-nativo').classList.add('ativo');
+            if (dplayerInstancia) { dplayerInstancia.destroy(); dplayerInstancia = null; }
+            
+            caixa.innerHTML = `
+                <video id="player-nativo" controls playsinline poster="${capaFilme}" preload="metadata" autoplay>
+                    <source src="${linkFilme}" type="video/mp4">
+                </video>
+            `;
+        } 
+        else if (tipo === 'turbo') {
+            document.getElementById('btn-turbo').classList.add('ativo');
+            
+            caixa.innerHTML = '<div id="dplayer-container"></div>';
+            
+            dplayerInstancia = new DPlayer({
+                container: document.getElementById('dplayer-container'),
+                autoplay: true,
+                theme: '#e50914',
+                video: {
+                    url: linkFilme,
+                    pic: capaFilme,
+                    type: 'auto'
+                }
+            });
+        }
+    }
+
+    // 3. Feitiço Intent para forçar o Android a abrir apps externos
+    function abrirNoCelular(url) {
+        if (!url || !url.startsWith('http')) return;
+
+        let scheme = url.startsWith('https') ? 'https' : 'http';
+        let urlLimpa = url.replace('https://', '').replace('http://', '');
+        
+        let intentURI = `intent://${urlLimpa}#Intent;action=android.intent.action.VIEW;scheme=${scheme};type=video/mp4;end`;
+        
+        window.location.href = intentURI;
+
+        setTimeout(() => {
+            window.open(url, '_blank');
+        }, 2000);
     }
 </script>
 </body>
