@@ -1,24 +1,41 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
+
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+<meta name="viewport"
+content="width=device-width,
+initial-scale=1.0,
+maximum-scale=1.0,
+user-scalable=no">
 
 <title>{{ filme.title }} - {{ nome_site }}</title>
 
-<!-- PLAYER MODERNO E COMPATÍVEL -->
-<link href="https://vjs.zencdn.net/8.10.0/video-js.css" rel="stylesheet">
-<script src="https://vjs.zencdn.net/8.10.0/video.min.js"></script>
+<link rel="stylesheet"
+href="https://cdn.plyr.io/3.7.8/plyr.css" />
+
+<script
+src="https://cdn.plyr.io/3.7.8/plyr.polyfilled.js">
+</script>
+
+<!-- SUPORTE IPTV -->
+
+<script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
 
 {% if mostrar_ads %}
-<!-- ANÚNCIO 1 - AO ENTRAR NA PÁGINA -->
+
+<!-- ANÚNCIO 1 -->
+
 <script>
 (function(s){
 s.dataset.zone='10920011',
 s.src='https://n6wxm.com/vignette.min.js'
 })
-(document.body.appendChild(document.createElement('script')));
+(document.body.appendChild(
+document.createElement('script')));
 </script>
+
 {% endif %}
 
 <style>
@@ -36,15 +53,20 @@ font-family: 'Segoe UI', Roboto, sans-serif;
 overflow-x: hidden;
 }
 
-/* Fundo */
+/* FUNDO */
+
 .fundo {
 position: fixed;
 top: 0;
 left: 0;
 width: 100%;
 height: 100%;
-background: url('{{ bg }}{{ filme.backdrop_path }}') center/cover;
-filter: blur(25px) brightness(0.2);
+background:
+url('{{ bg }}{{ filme.backdrop_path }}')
+center/cover;
+filter:
+blur(25px)
+brightness(0.2);
 z-index: -1;
 }
 
@@ -71,7 +93,9 @@ width: 140px;
 border-radius: 12px;
 margin: 50px auto 15px;
 display: block;
-box-shadow: 0 10px 30px rgba(0,0,0,0.8);
+box-shadow:
+0 10px 30px
+rgba(0,0,0,0.8);
 }
 
 .info-topo {
@@ -87,7 +111,8 @@ font-size: 18px;
 }
 
 .tag-genero {
-background: rgba(229,9,20,0.2);
+background:
+rgba(229,9,20,0.2);
 padding: 5px 12px;
 border-radius: 6px;
 font-size: 11px;
@@ -98,26 +123,29 @@ font-weight: bold;
 }
 
 /* PLAYER */
+
 .player-wrapper {
 margin: 20px 0;
 border-radius: 15px;
 overflow: hidden;
-box-shadow: 0 20px 50px rgba(0,0,0,0.9);
+box-shadow:
+0 20px 50px
+rgba(0,0,0,0.9);
 border: 1px solid #222;
 background: #000;
 }
 
-.video-js {
-width: 100%;
-height: auto;
-}
+/* BOTÃO */
 
-/* BOTÃO EXTERNO */
 .btn-externo {
 display: block;
 width: 100%;
 padding: 16px;
-background: linear-gradient(45deg,#222,#333);
+background:
+linear-gradient(
+45deg,
+#222,
+#333);
 color: #fff;
 text-decoration: none;
 border-radius: 12px;
@@ -127,10 +155,35 @@ font-size: 14px;
 border: 1px solid #444;
 }
 
+/* RECOMENDADOS */
+
+.rec-grid {
+display: grid;
+grid-template-columns:
+repeat(3, 1fr);
+gap: 12px;
+margin-top: 20px;
+}
+
+.rec-card {
+text-decoration: none;
+color: #fff;
+font-size: 11px;
+}
+
+.rec-card img {
+width: 100%;
+border-radius: 10px;
+margin-bottom: 8px;
+}
+
 /* AVISO */
+
 .aviso-uc {
-background: rgba(255,204,0,0.1);
-border: 1px dashed #ffcc00;
+background:
+rgba(255,204,0,0.1);
+border:
+1px dashed #ffcc00;
 padding: 12px;
 border-radius: 12px;
 margin: 15px 0;
@@ -148,22 +201,35 @@ color: #ffcc00;
 <div class="container">
 
 <a href="/" class="back-btn">
+
 ⬅ VOLTAR
+
 </a>
 
-<img src="{{ img }}{{ filme.poster_path }}" class="capinha">
+<img
+src="{{ img }}{{ filme.poster_path }}"
+class="capinha">
 
-<h1 style="font-size:26px;margin:15px 0 5px;font-weight:900;">
+<h1
+style="
+font-size: 26px;
+margin: 15px 0 5px;
+font-weight: 900;">
+
 {{ filme.title }}
+
 </h1>
 
 <div class="info-topo">
 
 <span class="nota-estrela">
+
 ★ {{ nota }}
+
 </span>
 
 | {{ duracao }} |
+
 {{ filme.release_date[:4] }}
 
 </div>
@@ -171,9 +237,13 @@ color: #ffcc00;
 <div>
 
 {% for g in generos %}
+
 <span class="tag-genero">
+
 {{ g }}
+
 </span>
+
 {% endfor %}
 
 </div>
@@ -193,31 +263,34 @@ Eles possuem codecs extras para este servidor!
 
 <video
 id="player"
-class="video-js vjs-default-skin"
+playsinline
+muted
 controls
 preload="auto"
-playsinline
-poster="{{ bg }}{{ filme.backdrop_path }}"
-data-setup='{}'
->
+crossorigin="anonymous"
+data-poster="{{ bg }}{{ filme.backdrop_path }}">
 
-<!-- VIDEO PRINCIPAL -->
+<source
+src="{{ play_link }}"
+type="video/mp4">
 
-<source src="{{ play_link }}" type="video/mp4">
+<source
+src="{{ play_link }}"
+type="application/x-mpegURL">
 
-<!-- FALLBACK -->
-
-<source src="{{ play_link }}" type="application/x-mpegURL">
-
-<!-- LEGENDA -->
+<source
+src="{{ play_link }}"
+type="video/webm">
 
 {% if legenda_link %}
+
 <track
 kind="subtitles"
 src="{{ legenda_link }}"
 srclang="pt"
 label="Português"
 default>
+
 {% endif %}
 
 </video>
@@ -230,16 +303,35 @@ default>
 href="{{ play_link }}"
 target="_blank"
 class="btn-externo"
-onclick="abrirAdExterno()"
->
+onclick="abrirAdExterno()">
 
 📲 ABRIR NO PLAYER EXTERNO (VLC/MX)
 
 </a>
 
+<!-- TRAILER -->
+
+{% if trailer %}
+
+<div class="player-wrapper">
+
+<iframe
+width="100%"
+height="220"
+src="https://www.youtube.com/embed/{{ trailer }}"
+frameborder="0"
+allowfullscreen>
+
+</iframe>
+
+</div>
+
+{% endif %}
+
 <!-- SINOPSE -->
 
-<div style="
+<div
+style="
 background: rgba(0,0,0,0.7);
 padding: 20px;
 border-radius: 15px;
@@ -247,21 +339,72 @@ text-align: justify;
 font-size: 14px;
 line-height: 1.6;
 border: 1px solid #222;
-margin-top: 20px;
-">
+margin-top: 20px;">
 
-<strong style="color:#e50914;font-size:16px;">
+<strong
+style="
+color:#e50914;
+font-size: 16px;">
+
 SINOPSE:
+
 </strong>
 
 <br>
 
-<span style="color:#bbb;">
+<span
+style="color:#bbb;">
 
-{{ filme.overview or
+{{ filme.overview
+or
 "Sinopse não disponível para este título." }}
 
 </span>
+
+</div>
+
+<!-- RECOMENDADOS -->
+
+<div
+style="
+margin-top: 40px;
+text-align: left;">
+
+<h3
+style="
+font-size: 18px;
+color: #fff;
+margin-bottom: 15px;
+border-left: 4px solid #e50914;
+padding-left: 10px;">
+
+🍿 VOCÊ PODE GOSTAR:
+
+</h3>
+
+<div class="rec-grid">
+
+{% for rec in recomendados %}
+
+<a
+href="/filme/{{ rec.id }}"
+class="rec-card">
+
+<img
+src="{{ img }}{{ rec.poster_path }}">
+
+<p
+style="text-align:center;">
+
+{{ rec.title[:15] }}...
+
+</p>
+
+</a>
+
+{% endfor %}
+
+</div>
 
 </div>
 
@@ -271,56 +414,84 @@ SINOPSE:
 
 /* PLAYER */
 
-var player = videojs('player', {
+const player =
+new Plyr('#player');
 
-controls: true,
-autoplay: false,
-preload: 'auto',
+/* SUPORTE IPTV */
 
-fluid: true,
+const video =
+document.getElementById('player');
 
-playbackRates: [
-0.5,
-1,
-1.5,
-2
-]
+if (Hls.isSupported()) {
+
+const hls =
+new Hls({
+
+maxBufferLength: 30,
+enableWorker: true
 
 });
 
-/* ANÚNCIO 2 - APÓS 15 SEGUNDOS */
+hls.loadSource(
+"{{ play_link }}"
+);
+
+hls.attachMedia(video);
+
+}
+
+/* POPUP AO DAR PLAY */
+
+let anuncioDisparado = false;
+
+video.addEventListener(
+"play",
+function(){
+
+if(!anuncioDisparado){
+
+anuncioDisparado = true;
+
+(function(s){
+
+s.dataset.zone='10920000',
+s.src='https://al5sm.com/tag.min.js'
+
+})
+(document.body.appendChild(
+document.createElement('script')));
+
+}
+
+});
+
+/* ANÚNCIO APÓS 15s */
 
 setTimeout(function(){
 
-{% if mostrar_ads %}
-
 (function(s){
+
 s.dataset.zone='10920008',
 s.src='https://nap5k.com/tag.min.js'
+
 })
 (document.body.appendChild(
-document.createElement('script')
-));
-
-{% endif %}
+document.createElement('script')));
 
 },15000);
 
-/* ANÚNCIO 3 - BOTÃO EXTERNO */
+/* BOTÃO EXTERNO */
 
 function abrirAdExterno(){
 
-{% if mostrar_ads %}
-
 (function(s){
+
 s.dataset.zone='10920000',
 s.src='https://al5sm.com/tag.min.js'
+
 })
 (document.body.appendChild(
-document.createElement('script')
-));
-
-{% endif %}
+document.createElement('script')));
 
 }
 
