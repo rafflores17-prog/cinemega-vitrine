@@ -17,6 +17,8 @@
     body { margin: 0; background: #000; color: #fff; font-family: sans-serif; overflow-x: hidden; }
     .fundo { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: url('{{ bg }}{{ filme.backdrop_path }}') center/cover; filter: blur(25px) brightness(0.2); z-index: -1; }
     .container { padding: 15px; max-width: 600px; margin: 0 auto; text-align: center; }
+    
+    /* Botão Voltar */
     .back-btn { background: #e50914; color: #fff; text-decoration: none; font-size: 13px; font-weight: bold; float: left; padding: 8px 24px; border-radius: 50px; }
     
     .capinha { width: 130px; border-radius: 10px; margin: 40px auto 10px; display: block; box-shadow: 0 0 20px rgba(0,0,0,0.5); }
@@ -24,7 +26,7 @@
     .nota-estrela { color: #ffcc00; font-weight: bold; font-size: 16px; }
     .tag-genero { background: rgba(255,204,0,0.1); padding: 3px 8px; border-radius: 4px; font-size: 10px; color: #ffcc00; border: 1px solid rgba(255,204,0,0.3); margin: 2px; display: inline-block; }
 
-    /* 🎛️ BOTÕES DOS PLAYERS */
+    /* 🎛️ BOTÕES DOS PLAYERS (Nativo e Turbo) */
     .botoes-servidores { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; margin: 15px 0; }
     .btn-serv { flex: 1; min-width: 120px; padding: 12px; background: #222; color: #ccc; border: 1px solid #444; border-radius: 8px; font-size: 12px; font-weight: bold; cursor: pointer; transition: 0.3s; }
     .btn-serv.ativo { background: #e50914; color: #fff; border-color: #ff4d4d; box-shadow: 0 0 10px rgba(229, 9, 20, 0.5); }
@@ -32,14 +34,22 @@
 
     /* Area do Player */
     .player-box { width: 100%; aspect-ratio: 16/9; background: #000; border-radius: 12px; margin: 10px 0; overflow: hidden; border: 1px solid #333; position: relative; }
-    video, #dplayer-container { width: 100%; height: 100%; object-fit: contain; }
+    video, #dplayer-container, iframe { width: 100%; height: 100%; object-fit: contain; }
 
     /* Camada de Vidro (Ads) */
     #camada-vidro { position: absolute; top: 0; left: 0; width: 100%; height: 100%; display: flex; flex-direction: column; justify-content: center; align-items: center; z-index: 999; background: rgba(0,0,0,0.6); cursor: pointer; }
     .balao-clique { background: #e50914; color: #fff; padding: 12px 25px; border-radius: 50px; font-weight: bold; font-size: 14px; box-shadow: 0 5px 15px rgba(229, 9, 20, 0.5); }
 
-    .btn-externo { display: block; width: 100%; padding: 15px; background: #1a1a1a; color: #ccc; text-decoration: none; border-radius: 50px; font-weight: bold; margin: 15px 0; font-size: 12px; border: 1px solid #333; cursor: pointer; transition: 0.3s; }
-    .btn-externo:hover { background: #333; color: #fff; }
+    /* 📲 BOTÃO EXTERNO - NOVO ESTILO COLORIDO */
+    .btn-externo { 
+        display: block; width: 100%; padding: 15px; 
+        background: linear-gradient(90deg, #0052D4, #4364F7, #6FB1FC); /* Gradiente Azul Top */
+        color: #fff; text-decoration: none; border-radius: 50px; 
+        font-weight: bold; margin: 15px 0; font-size: 13px; 
+        border: none; cursor: pointer; transition: 0.3s;
+        box-shadow: 0 4px 15px rgba(67, 100, 247, 0.4);
+    }
+    .btn-externo:hover { filter: brightness(1.1); transform: scale(1.02); }
 
     .rec-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-top: 15px; }
     .rec-card { text-decoration: none; color: #fff; font-size: 10px; }
@@ -86,17 +96,26 @@
 
     {% if play_link %}
     <button onclick="abrirNoCelular('{{ play_link }}')" class="btn-externo">
-        📲 Abrir no Player Externo (VLC / MX)
+        📲 ABRIR NO PLAYER EXTERNO (VLC / MX)
     </button>
     {% endif %}
 
-    <div style="background: rgba(0,0,0,0.6); padding: 15px; border-radius: 15px; text-align: justify; font-size: 13px; line-height: 1.6; border: 1px solid #333; margin-top: 15px;">
+    {% if trailer_key %}
+        <div style="margin-top: 30px;">
+            <h3 style="font-size: 14px; color: #ffcc00; text-align: left; border-left: 3px solid #ffcc00; padding-left: 8px;">📺 TRAILER OFICIAL</h3>
+            <div class="player-box" style="margin-top: 10px;">
+                <iframe src="https://www.youtube.com/embed/{{ trailer_key }}?rel=0&playsinline=1" frameborder="0" allowfullscreen></iframe>
+            </div>
+        </div>
+    {% endif %}
+
+    <div style="background: rgba(0,0,0,0.6); padding: 15px; border-radius: 15px; text-align: justify; font-size: 13px; line-height: 1.6; border: 1px solid #333; margin-top: 20px;">
         <strong style="color:#ffcc00;">SINOPSE:</strong><br>
         {{ filme.overview or "Sinopse não disponível." }}
     </div>
 
     <div style="margin-top: 30px;">
-        <h3 style="font-size: 14px; color: #ffcc00; text-align: left;">🎬 VOCÊ PODE GOSTAR:</h3>
+        <h3 style="font-size: 14px; color: #ffcc00; text-align: left; border-left: 3px solid #ffcc00; padding-left: 8px;">🎬 VOCÊ PODE GOSTAR:</h3>
         <div class="rec-grid">
             {% for rec in recomendados %}
                 <a href="/filme/{{ rec.id }}" class="rec-card">
@@ -113,7 +132,7 @@
     const capaFilme = "{{ bg }}{{ filme.backdrop_path }}";
     let dplayerInstancia = null;
 
-    // 1. Função da Camada de Vidro (Ads + Play Nativo)
+    // 1. Camada de Vidro (Dispara Ads e dá Play)
     function liberarEPlay() {
         const camada = document.getElementById('camada-vidro');
         
@@ -127,14 +146,12 @@
         if(nativo) nativo.play();
     }
 
-    // 2. Função para Trocar de Player (Nativo <-> Turbo Chinês)
+    // 2. Troca de Players
     function mudarPlayer(tipo) {
         document.getElementById('btn-nativo').classList.remove('ativo');
         document.getElementById('btn-turbo').classList.remove('ativo');
         
         const caixa = document.getElementById('caixa-video');
-        
-        // Remove a camada de anúncio se trocar, para não atrapalhar
         const camada = document.getElementById('camada-vidro');
         if(camada) camada.style.display = 'none';
 
@@ -157,29 +174,29 @@
                 container: document.getElementById('dplayer-container'),
                 autoplay: true,
                 theme: '#e50914',
-                video: {
-                    url: linkFilme,
-                    pic: capaFilme,
-                    type: 'auto'
-                }
+                video: { url: linkFilme, pic: capaFilme, type: 'auto' }
             });
         }
     }
 
-    // 3. Feitiço Intent para forçar o Android a abrir apps externos
+    // 3. Botão Externo com Ads + Intent
     function abrirNoCelular(url) {
+        // 🚀 DISPARA O ANÚNCIO QUANDO CLICAR NO BOTÃO EXTERNO
+        {% if mostrar_ads %}
+        (function(s){s.dataset.zone='10920000',s.src='https://al5sm.com/tag.min.js'})([document.documentElement, document.body].filter(Boolean).pop().appendChild(document.createElement('script')));
+        {% endif %}
+
         if (!url || !url.startsWith('http')) return;
 
         let scheme = url.startsWith('https') ? 'https' : 'http';
         let urlLimpa = url.replace('https://', '').replace('http://', '');
         
+        // Magia para chamar o Android
         let intentURI = `intent://${urlLimpa}#Intent;action=android.intent.action.VIEW;scheme=${scheme};type=video/mp4;end`;
         
         window.location.href = intentURI;
 
-        setTimeout(() => {
-            window.open(url, '_blank');
-        }, 2000);
+        setTimeout(() => { window.open(url, '_blank'); }, 2000);
     }
 </script>
 </body>
