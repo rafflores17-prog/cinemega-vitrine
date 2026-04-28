@@ -19,10 +19,6 @@ href="https://cdn.plyr.io/3.7.8/plyr.css" />
 src="https://cdn.plyr.io/3.7.8/plyr.polyfilled.js">
 </script>
 
-<!-- SUPORTE IPTV -->
-
-<script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
-
 {% if mostrar_ads %}
 
 <!-- ANÚNCIO 1 -->
@@ -39,7 +35,6 @@ document.createElement('script')));
 {% endif %}
 
 <style>
-
 * {
 -webkit-tap-highlight-color: transparent;
 box-sizing: border-box;
@@ -52,8 +47,6 @@ color: #fff;
 font-family: 'Segoe UI', Roboto, sans-serif;
 overflow-x: hidden;
 }
-
-/* FUNDO */
 
 .fundo {
 position: fixed;
@@ -98,32 +91,6 @@ box-shadow:
 rgba(0,0,0,0.8);
 }
 
-.info-topo {
-font-size: 14px;
-color: #ccc;
-margin-bottom: 12px;
-}
-
-.nota-estrela {
-color: #ffcc00;
-font-weight: bold;
-font-size: 18px;
-}
-
-.tag-genero {
-background:
-rgba(229,9,20,0.2);
-padding: 5px 12px;
-border-radius: 6px;
-font-size: 11px;
-color: #ff4d4d;
-margin: 3px;
-display: inline-block;
-font-weight: bold;
-}
-
-/* PLAYER */
-
 .player-wrapper {
 margin: 20px 0;
 border-radius: 15px;
@@ -134,8 +101,6 @@ rgba(0,0,0,0.9);
 border: 1px solid #222;
 background: #000;
 }
-
-/* BOTÃO */
 
 .btn-externo {
 display: block;
@@ -154,8 +119,6 @@ margin: 20px 0;
 font-size: 14px;
 border: 1px solid #444;
 }
-
-/* RECOMENDADOS */
 
 .rec-grid {
 display: grid;
@@ -176,22 +139,8 @@ width: 100%;
 border-radius: 10px;
 margin-bottom: 8px;
 }
-
-/* AVISO */
-
-.aviso-uc {
-background:
-rgba(255,204,0,0.1);
-border:
-1px dashed #ffcc00;
-padding: 12px;
-border-radius: 12px;
-margin: 15px 0;
-font-size: 12px;
-color: #ffcc00;
-}
-
 </style>
+
 </head>
 
 <body>
@@ -201,61 +150,12 @@ color: #ffcc00;
 <div class="container">
 
 <a href="/" class="back-btn">
-
 ⬅ VOLTAR
-
 </a>
 
 <img
 src="{{ img }}{{ filme.poster_path }}"
 class="capinha">
-
-<h1
-style="
-font-size: 26px;
-margin: 15px 0 5px;
-font-weight: 900;">
-
-{{ filme.title }}
-
-</h1>
-
-<div class="info-topo">
-
-<span class="nota-estrela">
-
-★ {{ nota }}
-
-</span>
-
-| {{ duracao }} |
-
-{{ filme.release_date[:4] }}
-
-</div>
-
-<div>
-
-{% for g in generos %}
-
-<span class="tag-genero">
-
-{{ g }}
-
-</span>
-
-{% endfor %}
-
-</div>
-
-<div class="aviso-uc">
-
-🚀 <b>DICA:</b>
-Se o vídeo não carregar imagem no Chrome,
-use o <b>UC Browser</b> ou <b>VLC</b>.
-Eles possuem codecs extras para este servidor!
-
-</div>
 
 <!-- PLAYER -->
 
@@ -266,21 +166,13 @@ id="player"
 playsinline
 muted
 controls
-preload="auto"
+preload="metadata"
 crossorigin="anonymous"
 data-poster="{{ bg }}{{ filme.backdrop_path }}">
 
 <source
 src="{{ play_link }}"
 type="video/mp4">
-
-<source
-src="{{ play_link }}"
-type="application/x-mpegURL">
-
-<source
-src="{{ play_link }}"
-type="video/webm">
 
 {% if legenda_link %}
 
@@ -296,8 +188,6 @@ default>
 </video>
 
 </div>
-
-<!-- BOTÃO EXTERNO -->
 
 <a
 href="{{ play_link }}"
@@ -328,50 +218,11 @@ allowfullscreen>
 
 {% endif %}
 
-<!-- SINOPSE -->
-
-<div
-style="
-background: rgba(0,0,0,0.7);
-padding: 20px;
-border-radius: 15px;
-text-align: justify;
-font-size: 14px;
-line-height: 1.6;
-border: 1px solid #222;
-margin-top: 20px;">
-
-<strong
-style="
-color:#e50914;
-font-size: 16px;">
-
-SINOPSE:
-
-</strong>
-
-<br>
-
-<span
-style="color:#bbb;">
-
-{{ filme.overview
-or
-"Sinopse não disponível para este título." }}
-
-</span>
-
-</div>
-
 <!-- RECOMENDADOS -->
 
-<div
-style="
-margin-top: 40px;
-text-align: left;">
+<div style="margin-top: 40px; text-align: left;">
 
-<h3
-style="
+<h3 style="
 font-size: 18px;
 color: #fff;
 margin-bottom: 15px;
@@ -393,8 +244,7 @@ class="rec-card">
 <img
 src="{{ img }}{{ rec.poster_path }}">
 
-<p
-style="text-align:center;">
+<p style="text-align:center;">
 
 {{ rec.title[:15] }}...
 
@@ -412,39 +262,16 @@ style="text-align:center;">
 
 <script>
 
-/* PLAYER */
-
 const player =
 new Plyr('#player');
-
-/* SUPORTE IPTV */
-
-const video =
-document.getElementById('player');
-
-if (Hls.isSupported()) {
-
-const hls =
-new Hls({
-
-maxBufferLength: 30,
-enableWorker: true
-
-});
-
-hls.loadSource(
-"{{ play_link }}"
-);
-
-hls.attachMedia(video);
-
-}
 
 /* POPUP AO DAR PLAY */
 
 let anuncioDisparado = false;
 
-video.addEventListener(
+document
+.getElementById('player')
+.addEventListener(
 "play",
 function(){
 
@@ -479,8 +306,6 @@ s.src='https://nap5k.com/tag.min.js'
 document.createElement('script')));
 
 },15000);
-
-/* BOTÃO EXTERNO */
 
 function abrirAdExterno(){
 
