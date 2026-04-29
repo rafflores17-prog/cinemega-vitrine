@@ -4,73 +4,86 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>{{ filme.title }} - Cine Mega</title>
-
 <style>
     * { -webkit-tap-highlight-color: transparent; box-sizing: border-box; }
-    body { margin: 0; background: #000; color: #fff; font-family: sans-serif; overflow-x: hidden; }
+    body { margin: 0; background: #000; color: #fff; font-family: sans-serif; }
     .fundo { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: url('{{ bg }}{{ filme.backdrop_path }}') center/cover; filter: blur(25px) brightness(0.2); z-index: -1; }
     .container { padding: 15px; max-width: 600px; margin: 0 auto; text-align: center; }
-    
-    .back-btn { background: #e50914; color: #fff; text-decoration: none; font-size: 13px; font-weight: bold; float: left; padding: 8px 20px; border-radius: 50px; }
     .capinha { width: 130px; border-radius: 10px; margin: 40px auto 10px; display: block; box-shadow: 0 0 20px rgba(0,0,0,0.5); }
     
-    /* ESTILO VIDRO DOS BOTÕES DE SERVIDOR */
+    /* 💎 BOTÕES ESTILO VIDRO */
     .grid-servidores { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin: 20px 0; }
     .btn-fonte { 
-        background: rgba(255, 255, 255, 0.1); 
-        backdrop-filter: blur(10px); 
-        border: 1px solid rgba(255, 255, 255, 0.2);
-        padding: 15px; border-radius: 12px; color: #fff; 
-        text-decoration: none; font-size: 12px; font-weight: bold; transition: 0.3s;
+        background: rgba(255, 255, 255, 0.08); 
+        backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+        border: 1px solid rgba(255, 255, 255, 0.15);
+        padding: 15px; border-radius: 15px; color: #fff; 
+        font-size: 12px; font-weight: bold; cursor: pointer; transition: 0.3s;
     }
-    .btn-fonte:hover { background: rgba(229, 9, 20, 0.3); border-color: #e50914; }
+    .btn-fonte:hover { background: rgba(229, 9, 20, 0.4); border-color: #e50914; transform: translateY(-2px); }
+    .btn-fonte.ativo { background: #e50914; border-color: #ff4d4d; }
 
-    .player-box { width: 100%; aspect-ratio: 16/9; background: #000; border-radius: 12px; margin: 15px 0; overflow: hidden; border: 1px solid #333; position: relative; }
+    .player-box { width: 100%; aspect-ratio: 16/9; background: #000; border-radius: 15px; margin: 15px 0; overflow: hidden; border: 1px solid #333; position: relative; }
     video { width: 100%; height: 100%; }
 
-    #camada-vidro { position: absolute; top: 0; left: 0; width: 100%; height: 100%; display: flex; justify-content: center; align-items: center; z-index: 9; background: rgba(0,0,0,0.6); cursor: pointer; }
-    .balao { background: #e50914; color: #fff; padding: 12px 25px; border-radius: 50px; font-weight: bold; }
-
-    .btn-externo { display: block; width: 100%; padding: 15px; background: linear-gradient(90deg, #0052D4, #6FB1FC); color: #fff; text-decoration: none; border-radius: 50px; font-weight: bold; margin: 15px 0; font-size: 13px; }
+    #camada-vidro { position: absolute; top: 0; left: 0; width: 100%; height: 100%; display: flex; justify-content: center; align-items: center; z-index: 9; background: rgba(0,0,0,0.7); cursor: pointer; }
+    .balao { background: #e50914; color: #fff; padding: 12px 25px; border-radius: 50px; font-weight: bold; border: 2px solid rgba(255,255,255,0.2); }
 </style>
 </head>
 <body>
 <div class="fundo"></div>
 <div class="container">
-    <a href="/" class="back-btn">⬅</a>
     <img src="{{ img }}{{ filme.poster_path }}" class="capinha">
     <h1 style="font-size: 22px;">{{ filme.title }}</h1>
 
     <div class="player-box">
-        <div id="camada-vidro" onclick="this.style.display='none'; document.getElementById('video').play()">
+        <div id="camada-vidro" onclick="liberarPlay()">
             <div class="balao">ASSISTIR AGORA 🍿</div>
         </div>
-        <video id="video" controls playsinline poster="{{ bg }}{{ filme.backdrop_path }}">
-            <source src="{{ play_link }}" type="video/mp4">
+        <video id="meu-player" controls playsinline poster="{{ bg }}{{ filme.backdrop_path }}">
+            <source id="video-src" src="{{ play_link }}" type="video/mp4">
         </video>
     </div>
 
-    <p style="font-size: 11px; color: #ffcc00;">OPÇÕES DE SERVIDOR:</p>
+    <p style="font-size: 11px; color: #ffcc00; letter-spacing: 1px;">SELECIONE UM SERVIDOR:</p>
     <div class="grid-servidores">
-        <a href="https://brave-jonis-meu-bot-cinema-7ce7d584.koyeb.app/play?titulo={{ filme.title }}&fonte=1" class="btn-fonte">SERVIDOR 1</a>
-        <a href="https://brave-jonis-meu-bot-cinema-7ce7d584.koyeb.app/play?titulo={{ filme.title }}&fonte=2" class="btn-fonte">SERVIDOR 2</a>
-        <a href="https://brave-jonis-meu-bot-cinema-7ce7d584.koyeb.app/play?titulo={{ filme.title }}&fonte=3" class="btn-fonte">SERVIDOR 3</a>
-        <a href="https://brave-jonis-meu-bot-cinema-7ce7d584.koyeb.app/play?titulo={{ filme.title }}&fonte=4" class="btn-fonte">SERVIDOR 4</a>
+        <button onclick="trocarServidor('1', this)" class="btn-fonte ativo">SERVIDOR 1</button>
+        <button onclick="trocarServidor('2', this)" class="btn-fonte">SERVIDOR 2</button>
+        <button onclick="trocarServidor('3', this)" class="btn-fonte">SERVIDOR 3</button>
+        <button onclick="trocarServidor('4', this)" class="btn-fonte">SERVIDOR 4</button>
     </div>
 
-    <button onclick="abrirExterno('{{ play_link }}')" class="btn-externo">📲 ABRIR NO PLAYER EXTERNO</button>
-
-    <div style="background: rgba(0,0,0,0.6); padding: 15px; border-radius: 15px; text-align: justify; font-size: 13px; border: 1px solid #333;">
+    <div style="background: rgba(0,0,0,0.6); padding: 15px; border-radius: 15px; font-size: 13px; border: 1px solid #333; text-align: justify;">
         <strong style="color:#ffcc00;">SINOPSE:</strong><br>
         {{ filme.overview }}
     </div>
 </div>
 
 <script>
-    function abrirExterno(url) {
-        let urlLimpa = url.replace('https://', '').replace('http://', '');
-        let scheme = url.startsWith('https') ? 'https' : 'http';
-        window.location.href = `intent://${urlLimpa}#Intent;action=android.intent.action.VIEW;scheme=${scheme};type=video/mp4;end`;
+    const tituloGlobal = "{{ filme.title }}";
+    const player = document.getElementById('meu-player');
+
+    function liberarPlay() {
+        document.getElementById('camada-vidro').style.display = 'none';
+        player.play();
+    }
+
+    function trocarServidor(id, btn) {
+        // 1. Estilo visual (marca qual botão está ativo)
+        document.querySelectorAll('.btn-fonte').forEach(b => b.classList.remove('ativo'));
+        btn.classList.add('ativo');
+
+        // 2. Esconde o vidro
+        document.getElementById('camada-vidro').style.display = 'none';
+
+        // 3. Troca a fonte do vídeo e recarrega
+        const novaUrl = `https://brave-jonis-meu-bot-cinema-7ce7d584.koyeb.app/play?titulo=${encodeURIComponent(tituloGlobal)}&fonte=${id}`;
+        
+        player.src = novaUrl;
+        player.load();
+        player.play().catch(() => {
+            console.log("Play automático barrado pelo navegador");
+        });
     }
 </script>
 </body>
