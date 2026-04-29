@@ -1,7 +1,6 @@
 from flask import Flask, render_template, request
 import requests
 import time
-import os
 from urllib.parse import quote
 
 app = Flask(__name__)
@@ -12,7 +11,8 @@ app = Flask(__name__)
 
 NOME_SITE = "Cine Mega"
 
-TMDB_API_KEY = os.getenv("TMDB_API_KEY")
+# API DIRETO NO CÓDIGO (modo teste)
+TMDB_API_KEY = "c90fb79a2f7d756a49bee848bce5f413"
 
 IMG = "https://image.tmdb.org/t/p/w500"
 BG = "https://image.tmdb.org/t/p/original"
@@ -77,7 +77,7 @@ def gerar_link_play(titulo):
 
         print("Motor offline")
 
-        return None
+        return "#"
 
 
 # =========================
@@ -322,10 +322,6 @@ def detalhes(id):
             titulo
         )
 
-        if not play_link:
-
-            play_link = "#"
-
         generos = [
 
             g["name"]
@@ -457,9 +453,6 @@ def health():
 if __name__ == "__main__":
 
     app.run(
-
         host="0.0.0.0",
-
         port=5000
-
     )
