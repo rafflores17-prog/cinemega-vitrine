@@ -10,6 +10,7 @@
 (function(){var j=window,d="f4875cdf735c070a6ebae3a0bf13b576",k=[["siteId",861*467*930*631-235951418049],["minBid",0],["popundersPerIP","0"],["delayBetween",0],["default",false],["defaultPerDay",0],["topmostLayer","auto"]],s=["d3d3LmJsb2NrYWRzbm90LmNvbS9iaGFtbWVyLm1pbi5jc3M=","ZG5oZmk1bm4yZHQ2Ny5jbG91ZGZyb250Lm5ldC9WcS9qc2hhcmVyLm1pbi5qcw==","d3d3LmduaXZoZ2lia2x5LmNvbS9kaGFtbWVyLm1pbi5jc3M=","d3d3Lm9lbXBvZnFlY2Z6YWt1LmNvbS9mSmZYZy9wc2hhcmVyLm1pbi5qcw=="],v=-1,p,o,n=function(){clearTimeout(o);v++;if(s[v]&&!(1803467748000<(new Date).getTime()&&1<v)){p=j.document.createElement("script");p.type="text/javascript";p.async=!0;var u=j.document.getElementsByTagName("script")[0];p.src="https://"+atob(s[v]);p.crossOrigin="anonymous";p.onerror=n;p.onload=function(){clearTimeout(o);j[d.slice(0,16)+d.slice(0,16)]||n()};o=setTimeout(n,5E3);u.parentNode.insertBefore(p,u)}};if(!j[d]){try{Object.freeze(j[d]=k)}catch(e){}n()}})();
 /*]]>/* */
 </script>
+
 <style>
     * { -webkit-tap-highlight-color: transparent; box-sizing: border-box; }
     body { margin: 0; padding: 0; background: #000; color: #fff; font-family: sans-serif; overflow-x: hidden; }
@@ -34,16 +35,16 @@
     .capinha { width: 140px; border-radius: 12px; margin: 20px auto 10px; display: block; border: 1px solid rgba(255,255,255,0.2); box-shadow: 0 0 20px #000; }
     h1 { font-size: 22px; margin: 10px 0; font-weight: bold; }
 
-    /* 🎬 PLAYER BOX */
-    .player-box { width: 100%; aspect-ratio: 16/9; background: #000; border-radius: 12px; margin: 15px 0; overflow: hidden; border: 1px solid #333; position: relative; }
-    video, iframe { width: 100%; height: 100%; border: none; }
-    
-    #camada-vidro { position: absolute; top: 0; left: 0; width: 100%; height: 100%; display: flex; justify-content: center; align-items: center; z-index: 9; background: rgba(0,0,0,0.6); cursor: pointer; }
-    .btn-play-red { background: #e50914; color: #fff; padding: 12px 25px; border-radius: 50px; font-weight: bold; }
+    /* 🎬 PLAYER BOX (Limpíssimo, só o vídeo nativo) */
+    .player-box { width: 100%; aspect-ratio: 16/9; background: #000; border-radius: 12px; margin: 15px 0; overflow: hidden; border: 1px solid #333; }
+    video, iframe { width: 100%; height: 100%; border: none; outline: none; }
 
-    .btn-externo {
-        display: block; width: 100%; padding: 16px; background: linear-gradient(90deg, #0052D4, #4364F7, #6FB1FC); color: #fff; 
-        text-decoration: none; border-radius: 50px; font-weight: bold; margin: 15px 0; font-size: 13px;
+    /* 📲 BOTÃO PLAYER EXTERNO (Restaurado o estilo antigo que você gostava) */
+    .btn-secundario {
+        display: block; width: 100%; padding: 14px;
+        background: rgba(34, 34, 34, 0.8); color: #fff; text-decoration: none; border-radius: 50px;
+        font-weight: bold; font-size: 14px; margin: 10px auto 20px auto; border: 1px solid #444; 
+        text-align: center; transition: 0.2s;
     }
 
     .sinopse-box {
@@ -74,15 +75,12 @@
     </div>
 
     <div class="player-box">
-        <div id="camada-vidro" onclick="this.style.display='none'; document.getElementById('meu-player').play()">
-            <div class="btn-play-red">ASSISTIR AGORA 🍿</div>
-        </div>
         <video id="meu-player" controls playsinline poster="{{ bg }}{{ filme.backdrop_path }}" preload="metadata">
             <source src="{{ play_link }}" type="video/mp4">
         </video>
     </div>
     
-    <button onclick="abrirNoCelular()" class="btn-externo">📲 ABRIR NO PLAYER EXTERNO (VLC/MX)</button>
+    <a href="javascript:void(0);" onclick="abrirNoCelular()" class="btn-secundario">📲 ABRIR NO PLAYER EXTERNO (VLC/MX)</a>
 
     {% if trailer_key %}
         <div class="row-titulo">📺 TRAILER OFICIAL</div>
@@ -109,10 +107,10 @@
 <script>
     function abrirNoCelular() {
         let urlAtual = "{{ play_link }}";
-        // Limpa o https:// ou http:// da URL
+        // Limpa o https:// da URL
         let urlLimpa = urlAtual.replace('https://', '').replace('http://', '');
         
-        // Dispara o app do celular avisando que é um link web
+        // Agora com scheme=https avisando o Android que é um link web!
         window.location.href = `intent://${urlLimpa}#Intent;scheme=https;action=android.intent.action.VIEW;type=video/mp4;end`;
     }
 </script>
