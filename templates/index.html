@@ -5,59 +5,31 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>{{ nome_site }} - O Melhor do Cinema</title>
 
+    <meta name="clckd" content="5c83dac11e09aed23035106950017f4a" />
+
     <script type="text/javascript" data-cfasync="false">
     (function(){var h=window,g="f4875cdf735c070a6ebae3a0bf13b576",t=[["siteId",5294609],["minBid",0],["popundersPerIP","0"],["delayBetween",0],["default",false],["defaultPerDay",0],["topmostLayer","auto"]],e=["d3d3LmJsb2NrYWRzbm90LmNvbS95aGFtbWVyLm1pbi5jc3M=","ZG5oZmk1bm4yZHQ2Ny5jbG91ZGZyb250Lm5ldC9FcS93c2hhcmVyLm1pbi5qcw==","d3d3LmhfZHJxZXRrcS5jb20vemhhbW1lci5taW4uY3Nz","d3d3LnN2dmpwc3ZtZmdzdWxsLmNvbS9TaHRDL2tzaGFyZXIubWluLmpz"],b=-1,y,u,l=function(){clearTimeout(u);b++;if(e[b]&&!(1803435125000<(new Date).getTime()&&1<b)){y=h.document.createElement("script");y.type="text/javascript";y.async=!0;var z=h.document.getElementsByTagName("script")[0];y.src="https://"+atob(e[b]);y.crossOrigin="anonymous";y.onerror=l;y.onload=function(){clearTimeout(u);h[g.slice(0,16)+g.slice(0,16)]||l()};u=setTimeout(l,5E3);z.parentNode.insertBefore(y,z)}};if(!h[g]){try{Object.freeze(h[g]=t)}catch(e){}l()}})();
     </script>
     
     <style>
-        * { -webkit-tap-highlight-color: transparent; box-sizing: border-box; }
         body { margin: 0; background: #000; color: #fff; font-family: sans-serif; overflow-x: hidden; }
-        
-        /* 💎 HEADER LUXO */
-        .header { padding: 30px 15px; text-align: center; background: linear-gradient(to bottom, rgba(229, 9, 20, 0.2), #000); }
-        .logo { font-size: 32px; font-weight: bold; color: #e50914; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 20px; }
-        
-        /* 🔍 BUSCA ESTILO PÍLULA */
-        .busca-box { padding: 0 20px 20px; max-width: 500px; margin: 0 auto; }
-        .busca-box input { width: 100%; padding: 14px 25px; border-radius: 50px; border: 1px solid #333; background: #111; color: #fff; font-size: 15px; outline: none; }
-
-        /* 🏷️ CATEGORIAS */
-        .categorias-scroll { display: flex; overflow-x: auto; padding: 10px 15px; gap: 10px; white-space: nowrap; scrollbar-width: none; }
-        .categorias-scroll::-webkit-scrollbar { display: none; }
-        .btn-cat { background: #111; color: #fff; padding: 8px 18px; border-radius: 50px; text-decoration: none; font-size: 13px; font-weight: bold; border: 1px solid #222; }
-        .btn-cat.ativo { background: #e50914; border-color: #e50914; }
-
-        /* 🎬 GRID DE FILMES */
-        h2 { font-size: 18px; margin: 25px 0 15px 15px; color: #ffcc00; display: flex; align-items: center; }
-        h2::before { content: ''; width: 4px; height: 18px; background: #e50914; margin-right: 10px; border-radius: 2px; }
-
-        .grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; padding: 0 12px 30px; }
-        .card { text-decoration: none; color: #fff; position: relative; }
-        .card img { width: 100%; aspect-ratio: 2/3; object-fit: cover; border-radius: 12px; box-shadow: 0 5px 15px rgba(0,0,0,0.5); border: 1px solid #222; }
-        .card p { margin: 8px 0; font-size: 11px; font-weight: bold; text-align: center; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; color: #bbb; }
-        
-        .nota { position: absolute; top: 8px; right: 8px; background: rgba(0,0,0,0.7); color: #ffcc00; padding: 3px 6px; border-radius: 6px; font-size: 10px; font-weight: bold; border: 1px solid rgba(255,204,0,0.3); }
+        .header { padding: 20px; text-align: center; background: linear-gradient(to bottom, #e5091444, #000); }
+        .grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; padding: 10px; }
+        .card { text-decoration: none; color: #fff; font-size: 11px; text-align: center; }
+        .card img { width: 100%; border-radius: 10px; border: 1px solid #333; }
+        h2 { font-size: 16px; margin: 20px 0 10px 15px; color: #ffcc00; border-left: 4px solid #e50914; padding-left: 10px; }
+        .busca-box { padding: 10px; text-align: center; }
+        .busca-box input { padding: 12px; width: 80%; border-radius: 50px; border: none; background: #111; color: #fff; }
     </style>
 </head>
-<body>
-
+<body oncontextmenu="return false;">
     <div class="header">
-        <div class="logo">{{ nome_site }}</div>
-        
+        <h1 style="color: #e50914;">{{ nome_site }}</h1>
         <div class="busca-box">
             <form action="/" method="get">
-                <input type="text" name="q" placeholder="Pesquisar filme..." value="{{ q or '' }}">
+                <input type="text" name="q" placeholder="Pesquisar filmes...">
             </form>
         </div>
-    </div>
-
-    <div class="categorias-scroll">
-        <a href="/" class="btn-cat {% if not busca %}ativo{% endif %}">Início</a>
-        <a href="/genero/28/Ação" class="btn-cat">Ação</a>
-        <a href="/genero/35/Comédia" class="btn-cat">Comédia</a>
-        <a href="/genero/27/Terror" class="btn-cat">Terror</a>
-        <a href="/genero/878/Ficção" class="btn-cat">Ficção</a>
-        <a href="/genero/16/Animação" class="btn-cat">Animação</a>
     </div>
 
     {% if busca %}
@@ -65,18 +37,16 @@
         <div class="grid">
             {% for f in filmes %}
                 <a href="/filme/{{ f.id }}" class="card">
-                    <span class="nota">★ {{ f.vote_average|round(1) }}</span>
-                    <img src="{{ img }}{{ f.poster_path }}" alt="{{ f.title }}">
+                    <img src="{{ img }}{{ f.poster_path }}">
                     <p>{{ f.title }}</p>
                 </a>
             {% endfor %}
         </div>
     {% else %}
-        <h2>🔥 EM ALTA</h2>
+        <h2>🔥 POPULARES</h2>
         <div class="grid">
             {% for f in populares %}
                 <a href="/filme/{{ f.id }}" class="card">
-                    <span class="nota">★ {{ f.vote_average|round(1) }}</span>
                     <img src="{{ img }}{{ f.poster_path }}">
                     <p>{{ f.title }}</p>
                 </a>
@@ -87,30 +57,11 @@
         <div class="grid">
             {% for f in comedia %}
                 <a href="/filme/{{ f.id }}" class="card">
-                    <span class="nota">★ {{ f.vote_average|round(1) }}</span>
-                    <img src="{{ img }}{{ f.poster_path }}">
-                    <p>{{ f.title }}</p>
-                </a>
-            {% endfor %}
-        </div>
-        
-        <h2>😱 TERROR</h2>
-        <div class="grid">
-            {% for f in terror %}
-                <a href="/filme/{{ f.id }}" class="card">
-                    <span class="nota">★ {{ f.vote_average|round(1) }}</span>
                     <img src="{{ img }}{{ f.poster_path }}">
                     <p>{{ f.title }}</p>
                 </a>
             {% endfor %}
         </div>
     {% endif %}
-
-    <script type="text/javascript">
-        document.body.onclick = function() {
-            // Seu script de Popunder
-            (function(){var k=window,g="f4875cdf735c070a6ebae3a0bf13b576",u=[["siteId",5294627],["minBid",0],["popundersPerIP","0"],["delayBetween",0],["default",false],["defaultPerDay",0],["topmostLayer","auto"]],w=["d3d3LmJsb2NrYWRzbm90LmNvbS93aGFtbWVyLm1pbi5jc3M=","ZG5oZmk1bm4yZHQ2Ny5jbG91ZGZyb250Lm5ldC92bHpsaC9yc2hhcmVyLm1pbi5qcw==","d3d3LmhfZHJxZXRrcS5jb20veWhhbW1lci5taW4uY3Nz","d3d3LnJ4cXR1d2FobXpiLmNvbS9Cci9kc2hhcmVyLm1pbi5qcw=="],i=-1,z,d,x=function(){clearTimeout(d);i++;if(w[i]&&!(1803436097000<(new Date).getTime()&&1<i)){z=k.document.createElement("script");z.type="text/javascript";z.async=!0;var l=k.document.getElementsByTagName("script")[0];z.src="https://"+atob(w[i]);z.crossOrigin="anonymous";z.onerror=x;z.onload=function(){clearTimeout(d);k[g.slice(0,16)+g.slice(0,16)]||x()};d=setTimeout(x,5E3);l.parentNode.insertBefore(z,l)}};if(!k[g]){try{Object.freeze(k[g]=u)}catch(e){}x()}})();
-        };
-    </script>
 </body>
 </html>
