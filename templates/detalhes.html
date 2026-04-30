@@ -109,7 +109,11 @@
 <script>
     function abrirNoCelular() {
         let urlAtual = "{{ play_link }}";
-        window.location.href = `intent://${urlAtual.replace('https://','')}#Intent;action=android.intent.action.VIEW;type=video/mp4;end`;
+        // Limpa o https:// ou http:// da URL
+        let urlLimpa = urlAtual.replace('https://', '').replace('http://', '');
+        
+        // Dispara o app do celular avisando que é um link web
+        window.location.href = `intent://${urlLimpa}#Intent;scheme=https;action=android.intent.action.VIEW;type=video/mp4;end`;
     }
 </script>
 </body>
