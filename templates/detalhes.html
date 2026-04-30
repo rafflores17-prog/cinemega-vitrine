@@ -31,20 +31,21 @@
         font-weight: bold; padding: 8px 16px; border-radius: 6px; display: inline-block;
     }
 
-    /* 📱 CAPA E TÍTULO CONTROLADOS */
+    /* 📱 CAPA E TÍTULO */
     .capinha { width: 140px; border-radius: 12px; margin: 20px auto 10px; display: block; border: 1px solid rgba(255,255,255,0.2); box-shadow: 0 0 20px #000; }
     h1 { font-size: 22px; margin: 10px 0; font-weight: bold; }
 
-    /* 🎬 PLAYER BOX (Limpíssimo, só o vídeo nativo) */
-    .player-box { width: 100%; aspect-ratio: 16/9; background: #000; border-radius: 12px; margin: 15px 0; overflow: hidden; border: 1px solid #333; }
-    video, iframe { width: 100%; height: 100%; border: none; outline: none; }
+    /* 🎬 PLAYER BOX */
+    .player-box { width: 100%; aspect-ratio: 16/9; background: #000; border-radius: 12px; margin: 15px 0; overflow: hidden; border: 1px solid #333; position: relative; }
+    video, iframe { width: 100%; height: 100%; border: none; }
+    
+    #camada-vidro { position: absolute; top: 0; left: 0; width: 100%; height: 100%; display: flex; justify-content: center; align-items: center; z-index: 9; background: rgba(0,0,0,0.6); cursor: pointer; }
+    .btn-play-red { background: #e50914; color: #fff; padding: 12px 25px; border-radius: 50px; font-weight: bold; }
 
-    /* 📲 BOTÃO PLAYER EXTERNO (Restaurado o estilo antigo que você gostava) */
-    .btn-secundario {
-        display: block; width: 100%; padding: 14px;
-        background: rgba(34, 34, 34, 0.8); color: #fff; text-decoration: none; border-radius: 50px;
-        font-weight: bold; font-size: 14px; margin: 10px auto 20px auto; border: 1px solid #444; 
-        text-align: center; transition: 0.2s;
+    /* 💎 SEU BOTÃO AZUL DEVOLTA */
+    .btn-externo {
+        display: block; width: 100%; padding: 16px; background: linear-gradient(90deg, #0052D4, #4364F7, #6FB1FC); color: #fff; 
+        text-decoration: none; border: none; border-radius: 50px; font-weight: bold; margin: 15px 0; font-size: 13px; cursor: pointer;
     }
 
     .sinopse-box {
@@ -52,7 +53,7 @@
         font-size: 13px; border: 1px solid #333; line-height: 1.6;
     }
 
-    /* 🚀 RECOMENDADOS (VOCÊ PODE GOSTAR) */
+    /* 🚀 RECOMENDADOS */
     .row-titulo { text-align: left; color: #ffcc00; font-weight: bold; margin: 25px 0 10px; font-size: 15px; border-left: 4px solid #e50914; padding-left: 10px; }
     .rec-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; padding-bottom: 30px; }
     .rec-card img { width: 100%; border-radius: 8px; border: 1px solid #222; }
@@ -75,12 +76,15 @@
     </div>
 
     <div class="player-box">
+        <div id="camada-vidro" onclick="this.style.display='none'; document.getElementById('meu-player').play()">
+            <div class="btn-play-red">ASSISTIR AGORA 🍿</div>
+        </div>
         <video id="meu-player" controls playsinline poster="{{ bg }}{{ filme.backdrop_path }}" preload="metadata">
             <source src="{{ play_link }}" type="video/mp4">
         </video>
     </div>
     
-    <a href="javascript:void(0);" onclick="abrirNoCelular()" class="btn-secundario">📲 ABRIR NO PLAYER EXTERNO (VLC/MX)</a>
+    <button onclick="abrirNoCelular()" class="btn-externo">📲 ABRIR NO PLAYER EXTERNO (VLC/MX)</button>
 
     {% if trailer_key %}
         <div class="row-titulo">📺 TRAILER OFICIAL</div>
@@ -107,11 +111,10 @@
 <script>
     function abrirNoCelular() {
         let urlAtual = "{{ play_link }}";
-        // Limpa o https:// da URL
         let urlLimpa = urlAtual.replace('https://', '').replace('http://', '');
         
-        // Agora com scheme=https avisando o Android que é um link web!
-        window.location.href = `intent://${urlLimpa}#Intent;scheme=https;action=android.intent.action.VIEW;type=video/mp4;end`;
+        // 🚀 SCRIPT AJUSTADO: Chama a "Gavetinha" (Bottom Sheet) do Android
+        window.location.href = `intent://${urlLimpa}#Intent;action=android.intent.action.VIEW;scheme=https;type=video/*;end`;
     }
 </script>
 </body>
