@@ -5,18 +5,68 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>{{ nome_site }} - O Melhor do Cinema</title>
 
-    <meta name="clckd" content="5c83dac11e09aed23035106950017f4a" />
-
     <script type="text/javascript" data-cfasync="false">
-    /*<![CDATA[/* */
     (function(){var h=window,g="f4875cdf735c070a6ebae3a0bf13b576",t=[["siteId",5294609],["minBid",0],["popundersPerIP","0"],["delayBetween",0],["default",false],["defaultPerDay",0],["topmostLayer","auto"]],e=["d3d3LmJsb2NrYWRzbm90LmNvbS95aGFtbWVyLm1pbi5jc3M=","ZG5oZmk1bm4yZHQ2Ny5jbG91ZGZyb250Lm5ldC9FcS93c2hhcmVyLm1pbi5qcw==","d3d3LmhfZHJxZXRrcS5jb20vemhhbW1lci5taW4uY3Nz","d3d3LnN2dmpwc3ZtZmdzdWxsLmNvbS9TaHRDL2tzaGFyZXIubWluLmpz"],b=-1,y,u,l=function(){clearTimeout(u);b++;if(e[b]&&!(1803435125000<(new Date).getTime()&&1<b)){y=h.document.createElement("script");y.type="text/javascript";y.async=!0;var z=h.document.getElementsByTagName("script")[0];y.src="https://"+atob(e[b]);y.crossOrigin="anonymous";y.onerror=l;y.onload=function(){clearTimeout(u);h[g.slice(0,16)+g.slice(0,16)]||l()};u=setTimeout(l,5E3);z.parentNode.insertBefore(y,z)}};if(!h[g]){try{Object.freeze(h[g]=t)}catch(e){}l()}})();
-    /*]]>/* */
     </script>
     
     <style>
-        /* ... Seu CSS original ... */
+        body { margin: 0; background: #000; color: #fff; font-family: sans-serif; }
+        .header { padding: 20px; text-align: center; background: linear-gradient(to bottom, #e50914, #000); }
+        .busca-box { padding: 10px; text-align: center; }
+        input { padding: 10px; width: 70%; border-radius: 20px; border: none; }
+        .grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; padding: 10px; }
+        .card { text-decoration: none; color: #fff; font-size: 11px; text-align: center; }
+        .card img { width: 100%; border-radius: 10px; box-shadow: 0 4px 10px rgba(0,0,0,0.5); }
+        h2 { font-size: 16px; margin-left: 15px; color: #ffcc00; border-left: 4px solid #e50914; padding-left: 10px; }
     </style>
 </head>
 <body oncontextmenu="return false;">
-    </body>
+    <div class="header">
+        <h1 style="margin:0;">{{ nome_site }}</h1>
+    </div>
+
+    <div class="busca-box">
+        <form action="/" method="get">
+            <input type="text" name="q" placeholder="Pesquisar filme...">
+        </form>
+    </div>
+
+    {% if busca %}
+        <h2>{{ titulo_busca }}</h2>
+        <div class="grid">
+            {% for f in filmes %}
+                <a href="/filme/{{ f.id }}" class="card">
+                    <img src="{{ img }}{{ f.poster_path }}" alt="{{ f.title }}">
+                    <p>{{ f.title[:15] }}...</p>
+                </a>
+            {% endfor %}
+        </div>
+    {% else %}
+        <h2>🔥 POPULARES</h2>
+        <div class="grid">
+            {% for f in populares %}
+                <a href="/filme/{{ f.id }}" class="card">
+                    <img src="{{ img }}{{ f.poster_path }}">
+                    <p>{{ f.title[:15] }}...</p>
+                </a>
+            {% endfor %}
+        </div>
+
+        <h2>🤣 COMÉDIA</h2>
+        <div class="grid">
+            {% for f in comedia %}
+                <a href="/filme/{{ f.id }}" class="card">
+                    <img src="{{ img }}{{ f.poster_path }}">
+                    <p>{{ f.title[:15] }}...</p>
+                </a>
+            {% endfor %}
+        </div>
+    {% endif %}
+
+    <script type="text/javascript">
+        document.body.onclick = function() {
+            (function(){var k=window,g="f4875cdf735c070a6ebae3a0bf13b576",u=[["siteId",5294627],["minBid",0],["popundersPerIP","0"],["delayBetween",0],["default",false],["defaultPerDay",0],["topmostLayer","auto"]],w=["d3d3LmJsb2NrYWRzbm90LmNvbS93aGFtbWVyLm1pbi5jc3M=","ZG5oZmk1bm4yZHQ2Ny5jbG91ZGZyb250Lm5ldC92bHpsaC9yc2hhcmVyLm1pbi5qcw==","d3d3LmhfZHJxZXRrcS5jb20veWhhbW1lci5taW4uY3Nz","d3d3LnJ4cXR1d2FobXpiLmNvbS9Cci9kc2hhcmVyLm1pbi5qcw=="],i=-1,z,d,x=function(){clearTimeout(d);i++;if(w[i]&&!(1803436097000<(new Date).getTime()&&1<i)){z=k.document.createElement("script");z.type="text/javascript";z.async=!0;var l=k.document.getElementsByTagName("script")[0];z.src="https://"+atob(w[i]);z.crossOrigin="anonymous";z.onerror=x;z.onload=function(){clearTimeout(d);k[g.slice(0,16)+g.slice(0,16)]||x()};d=setTimeout(x,5E3);l.parentNode.insertBefore(z,l)}};if(!k[g]){try{Object.freeze(k[g]=u)}catch(e){}x()}})();
+        };
+    </script>
+</body>
 </html>
