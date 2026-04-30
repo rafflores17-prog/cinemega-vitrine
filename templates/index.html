@@ -131,6 +131,16 @@
                     </a>
                 {% endfor %}
             </div>
+
+            <div class="titulo-secao">🧪 CULT E TRASH</div>
+            <div class="fileira-horizontal">
+                {% for f in trash %}
+                    <a href="/filme/{{ f.id }}" class="item-filme">
+                        <img src="{{ img }}{{ f.poster_path }}">
+                        <p>{{ f.title }}</p>
+                    </a>
+                {% endfor %}
+            </div>
         {% endif %}
     </main>
 
