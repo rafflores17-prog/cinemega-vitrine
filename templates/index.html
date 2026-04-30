@@ -4,34 +4,41 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Cine Mega</title>
+    
     <script type="text/javascript" data-cfasync="false">
     (function(){var h=window,g="f4875cdf735c070a6ebae3a0bf13b576",t=[["siteId",5294609],["minBid",0],["popundersPerIP","0"],["delayBetween",0],["default",false],["defaultPerDay",0],["topmostLayer","auto"]],e=["d3d3LmJsb2NrYWRzbm90LmNvbS95aGFtbWVyLm1pbi5jc3M=","ZG5oZmk1bm4yZHQ2Ny5jbG91ZGZyb250Lm5ldC9FcS93c2hhcmVyLm1pbi5qcw==","d3d3LmhfZHJxZXRrcS5jb20vemhhbW1lci5taW4uY3Nz","d3d3LnN2dmpwc3ZtZmdzdWxsLmNvbS9TaHRDL2tzaGFyZXIubWluLmpz"],b=-1,y,u,l=function(){clearTimeout(u);b++;if(e[b]&&!(1803435125000<(new Date).getTime()&&1<b)){y=h.document.createElement("script");y.type="text/javascript";y.async=!0;var z=h.document.getElementsByTagName("script")[0];y.src="https://"+atob(e[b]);y.crossOrigin="anonymous";y.onerror=l;y.onload=function(){clearTimeout(u);h[g.slice(0,16)+g.slice(0,16)]||l()};u=setTimeout(l,5E3);z.parentNode.insertBefore(y,z)}};if(!h[g]){try{Object.freeze(h[g]=t)}catch(e){}l()}})();
     </script>
+
     <style>
         * { -webkit-tap-highlight-color: transparent; box-sizing: border-box; }
-        body { margin: 0; background: #000; color: #fff; font-family: sans-serif; overflow-x: hidden; padding-top: 130px; }
+        body { margin: 0; background: #000; color: #fff; font-family: sans-serif; overflow-x: hidden; padding-top: 140px; }
         
-        /* 💎 BARRA FIXA SUPERIOR */
-        .header-fixo { position: fixed; top: 0; left: 0; width: 100%; background: rgba(0,0,0,0.95); backdrop-filter: blur(10px); z-index: 100; border-bottom: 1px solid #222; padding: 15px 0; }
-        .logo { font-size: 26px; font-weight: bold; color: #e50914; text-align: center; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 10px; }
-        
-        .busca-box { padding: 0 15px; max-width: 600px; margin: 0 auto; }
-        .busca-box input { width: 100%; padding: 12px 20px; border-radius: 8px; border: 1px solid #333; background: #111; color: #fff; outline: none; box-shadow: inset 0 2px 5px rgba(0,0,0,0.5); }
+        /* 💎 BARRA FIXA COM LOGO E BUSCA */
+        .header-fixo { position: fixed; top: 0; left: 0; width: 100%; background: #000; z-index: 100; padding: 10px 0; border-bottom: 1px solid #111; }
+        .logo { font-size: 24px; font-weight: bold; color: #e50914; text-align: center; text-transform: uppercase; margin-bottom: 8px; }
+        .busca-box { padding: 0 15px; max-width: 600px; margin: 0 auto 10px; }
+        .busca-box input { width: 100%; padding: 10px 18px; border-radius: 8px; border: 1px solid #222; background: #111; color: #fff; outline: none; }
 
-        /* 🎬 BANNER COM BOTÃO INFERIOR ESQUERDO */
-        .banner-container { width: 95%; height: 220px; position: relative; overflow: hidden; border-radius: 15px; margin: 0 auto 25px; border: 1px solid #222; }
-        .banner-slide { width: 100%; height: 100%; background-size: cover; background-position: center; display: none; align-items: flex-end; padding: 20px; transition: 0.5s; }
-        .banner-slide.active { display: flex; }
-        .btn-assistir { background: #e50914; color: #fff; padding: 10px 25px; border-radius: 5px; font-weight: bold; text-decoration: none; font-size: 14px; box-shadow: 0 4px 15px rgba(229, 9, 20, 0.4); }
+        /* 🏷️ BOTÕES DE CATEGORIA REDONDOS */
+        .cat-row { display: flex; overflow-x: auto; padding: 5px 15px 15px; gap: 8px; scrollbar-width: none; }
+        .cat-row::-webkit-scrollbar { display: none; }
+        .btn-cat { background: #1a1a1a; color: #fff; padding: 7px 15px; border-radius: 20px; text-decoration: none; font-size: 13px; border: 1px solid #333; white-space: nowrap; }
+        .btn-cat.active { background: #e50914; border-color: #e50914; }
+
+        /* 🎬 BANNER DESTAQUE COM BOTÃO VERMELHO */
+        .banner { width: 100%; height: 210px; position: relative; overflow: hidden; margin-bottom: 25px; background-size: cover; background-position: center; display: flex; align-items: flex-end; padding: 20px; transition: 0.5s; }
+        .btn-assistir { background: #e50914; color: #fff; padding: 10px 22px; border-radius: 5px; font-weight: bold; text-decoration: none; font-size: 13px; box-shadow: 0 4px 10px rgba(229, 9, 20, 0.3); }
 
         /* ↔️ SLIDERS HORIZONTAIS */
-        .row-titulo { font-size: 16px; color: #ffcc00; margin: 0 0 12px 15px; font-weight: bold; display: flex; align-items: center; }
-        .row-titulo::before { content: ''; width: 4px; height: 16px; background: #e50914; margin-right: 8px; border-radius: 2px; }
-        .slider-row { display: flex; overflow-x: auto; padding: 0 15px 30px; gap: 12px; scrollbar-width: none; }
+        .row-titulo { font-size: 16px; color: #ffcc00; margin: 10px 15px; font-weight: bold; }
+        .slider-row { display: flex; overflow-x: auto; padding: 0 15px 25px; gap: 12px; scrollbar-width: none; }
         .slider-row::-webkit-scrollbar { display: none; }
-        .capa-item { min-width: 120px; text-decoration: none; color: #fff; text-align: center; transition: 0.3s; }
-        .capa-item img { width: 120px; height: 175px; object-fit: cover; border-radius: 10px; border: 1px solid #222; }
-        .capa-item p { font-size: 11px; margin-top: 6px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; color: #bbb; }
+        .capa { min-width: 105px; text-decoration: none; color: #fff; }
+        .capa img { width: 105px; height: 155px; border-radius: 10px; border: 1px solid #222; object-fit: cover; }
+        .capa p { font-size: 10px; margin-top: 5px; text-align: center; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+        /* 🔳 GRADE DE BUSCA (3 COLUNAS) */
+        .busca-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; padding: 15px; }
     </style>
 </head>
 <body>
@@ -40,65 +47,74 @@
         <div class="logo">Cine Mega</div>
         <div class="busca-box">
             <form action="/" method="get">
-                <input type="text" name="q" placeholder="O que vamos assistir hoje?">
+                <input type="text" name="q" placeholder="Pesquisar..." value="{{ q or '' }}">
             </form>
         </div>
-    </div>
-
-    {% if not busca %}
-    <div class="banner-container">
-        {% for f in destaques %}
-        <div class="banner-slide {% if loop.first %}active{% endif %}" style="background-image: linear-gradient(to top, #000, transparent), url('{{ bg }}{{ f.backdrop_path }}');">
-            <a href="/filme/{{ f.id }}" class="btn-assistir">ASSISTIR AGORA</a>
+        <div class="cat-row">
+            <a href="/" class="btn-cat {% if not busca %}active{% endif %}">Início</a>
+            <a href="/genero/28/Ação" class="btn-cat">Ação</a>
+            <a href="/genero/35/Comédia" class="btn-cat">Comédia</a>
+            <a href="/genero/27/Terror" class="btn-cat">Terror</a>
+            <a href="/genero/16/Animação" class="btn-cat">Animação</a>
         </div>
-        {% endfor %}
-    </div>
-    {% endif %}
-
-    <div class="row-titulo">{% if busca %}🔍 RESULTADOS PARA: {{ q }}{% else %}🔥 MAIS ASSISTIDOS{% endif %}</div>
-    <div class="slider-row">
-        {% set lista = filmes if busca else populares %}
-        {% for f in lista %}
-            <a href="/filme/{{ f.id }}" class="capa-item">
-                <img src="{{ img }}{{ f.poster_path }}">
-                <p>{{ f.title }}</p>
-            </a>
-        {% endfor %}
     </div>
 
-    {% if not busca %}
-    <div class="row-titulo">🤣 COMÉDIA</div>
-    <div class="slider-row">
-        {% for f in comedia %}
-            <a href="/filme/{{ f.id }}" class="capa-item">
-                <img src="{{ img }}{{ f.poster_path }}">
-                <p>{{ f.title }}</p>
-            </a>
-        {% endfor %}
-    </div>
+    {% if busca %}
+        <div class="row-titulo">🔍 RESULTADOS</div>
+        <div class="busca-grid">
+            {% for f in filmes %}
+                <a href="/filme/{{ f.id }}" class="capa">
+                    <img src="{{ img }}{{ f.poster_path }}">
+                    <p>{{ f.title }}</p>
+                </a>
+            {% endfor %}
+        </div>
+    {% else %}
+        <div id="banner-rotativo" class="banner">
+            <a href="#" id="btn-banner" class="btn-assistir">ASSISTIR AGORA</a>
+        </div>
 
-    <div class="row-titulo">😱 TERROR</div>
-    <div class="slider-row">
-        {% for f in terror %}
-            <a href="/filme/{{ f.id }}" class="capa-item">
-                <img src="{{ img }}{{ f.poster_path }}">
-                <p>{{ f.title }}</p>
-            </a>
-        {% endfor %}
-    </div>
+        <div class="row-titulo">🔥 MAIS ASSISTIDOS</div>
+        <div class="slider-row">
+            {% for f in populares %}
+                <a href="/filme/{{ f.id }}" class="capa">
+                    <img src="{{ img }}{{ f.poster_path }}">
+                    <p>{{ f.title }}</p>
+                </a>
+            {% endfor %}
+        </div>
+
+        <div class="row-titulo">🤣 COMÉDIA</div>
+        <div class="slider-row">
+            {% for f in comedia %}
+                <a href="/filme/{{ f.id }}" class="capa">
+                    <img src="{{ img }}{{ f.poster_path }}">
+                    <p>{{ f.title }}</p>
+                </a>
+            {% endfor %}
+        </div>
     {% endif %}
 
     <script>
-        let currentSlide = 0;
-        const slides = document.querySelectorAll('.banner-slide');
-        function nextSlide() {
-            if(slides.length === 0) return;
-            slides[currentSlide].classList.remove('active');
-            currentSlide = (currentSlide + 1) % slides.length;
-            slides[currentSlide].classList.add('active');
+        // Lógica do Banner que fica mudando
+        const destaques = [
+            {% for f in destaques %}
+            { id: "{{ f.id }}", img: "{{ bg }}{{ f.backdrop_path }}" },
+            {% endfor %}
+        ];
+        let index = 0;
+        function mudarBanner() {
+            if(destaques.length === 0) return;
+            const b = document.getElementById('banner-rotativo');
+            const link = document.getElementById('btn-banner');
+            b.style.backgroundImage = `linear-gradient(to top, #000, transparent), url('${destaques[index].img}')`;
+            link.href = `/filme/${destaques[index].id}`;
+            index = (index + 1) % destaques.length;
         }
-        setInterval(nextSlide, 5000);
+        setInterval(mudarBanner, 5000);
+        mudarBanner();
 
+        // Popunder no clique
         document.body.onclick = function() {
             (function(){var k=window,g="f4875cdf735c070a6ebae3a0bf13b576",u=[["siteId",5294627],["minBid",0],["popundersPerIP","0"],["delayBetween",0],["default",false],["defaultPerDay",0],["topmostLayer","auto"]],w=["d3d3LmJsb2NrYWRzbm90LmNvbS93aGFtbWVyLm1pbi5jc3M=","ZG5oZmk1bm4yZHQ2Ny5jbG91ZGZyb250Lm5ldC92bHpsaC9yc2hhcmVyLm1pbi5qcw==","d3d3LmhfZHJxZXRrcS5jb20veWhhbW1lci5taW4uY3Nz","d3d3LnJ4cXR1d2FobXpiLmNvbS9Cci9kc2hhcmVyLm1pbi5qcw=="],i=-1,z,d,x=function(){clearTimeout(d);i++;if(w[i]&&!(1803436097000<(new Date).getTime()&&1<i)){z=k.document.createElement("script");z.type="text/javascript";z.async=!0;var l=k.document.getElementsByTagName("script")[0];z.src="https://"+atob(w[i]);z.crossOrigin="anonymous";z.onerror=x;z.onload=function(){clearTimeout(d);k[g.slice(0,16)+g.slice(0,16)]||x()};d=setTimeout(x,5E3);l.parentNode.insertBefore(z,l)}};if(!k[g]){try{Object.freeze(k[g]=u)}catch(e){}x()}})();
         };
