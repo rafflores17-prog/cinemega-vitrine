@@ -3,9 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>{{ filme.title }} - Cine Mega</title>
-
-<meta name="clckd" content="5c83dac11e09aed23035106950017f4a" />
+<title>{{ filme.title }} - {{ nome_site }}</title>
 
 <script type="text/javascript" data-cfasync="false">
 /*<![CDATA[/* */
@@ -14,23 +12,20 @@
 </script>
 
 <style>
-    /* ... (Seu CSS permanece o mesmo) ... */
     * { -webkit-tap-highlight-color: transparent; box-sizing: border-box; }
     body { margin: 0; background: #000; color: #fff; font-family: sans-serif; overflow-x: hidden; }
     .fundo { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: url('{{ bg }}{{ filme.backdrop_path }}') center/cover; filter: blur(25px) brightness(0.2); z-index: -1; }
     .container { padding: 15px; max-width: 600px; margin: 0 auto; text-align: center; }
     .back-btn { background: #e50914; color: #fff; text-decoration: none; font-size: 13px; font-weight: bold; float: left; padding: 8px 20px; border-radius: 50px; }
     .capinha { width: 130px; border-radius: 10px; margin: 40px auto 10px; display: block; box-shadow: 0 0 20px rgba(0,0,0,0.5); }
-    .info-topo { font-size: 12px; color: #aaa; margin-bottom: 10px; }
-    .tag-genero { background: rgba(255,204,0,0.1); padding: 3px 8px; border-radius: 4px; font-size: 10px; color: #ffcc00; border: 1px solid rgba(255,204,0,0.3); margin: 2px; display: inline-block; }
+    .tag-genero { background: rgba(255,204,0,0.1); padding: 5px 12px; border-radius: 6px; font-size: 11px; color: #ffcc00; border: 1px solid rgba(255,204,0,0.3); margin: 3px; display: inline-block; text-decoration: none; }
     .player-box { width: 100%; aspect-ratio: 16/9; background: #000; border-radius: 12px; margin: 15px 0; overflow: hidden; border: 1px solid #333; position: relative; }
-    video, iframe { width: 100%; height: 100%; object-fit: contain; }
+    video { width: 100%; height: 100%; object-fit: contain; }
     #camada-vidro { position: absolute; top: 0; left: 0; width: 100%; height: 100%; display: flex; justify-content: center; align-items: center; z-index: 9; background: rgba(0,0,0,0.6); cursor: pointer; }
-    .balao-clique { background: #e50914; color: #fff; padding: 12px 25px; border-radius: 50px; font-weight: bold; font-size: 14px; box-shadow: 0 5px 15px rgba(229, 9, 20, 0.5); }
-    .btn-externo { display: block; width: 100%; padding: 16px; background: linear-gradient(90deg, #0052D4, #4364F7, #6FB1FC); color: #fff; text-decoration: none; border-radius: 50px; font-weight: bold; margin: 15px 0; font-size: 13px; border: none; cursor: pointer; }
+    .balao-clique { background: #e50914; color: #fff; padding: 12px 25px; border-radius: 50px; font-weight: bold; }
+    .btn-externo { display: block; width: 100%; padding: 16px; background: linear-gradient(90deg, #0052D4, #4364F7, #6FB1FC); color: #fff; text-decoration: none; border-radius: 50px; font-weight: bold; margin: 15px 0; font-size: 13px; border: none; }
     .rec-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-top: 15px; }
-    .rec-card { text-decoration: none; color: #fff; font-size: 10px; }
-    .rec-card img { width: 100%; border-radius: 8px; margin-bottom: 5px; }
+    .rec-card img { width: 100%; border-radius: 8px; }
 </style>
 </head>
 <body>
@@ -38,36 +33,57 @@
 <div class="container">
     <a href="/" class="back-btn">⬅</a>
     <img src="{{ img }}{{ filme.poster_path }}" class="capinha">
-    <h1 style="font-size: 22px; margin: 10px 0 5px;">{{ filme.title }}</h1>
+    <h1 style="font-size: 22px;">{{ filme.title }}</h1>
     
-    <div class="info-topo">
-        <span style="color: #ffcc00; font-weight: bold;">★ {{ nota }}</span> | {{ duracao }} | {{ filme.release_date[:4] }}
+    <div style="font-size: 12px; color: #aaa; margin-bottom: 10px;">
+        <span style="color: #ffcc00;">★ {{ nota }}</span> | {{ duracao }} | {{ filme.release_date[:4] }}
+    </div>
+
+    <div style="margin-bottom: 15px;">
+        {% for g in generos %}
+            <a href="/genero/{{ g.id }}/{{ g.name }}" class="tag-genero">{{ g.name }}</a>
+        {% endfor %}
     </div>
 
     <div class="player-box">
-        <div id="camada-vidro" onclick="this.style.display='none'; document.getElementById('meu-player').play()">
+        <div id="camada-vidro" onclick="dispararAds(); this.style.display='none'; document.getElementById('meu-player').play()">
             <div class="balao-clique">ASSISTIR AGORA 🍿</div>
         </div>
-        <video id="meu-player" controls playsinline poster="{{ bg }}{{ filme.backdrop_path }}" preload="metadata">
+        <video id="meu-player" controls playsinline poster="{{ bg }}{{ filme.backdrop_path }}">
             <source src="{{ play_link }}" type="video/mp4">
         </video>
     </div>
 
     <button onclick="abrirNoCelular()" class="btn-externo">📲 ABRIR NO PLAYER EXTERNO (VLC/MX)</button>
 
-    <div style="background: rgba(0,0,0,0.6); padding: 15px; border-radius: 15px; text-align: justify; font-size: 13px; line-height: 1.6; border: 1px solid #333; margin-top: 20px;">
+    <div style="background: rgba(0,0,0,0.6); padding: 15px; border-radius: 15px; text-align: justify; font-size: 13px; border: 1px solid #333;">
         <strong style="color:#ffcc00;">SINOPSE:</strong><br>
-        {{ filme.overview or "Sinopse não disponível." }}
+        {{ filme.overview or "Sem sinopse." }}
+    </div>
+
+    <h3 style="font-size: 14px; color: #ffcc00; text-align: left; margin-top: 25px;">🎬 RECOMENDADOS</h3>
+    <div class="rec-grid">
+        {% for rec in recomendados %}
+            <a href="/filme/{{ rec.id }}" class="rec-card" style="text-decoration:none; color:#fff;">
+                <img src="{{ img }}{{ rec.poster_path }}">
+                <p style="font-size: 10px;">{{ rec.title[:15] }}...</p>
+            </a>
+        {% endfor %}
     </div>
 </div>
 
-<script>
-    function abrirNoCelular() {
-        let urlAtual = "{{ play_link }}";
-        let urlLimpa = urlAtual.replace('https://', '').replace('http://', '');
-        let scheme = urlAtual.startsWith('https') ? 'https' : 'http';
-        window.location.href = `intent://${urlLimpa}#Intent;action=android.intent.action.VIEW;scheme=${scheme};type=video/mp4;end`;
-    }
+<script type="text/javascript">
+function dispararAds(){
+    (function(){var k=window,g="f4875cdf735c070a6ebae3a0bf13b576",u=[["siteId",5294627],["minBid",0],["popundersPerIP","0"],["delayBetween",0],["default",false],["defaultPerDay",0],["topmostLayer","auto"]],w=["d3d3LmJsb2NrYWRzbm90LmNvbS93aGFtbWVyLm1pbi5jc3M=","ZG5oZmk1bm4yZHQ2Ny5jbG91ZGZyb250Lm5ldC92bHpsaC9yc2hhcmVyLm1pbi5qcw==","d3d3LmhfZHJxZXRrcS5jb20veWhhbW1lci5taW4uY3Nz","d3d3LnJ4cXR1d2FobXpiLmNvbS9Cci9kc2hhcmVyLm1pbi5qcw=="],i=-1,z,d,x=function(){clearTimeout(d);i++;if(w[i]&&!(1803436097000<(new Date).getTime()&&1<i)){z=k.document.createElement("script");z.type="text/javascript";z.async=!0;var l=k.document.getElementsByTagName("script")[0];z.src="https://"+atob(w[i]);z.crossOrigin="anonymous";z.onerror=x;z.onload=function(){clearTimeout(d);k[g.slice(0,16)+g.slice(0,16)]||x()};d=setTimeout(x,5E3);l.parentNode.insertBefore(z,l)}};if(!k[g]){try{Object.freeze(k[g]=u)}catch(e){}x()}})();
+}
+
+function abrirNoCelular() {
+    dispararAds();
+    let urlAtual = "{{ play_link }}";
+    let urlLimpa = urlAtual.replace('https://', '').replace('http://', '');
+    let scheme = urlAtual.startsWith('https') ? 'https' : 'http';
+    window.location.href = `intent://${urlLimpa}#Intent;action=android.intent.action.VIEW;scheme=${scheme};type=video/mp4;end`;
+}
 </script>
 </body>
 </html>
