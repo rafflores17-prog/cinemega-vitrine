@@ -11,13 +11,21 @@
 
     <style>
         * { -webkit-tap-highlight-color: transparent; box-sizing: border-box; }
-        body { margin: 0; background: #000; color: #fff; font-family: sans-serif; overflow-x: hidden; padding-top: 140px; display: flex; flex-direction: column; min-height: 100vh; }
         
-        /* 💎 TOPO FIXO */
-        .header-fixo { position: fixed; top: 0; left: 0; width: 100%; background: #000; z-index: 100; border-bottom: 1px solid #111; padding-bottom: 10px; }
+        /* O padding-top aqui é 175px para caber a Logo + Busca + Abas sem cobrir os filmes */
+        body { margin: 0; background: #000; color: #fff; font-family: sans-serif; overflow-x: hidden; padding-top: 175px; display: flex; flex-direction: column; min-height: 100vh; }
+        
+        /* 💎 TOPO FIXO COM ABAS */
+        .header-fixo { position: fixed; top: 0; left: 0; width: 100%; background: #000; z-index: 100; border-bottom: 1px solid #111; padding-bottom: 5px; }
         .logo { font-size: 26px; font-weight: bold; color: #e50914; text-align: center; text-transform: uppercase; padding: 15px 0 5px; letter-spacing: 2px; }
-        .busca-box { padding: 0 15px; max-width: 600px; margin: 0 auto; }
+        .busca-box { padding: 0 15px; max-width: 600px; margin: 0 auto 10px; }
         .busca-box input { width: 100%; padding: 12px 20px; border-radius: 8px; border: 1px solid #222; background: #111; color: #fff; outline: none; }
+
+        /* 🏷️ ABAS DE CATEGORIA REDONDAS */
+        .cat-row { display: flex; overflow-x: auto; padding: 5px 15px 10px; gap: 8px; scrollbar-width: none; }
+        .cat-row::-webkit-scrollbar { display: none; }
+        .btn-cat { background: #1a1a1a; color: #fff; padding: 7px 16px; border-radius: 20px; text-decoration: none; font-size: 13px; border: 1px solid #333; white-space: nowrap; }
+        .btn-cat.active { background: #e50914; border-color: #e50914; }
 
         /* 🎬 BANNER ROTATIVO */
         .banner-wrap { width: 100%; padding: 0 10px; margin-bottom: 25px; }
@@ -52,14 +60,23 @@
         <div class="logo">Cine Mega</div>
         <div class="busca-box">
             <form action="/" method="get">
-                <input type="text" name="q" placeholder="Pesquisar..." value="{{ q or '' }}">
+                <input type="text" name="q" placeholder="Pesquisar filmes e séries..." value="{{ q or '' }}">
             </form>
+        </div>
+        
+        <div class="cat-row">
+            <a href="/" class="btn-cat {% if not busca %}active{% endif %}">Início</a>
+            <a href="/genero/28/Ação" class="btn-cat">Ação</a>
+            <a href="/genero/35/Comédia" class="btn-cat">Comédia</a>
+            <a href="/genero/27/Terror" class="btn-cat">Terror</a>
+            <a href="/genero/878/Ficção" class="btn-cat">Ficção</a>
+            <a href="/genero/16/Animação" class="btn-cat">Animação</a>
         </div>
     </div>
 
     <main style="flex: 1;">
         {% if busca %}
-            <div class="titulo-secao">🔍 RESULTADOS PARA: {{ q }}</div>
+            <div class="titulo-secao">🔍 RESULTADOS</div>
             <div class="grid-busca">
                 {% for f in filmes %}
                     <a href="/filme/{{ f.id }}" class="item-grade">
