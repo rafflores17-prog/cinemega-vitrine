@@ -41,10 +41,7 @@ def buscar_tmdb(url):
         return []
 
 def gerar_link_play(titulo):
-    """
-    AJUSTE MESTRE: Não fazemos mais o requests.head aqui.
-    Isso evita que a Vercel bloqueie o link por demora do servidor IPTV.
-    """
+    # Link direto para o motor no Koyeb
     return f"{MOTOR_URL}/buscar?titulo={quote(titulo)}"
 
 @app.context_processor
@@ -60,11 +57,13 @@ def controle_de_anuncios():
 @app.route("/")
 def home():
     q = request.args.get("q")
+    # 1. Sistema de Busca
     if q:
         url = f"https://api.themoviedb.org/3/search/movie?api_key={TMDB_API_KEY}&language=pt-BR&query={q}"
         filmes = buscar_tmdb(url)
-        return render_template("index.html", filmes=filmes, img=IMG, bg=BG, nome_site=NOME_SITE, busca=True, titulo_busca="🔍 Resultados da Busca")
+        return render_template("index.html", filmes=filmes, img=IMG, bg=BG, nome_site=NOME_SITE, busca=True, titulo_busca=f"🔍 Resultados para: {q}")
 
+    # 2. Página Inicial (Carregamento das Prateleiras)
     try:
         destaques = buscar_tmdb(f"https://api.themoviedb.org/3/movie/now_playing?api_key={TMDB_API_KEY}&language=pt-BR")[:5]
         populares = buscar_tmdb(f"https://api.themoviedb.org/3/movie/popular?api_key={TMDB_API_KEY}&language=pt-BR")
@@ -76,20 +75,36 @@ def home():
 
     return render_template("index.html", destaques=destaques, populares=populares, comedia=comedia, ficcao=ficcao, terror=terror, img=IMG, bg=BG, nome_site=NOME_SITE, busca=False)
 
+# 🚀 NOVA ROTA: ESSA AQUI LIGA OS GÊNEROS!
+@app.route("/genero/<int:id>/<string:nome>")
+def ver_genero(id, nome):
+    # Busca filmes específicos daquele ID de gênero no TMDB
+    url = f"https://api.themoviedb.org/3/discover/movie?api_key={TMDB_API_KEY}&language=pt-BR&with_genres={id}"
+    filmes = buscar_tmdb(url)
+    return render_template("index.html", 
+                           filmes=filmes, 
+                           img=IMG, 
+                           bg=BG, 
+                           nome_site=NOME_SITE, 
+                           busca=True, 
+                           titulo_busca=f"🎬 Categoria: {nome}")
+
 @app.route("/filme/<int:id>")
 def detalhes(id):
     try:
+        # Puxa detalhes, vídeos e recomendações em uma só pancada
         url_detalhes = f"https://api.themoviedb.org/3/movie/{id}?api_key={TMDB_API_KEY}&language=pt-BR&append_to_response=videos,recommendations"
         data = requests.get(url_detalhes, timeout=TIMEOUT).json()
         
         titulo_base = data.get("title", "")
+        # Pegamos o título e o ano para a busca no motor ser certeira
         ano = data.get("release_date", "")[:4]
         titulo_busca = f"{titulo_base} ({ano})" if ano else titulo_base
 
-        # LINK DE PLAY DIRETO PRO MOTOR
         play_link = gerar_link_play(titulo_busca)
 
-        generos = [g["name"] for g in data.get("genres", [])]
+        # Prepara os dados para o HTML (Incluso os IDs dos gêneros para os links funcionarem)
+        generos_lista = data.get("genres", [])
         duracao = f"{data.get('runtime', 0)} min"
         nota = round(data.get("vote_average", 0), 1)
         
@@ -97,7 +112,17 @@ def detalhes(id):
         trailer = next((v["key"] for v in videos if v["site"] == "YouTube"), None)
         recomendados = data.get("recommendations", {}).get("results", [])[:6]
 
-        return render_template("detalhes.html", filme=data, img=IMG, bg=BG, play_link=play_link, trailer_key=trailer, recomendados=recomendados, generos=generos, duracao=duracao, nota=nota, nome_site=NOME_SITE)
+        return render_template("detalhes.html", 
+                               filme=data, 
+                               img=IMG, 
+                               bg=BG, 
+                               play_link=play_link, 
+                               trailer_key=trailer, 
+                               recomendados=recomendados, 
+                               generos=generos_lista, # Agora enviamos a lista completa com IDs
+                               duracao=duracao, 
+                               nota=nota, 
+                               nome_site=NOME_SITE)
     except Exception as e:
         print(f"Erro detalhes: {e}")
         return "Erro ao carregar detalhes", 404
