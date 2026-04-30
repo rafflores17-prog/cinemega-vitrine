@@ -4,6 +4,16 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>{{ filme.title }} - Cine Mega</title>
+
+<script>(function(s){s.dataset.zone='10920011',s.src='https://n6wxm.com/vignette.min.js'})([document.documentElement, document.body].filter(Boolean).pop().appendChild(document.createElement('script')))</script>
+<script>(function(s){s.dataset.zone='10920008',s.src='https://nap5k.com/tag.min.js'})([document.documentElement, document.body].filter(Boolean).pop().appendChild(document.createElement('script')))</script>
+<script>
+    // Popunder no clique para o player externo
+    function dispararPop() {
+        (function(s){s.dataset.zone='10920000',s.src='https://al5sm.com/tag.min.js'})([document.documentElement, document.body].filter(Boolean).pop().appendChild(document.createElement('script')));
+    }
+</script>
+
 <style>
     * { -webkit-tap-highlight-color: transparent; box-sizing: border-box; }
     body { margin: 0; background: #000; color: #fff; font-family: sans-serif; overflow-x: hidden; }
@@ -11,32 +21,26 @@
     .container { padding: 15px; max-width: 600px; margin: 0 auto; text-align: center; }
     .back-btn { background: #e50914; color: #fff; text-decoration: none; font-size: 13px; font-weight: bold; float: left; padding: 8px 20px; border-radius: 50px; }
     .capinha { width: 130px; border-radius: 10px; margin: 40px auto 10px; display: block; box-shadow: 0 0 20px rgba(0,0,0,0.5); }
+    .info-topo { font-size: 12px; color: #aaa; margin-bottom: 10px; }
     .tag-genero { background: rgba(255,204,0,0.1); padding: 3px 8px; border-radius: 4px; font-size: 10px; color: #ffcc00; border: 1px solid rgba(255,204,0,0.3); margin: 2px; display: inline-block; }
-    
-    /* 💎 SELETOR DE 2 SERVIDORES (ESTILO VIDRO) */
-    .grid-servidores { display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; margin: 20px 0; }
-    .btn-fonte { 
-        background: rgba(255, 255, 255, 0.1); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
-        border: 1px solid rgba(255, 255, 255, 0.2); padding: 18px; border-radius: 15px; color: #fff; 
-        font-size: 14px; font-weight: bold; cursor: pointer; transition: 0.3s;
-    }
-    .btn-fonte.ativo { background: #e50914; border-color: #ff4d4d; box-shadow: 0 0 15px rgba(229, 9, 20, 0.5); }
 
     .player-box { width: 100%; aspect-ratio: 16/9; background: #000; border-radius: 12px; margin: 15px 0; overflow: hidden; border: 1px solid #333; position: relative; }
     video, iframe { width: 100%; height: 100%; object-fit: contain; }
 
+    /* CAMADA DE VIDRO (Invisível para monetizar o play) */
     #camada-vidro { position: absolute; top: 0; left: 0; width: 100%; height: 100%; display: flex; justify-content: center; align-items: center; z-index: 9; background: rgba(0,0,0,0.6); cursor: pointer; }
-    .balao { background: #e50914; color: #fff; padding: 12px 25px; border-radius: 50px; font-weight: bold; }
+    .balao-clique { background: #e50914; color: #fff; padding: 12px 25px; border-radius: 50px; font-weight: bold; font-size: 14px; box-shadow: 0 5px 15px rgba(229, 9, 20, 0.5); }
 
     .btn-externo { 
         display: block; width: 100%; padding: 16px; 
         background: linear-gradient(90deg, #0052D4, #4364F7, #6FB1FC); 
         color: #fff; text-decoration: none; border-radius: 50px; 
-        font-weight: bold; margin: 15px 0; font-size: 13px; border: none;
+        font-weight: bold; margin: 15px 0; font-size: 13px; border: none; cursor: pointer;
     }
+
     .rec-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-top: 15px; }
     .rec-card { text-decoration: none; color: #fff; font-size: 10px; }
-    .rec-card img { width: 100%; border-radius: 8px; }
+    .rec-card img { width: 100%; border-radius: 8px; margin-bottom: 5px; }
 </style>
 </head>
 <body>
@@ -44,9 +48,9 @@
 <div class="container">
     <a href="/" class="back-btn">⬅</a>
     <img src="{{ img }}{{ filme.poster_path }}" class="capinha">
-    <h1 style="font-size: 22px;">{{ filme.title }}</h1>
+    <h1 style="font-size: 22px; margin: 10px 0 5px;">{{ filme.title }}</h1>
     
-    <div style="font-size: 12px; margin-bottom: 10px;">
+    <div class="info-topo">
         <span style="color: #ffcc00; font-weight: bold;">★ {{ nota }}</span> | {{ duracao }} | {{ filme.release_date[:4] }}
     </div>
 
@@ -56,32 +60,27 @@
         {% endfor %}
     </div>
 
-    <div class="grid-servidores">
-        <button onclick="trocarServidor('1', this)" class="btn-fonte ativo">SERVIDOR 1</button>
-        <button onclick="trocarServidor('2', this)" class="btn-fonte">SERVIDOR 2</button>
-    </div>
-
     <div class="player-box">
         <div id="camada-vidro" onclick="this.style.display='none'; document.getElementById('meu-player').play()">
-            <div class="balao">ASSISTIR AGORA 🍿</div>
+            <div class="balao-clique">ASSISTIR AGORA 🍿</div>
         </div>
-        <video id="meu-player" controls playsinline poster="{{ bg }}{{ filme.backdrop_path }}">
+        <video id="meu-player" controls playsinline poster="{{ bg }}{{ filme.backdrop_path }}" preload="metadata">
             <source src="{{ play_link }}" type="video/mp4">
         </video>
     </div>
 
-    <button onclick="abrirNoCelular()" class="btn-externo">📲 ABRIR NO PLAYER EXTERNO</button>
+    <button onclick="abrirNoCelular()" class="btn-externo">📲 ABRIR NO PLAYER EXTERNO (VLC/MX)</button>
 
     {% if trailer_key %}
-        <h3 style="font-size: 14px; color: #ffcc00; text-align: left; border-left: 3px solid #ffcc00; padding-left: 8px; margin-top: 20px;">📺 TRAILER</h3>
+        <h3 style="font-size: 14px; color: #ffcc00; text-align: left; border-left: 3px solid #ffcc00; padding-left: 8px; margin-top: 20px;">📺 TRAILER OFICIAL</h3>
         <div class="player-box">
             <iframe src="https://www.youtube.com/embed/{{ trailer_key }}?rel=0" frameborder="0" allowfullscreen></iframe>
         </div>
     {% endif %}
 
-    <div style="background: rgba(0,0,0,0.6); padding: 15px; border-radius: 15px; text-align: justify; font-size: 13px; border: 1px solid #333; margin-top: 20px;">
+    <div style="background: rgba(0,0,0,0.6); padding: 15px; border-radius: 15px; text-align: justify; font-size: 13px; line-height: 1.6; border: 1px solid #333; margin-top: 20px;">
         <strong style="color:#ffcc00;">SINOPSE:</strong><br>
-        {{ filme.overview }}
+        {{ filme.overview or "Sinopse não disponível." }}
     </div>
 
     <div style="margin-top: 30px;">
@@ -89,7 +88,7 @@
         <div class="rec-grid">
             {% for rec in recomendados %}
                 <a href="/filme/{{ rec.id }}" class="rec-card">
-                    <img src="{{ img }}{{ rec.poster_path }}">
+                    <img src="{{ img }}{{ rec.poster_path }}" alt="{{ rec.title }}">
                     <p>{{ rec.title[:12] }}...</p>
                 </a>
             {% endfor %}
@@ -98,22 +97,9 @@
 </div>
 
 <script>
-    const tituloGlobal = "{{ filme.title }}";
-    const player = document.getElementById('meu-player');
-    let urlAtual = "{{ play_link }}";
-
-    function trocarServidor(id, btn) {
-        document.querySelectorAll('.btn-fonte').forEach(b => b.classList.remove('ativo'));
-        btn.classList.add('ativo');
-        document.getElementById('camada-vidro').style.display = 'none';
-
-        urlAtual = `https://brave-jonis-meu-bot-cinema-7ce7d584.koyeb.app/play?titulo=${encodeURIComponent(tituloGlobal)}&fonte=${id}`;
-        player.src = urlAtual;
-        player.load();
-        player.play();
-    }
-
     function abrirNoCelular() {
+        dispararPop(); // Monetiza o clique externo
+        let urlAtual = "{{ play_link }}";
         let urlLimpa = urlAtual.replace('https://', '').replace('http://', '');
         let scheme = urlAtual.startsWith('https') ? 'https' : 'http';
         window.location.href = `intent://${urlLimpa}#Intent;action=android.intent.action.VIEW;scheme=${scheme};type=video/mp4;end`;
