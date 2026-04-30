@@ -26,9 +26,11 @@ def buscar_tmdb(url):
             return dados
     try:
         res = requests.get(url, timeout=TIMEOUT)
-        dados = res.json().get("results", [])
-        CACHE[url] = (dados, agora)
-        return dados
+        if res.status_code == 200:
+            dados = res.json().get("results", [])
+            CACHE[url] = (dados, agora)
+            return dados
+        return []
     except:
         return []
 
@@ -50,7 +52,6 @@ def home():
 
     return render_template("index.html", destaques=destaques, populares=populares, comedia=comedia, terror=terror, img=IMG, bg=BG, nome_site=NOME_SITE, busca=False)
 
-# 🚀 ROTA DE GÊNEROS (LIGADA)
 @app.route("/genero/<int:id>/<string:nome>")
 def ver_genero(id, nome):
     url = f"https://api.themoviedb.org/3/discover/movie?api_key={TMDB_API_KEY}&language=pt-BR&with_genres={id}"
@@ -61,9 +62,12 @@ def ver_genero(id, nome):
 def detalhes(id):
     try:
         url_detalhes = f"https://api.themoviedb.org/3/movie/{id}?api_key={TMDB_API_KEY}&language=pt-BR&append_to_response=videos,recommendations"
-        data = requests.get(url_detalhes, timeout=TIMEOUT).json()
-        
-        titulo_base = data.get("title", "")
+        res = requests.get(url_detalhes, timeout=TIMEOUT)
+        if res.status_code != 200:
+            return "Filme não encontrado", 404
+            
+        data = res.json()
+        titulo_base = data.get("title", "Filme")
         ano = data.get("release_date", "")[:4]
         titulo_busca = f"{titulo_base} ({ano})" if ano else titulo_base
         play_link = f"{MOTOR_URL}/buscar?titulo={quote(titulo_busca)}"
@@ -78,5 +82,6 @@ def detalhes(id):
                                duracao=f"{data.get('runtime', 0)} min",
                                recomendados=data.get("recommendations", {}).get("results", [])[:6],
                                nome_site=NOME_SITE)
-    except:
-        return "Erro ao carregar detalhes", 404
+    except Exception as e:
+        print(f"Erro Detalhes: {e}")
+        return "Erro interno no servidor", 500
