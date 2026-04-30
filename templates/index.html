@@ -8,26 +8,23 @@
         * { -webkit-tap-highlight-color: transparent; box-sizing: border-box; }
         body { margin: 0; background: #000; color: #fff; font-family: sans-serif; overflow-x: hidden; padding-top: 130px; }
         
-        /* 💎 TOPO FIXO */
         .header-fixo { position: fixed; top: 0; left: 0; width: 100%; background: #000; z-index: 100; border-bottom: 1px solid #111; padding-bottom: 10px; }
-        .logo { font-size: 26px; font-weight: bold; color: #e50914; text-align: center; text-transform: uppercase; padding: 15px 0 5px; letter-spacing: 2px; }
+        .logo { font-size: 26px; font-weight: bold; color: #e50914; text-align: center; text-transform: uppercase; padding: 15px 0 5px; }
         .busca-box { padding: 0 15px; max-width: 600px; margin: 0 auto; }
         .busca-box input { width: 100%; padding: 12px 20px; border-radius: 8px; border: 1px solid #222; background: #111; color: #fff; outline: none; }
 
-        /* 🎬 BANNER ROTATIVO (O QUE MUDA SOZINHO) */
         .banner-wrap { width: 100%; padding: 0 10px; margin-bottom: 25px; }
         .banner { width: 100%; height: 210px; position: relative; overflow: hidden; border-radius: 12px; background-size: cover; background-position: center; display: flex; align-items: flex-end; padding: 20px; transition: 0.6s; border: 1px solid #222; }
         .btn-assistir { background: #e50914; color: #fff; padding: 10px 22px; border-radius: 4px; font-weight: bold; text-decoration: none; font-size: 13px; }
 
-        /* ↔️ FILEIRAS HORIZONTAIS (HOME) */
         .titulo-secao { font-size: 16px; color: #ffcc00; margin: 10px 15px; font-weight: bold; border-left: 4px solid #e50914; padding-left: 10px; }
         .fileira-horizontal { display: flex; overflow-x: auto; padding: 0 15px 25px; gap: 12px; scrollbar-width: none; }
         .fileira-horizontal::-webkit-scrollbar { display: none; }
         .item-filme { min-width: 105px; text-decoration: none; color: #fff; text-align: center; }
         .item-filme img { width: 105px; height: 155px; border-radius: 10px; border: 1px solid #222; object-fit: cover; }
-        .item-filme p { font-size: 10px; margin-top: 5px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; color: #bbb; }
+        .item-filme p { font-size: 10px; margin-top: 5px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 
-        /* 🔳 GRADE DE BUSCA (3 COLUNAS LADO A LADO) */
+        /* BUSCA EM GRADE (LADO A LADO) */
         .grid-busca { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; padding: 15px; }
         .grid-busca img { width: 100%; aspect-ratio: 2/3; object-fit: cover; border-radius: 10px; border: 1px solid #222; }
     </style>
@@ -43,12 +40,12 @@
     </div>
 
     {% if busca %}
-        <div class="titulo-secao">🔍 RESULTADOS PARA: {{ q }}</div>
+        <div class="titulo-secao">🔍 RESULTADOS</div>
         <div class="grid-busca">
             {% for f in filmes %}
                 <a href="/filme/{{ f.id }}" style="text-decoration:none; color:#fff; text-align:center;">
                     <img src="{{ img }}{{ f.poster_path }}">
-                    <p style="font-size:10px; margin-top:5px;">{{ f.title[:15] }}</p>
+                    <p style="font-size:10px;">{{ f.title[:15] }}</p>
                 </a>
             {% endfor %}
         </div>
@@ -68,33 +65,18 @@
                 </a>
             {% endfor %}
         </div>
-
-        <div class="titulo-secao">🤣 COMÉDIA</div>
-        <div class="fileira-horizontal">
-            {% for f in comedia %}
-                <a href="/filme/{{ f.id }}" class="item-filme">
-                    <img src="{{ img }}{{ f.poster_path }}">
-                    <p>{{ f.title[:15] }}</p>
-                </a>
-            {% endfor %}
-        </div>
     {% endif %}
 
     <script>
-        const slides = [
-            {% for f in destaques %}{ id: "{{ f.id }}", img: "{{ bg }}{{ f.backdrop_path }}" },{% endfor %}
-        ];
+        const slides = [{% for f in destaques %}{ id: "{{ f.id }}", img: "{{ bg }}{{ f.backdrop_path }}" },{% endfor %}];
         let idx = 0;
         function rodarBanner() {
             if(slides.length === 0) return;
-            const b = document.getElementById('banner-hero');
-            const l = document.getElementById('btn-hero');
-            b.style.backgroundImage = `linear-gradient(to top, #000, transparent), url('${slides[idx].img}')`;
-            l.href = `/filme/${slides[idx].id}`;
+            document.getElementById('banner-hero').style.backgroundImage = `linear-gradient(to top, #000, transparent), url('${slides[idx].img}')`;
+            document.getElementById('btn-hero').href = `/filme/${slides[idx].id}`;
             idx = (idx + 1) % slides.length;
         }
-        setInterval(rodarBanner, 5000);
-        rodarBanner();
+        setInterval(rodarBanner, 5000); rodarBanner();
     </script>
 </body>
 </html>
