@@ -1,6 +1,6 @@
 from flask import Flask, render_template, request, redirect
 import requests
-from urllib.parse import quote
+from urllib.parse import quote, unquote  # 🚀 AQUI: Adicionamos o 'unquote' para limpar os acentos
 
 app = Flask(__name__)
 
@@ -26,16 +26,12 @@ def home():
         filmes = buscar_tmdb(url)
         return render_template("index.html", filmes=filmes, img=IMG, bg=BG, nome_site=NOME_SITE, busca=True, q=q)
 
-    # Dados para a Home (Slider + Banners + Prateleiras)
+    # Dados para a Home
     destaques = buscar_tmdb(f"https://api.themoviedb.org/3/movie/now_playing?api_key={TMDB_API_KEY}&language=pt-BR")[:5]
     populares = buscar_tmdb(f"https://api.themoviedb.org/3/movie/popular?api_key={TMDB_API_KEY}&language=pt-BR")
     comedia = buscar_tmdb(f"https://api.themoviedb.org/3/discover/movie?api_key={TMDB_API_KEY}&language=pt-BR&with_genres=35")
     terror = buscar_tmdb(f"https://api.themoviedb.org/3/discover/movie?api_key={TMDB_API_KEY}&language=pt-BR&with_genres=27")
-    
-    # 🛸 FICÇÃO (ID 878)
     ficcao = buscar_tmdb(f"https://api.themoviedb.org/3/discover/movie?api_key={TMDB_API_KEY}&language=pt-BR&with_genres=878")
-    
-    # 🧪 FILMES TRASH (Terror + Comédia - IDs 27,35)
     trash = buscar_tmdb(f"https://api.themoviedb.org/3/discover/movie?api_key={TMDB_API_KEY}&language=pt-BR&with_genres=27,35")
 
     return render_template("index.html", 
@@ -44,16 +40,20 @@ def home():
                            comedia=comedia, 
                            terror=terror, 
                            ficcao=ficcao,
-                           trash=trash, # 🚀 ENVIANDO TRASH PARA O HTML
+                           trash=trash,
                            img=IMG, bg=BG, 
                            nome_site=NOME_SITE, 
                            busca=False)
 
 @app.route("/genero/<int:id>/<string:nome>")
 def ver_genero(id, nome):
+    # 🚀 AQUI: O Python agora limpa a palavra e tira os %% antes de mandar pro HTML
+    nome_limpo = unquote(nome)
+    
     url = f"https://api.themoviedb.org/3/discover/movie?api_key={TMDB_API_KEY}&language=pt-BR&with_genres={id}"
     filmes = buscar_tmdb(url)
-    return render_template("index.html", filmes=filmes, img=IMG, bg=BG, nome_site=NOME_SITE, busca=True, q=nome)
+    
+    return render_template("index.html", filmes=filmes, img=IMG, bg=BG, nome_site=NOME_SITE, busca=True, q=nome_limpo)
 
 @app.route("/filme/<int:id>")
 def detalhes(id):
