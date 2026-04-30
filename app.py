@@ -63,25 +63,23 @@ def detalhes(id):
     try:
         url_detalhes = f"https://api.themoviedb.org/3/movie/{id}?api_key={TMDB_API_KEY}&language=pt-BR&append_to_response=videos,recommendations"
         res = requests.get(url_detalhes, timeout=TIMEOUT)
-        if res.status_code != 200:
-            return "Filme não encontrado", 404
-            
         data = res.json()
+        
         titulo_base = data.get("title", "Filme")
         ano = data.get("release_date", "")[:4]
         titulo_busca = f"{titulo_base} ({ano})" if ano else titulo_base
         play_link = f"{MOTOR_URL}/buscar?titulo={quote(titulo_busca)}"
 
         return render_template("detalhes.html", 
-                               filme=data, 
-                               img=IMG, 
-                               bg=BG, 
+                               filme=data, img=IMG, bg=BG, 
                                play_link=play_link, 
                                generos=data.get("genres", []), 
                                nota=round(data.get("vote_average", 0), 1),
                                duracao=f"{data.get('runtime', 0)} min",
                                recomendados=data.get("recommendations", {}).get("results", [])[:6],
                                nome_site=NOME_SITE)
-    except Exception as e:
-        print(f"Erro Detalhes: {e}")
-        return "Erro interno no servidor", 500
+    except:
+        return redirect("/")
+
+if __name__ == "__main__":
+    app.run(host="0.0.0.0", port=5000)
