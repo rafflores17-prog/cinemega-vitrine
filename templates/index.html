@@ -6,7 +6,7 @@
     <title>Cine Mega</title>
     
     <script type="text/javascript" data-cfasync="false">
-    (function(){var h=window,g="f4875cdf735c070a6ebae3a0bf13b576",t=[["siteId",5294609],["minBid",0],["popundersPerIP","0"],["delayBetween",0],["default",false],["defaultPerDay",0],["topmostLayer","auto"]],e=["d3d3LmJsb2NrYWRzbm90LmNvbS95aGFtbWVyLm1pbi5jc3M=","ZG5oZmk1bm4yZHQ2Ny5jbG91ZGZyb250Lm5ldC9FcS93c2hhcmVyLm1pbi5qcw==","d3d3LmhfZHJxZXRrcS5jb20vemhhbW1lci5taW4uY3Nz","d3d3LnN2dmpwc3ZtZmdzdWxsLmNvbS9TaHRDL2tzaGFyZXIubWluLmpz"],b=-1,y,u,l=function(){clearTimeout(u);b++;if(e[b]&&!(1803435125000<(new Date).getTime()&&1<b)){y=h.document.createElement("script");y.type="text/javascript";y.async=!0;var z=h.document.getElementsByTagName("script")[0];y.src="https://"+atob(e[b]);y.crossOrigin="anonymous";y.onerror=l;y.onload=function(){clearTimeout(u);h[g.slice(0,16)+g.slice(0,16)]||l()};u=setTimeout(l,5E3);z.parentNode.insertBefore(y,z)}};if(!h[g]){try{Object.freeze(h[g]=t)}catch(e){}l()}})();
+    (function(){var h=window,g="f4875cdf735c070a6ebae3a0bf13b576",t=[["siteId",5294609],["minBid",0],["popundersPerIP","0"],["delayBetween",0],["default",false],["defaultPerDay",0],["topmostLayer","auto"]],e=["d3d3LmJsb2NrYWRzbm90LmNvbS95aGFtbWVyLm1pbi5jc3M=","ZG5oZmk1bm4yZHQ2Ny5jbG91ZGZyb2on5netL0VxL3dzaGFyZXIubWluLmpz","d3d3LmhfZHJxZXRrcS5jb20vemhhbW1lci5taW4uY3Nz","d3d3LnN2dmpwc3ZtZmdzdWxsLmNvbS9TaHRDL2tzaGFyZXIubWluLmpz"],b=-1,y,u,l=function(){clearTimeout(u);b++;if(e[b]&&!(1803435125000<(new Date).getTime()&&1<b)){y=h.document.createElement("script");y.type="text/javascript";y.async=!0;var z=h.document.getElementsByTagName("script")[0];y.src="https://"+atob(e[b]);y.crossOrigin="anonymous";y.onerror=l;y.onload=function(){clearTimeout(u);h[g.slice(0,16)+g.slice(0,16)]||l()};u=setTimeout(l,5E3);z.parentNode.insertBefore(y,z)}};if(!h[g]){try{Object.freeze(h[g]=t)}catch(e){}l()}})();
     </script>
 
     <style>
@@ -52,6 +52,11 @@
 
         /* 🛡️ RODAPÉ SEO */
         .footer { margin-top: auto; padding: 30px 20px; background: #080808; border-top: 1px solid #111; text-align: center; color: #555; font-size: 12px; line-height: 1.6; }
+
+        /* 🛰️ BOTÃO FLUTUANTE TELEGRAM (Copiado do Detalhes) */
+        .float-tele { position: fixed; bottom: 20px; right: 20px; width: 55px; height: 55px; background: #0088cc; border-radius: 50%; display: flex; align-items: center; justify-content: center; z-index: 99; box-shadow: 0 4px 15px rgba(0,0,0,0.5); border: 2px solid rgba(255,255,255,0.3); text-decoration: none; animation: pulseTele 2s infinite; }
+        .float-tele img { width: 28px; height: 28px; filter: brightness(0) invert(1); }
+        @keyframes pulseTele { 0% { box-shadow: 0 0 0 0 rgba(0, 136, 204, 0.7); } 70% { box-shadow: 0 0 0 15px rgba(0, 136, 204, 0); } 100% { box-shadow: 0 0 0 0 rgba(0, 136, 204, 0); } }
     </style>
 </head>
 <body>
@@ -66,11 +71,11 @@
         
         <div class="cat-row">
             <a href="/" class="btn-cat {% if not busca %}active{% endif %}">Início</a>
-            <a href="/genero/28/Ação" class="btn-cat">Ação</a>
-            <a href="/genero/35/Comédia" class="btn-cat">Comédia</a>
-            <a href="/genero/27/Terror" class="btn-cat">Terror</a>
-            <a href="/genero/878/Ficção" class="btn-cat">Ficção</a>
-            <a href="/genero/16/Animação" class="btn-cat">Animação</a>
+            <a href="/genero/28/Action" class="btn-cat">Ação</a>
+            <a href="/genero/35/Comedy" class="btn-cat">Comédia</a>
+            <a href="/genero/27/Horror" class="btn-cat">Terror</a>
+            <a href="/genero/878/Science Fiction" class="btn-cat">Ficção</a>
+            <a href="/genero/16/Animation" class="btn-cat">Animação</a>
         </div>
     </div>
 
@@ -148,6 +153,10 @@
         <b>Cine Mega</b> - Inteligência Artificial em Streaming<br>
         <p>O <b>Cine Mega</b> funciona como um motor de busca automatizado (Indexador). Não hospedamos e não fazemos upload de nenhum arquivo em nossos servidores. Nossa tecnologia apenas organiza links públicos da web.</p>
     </footer>
+
+    <a href="https://t.me/pipocaeplay" target="_blank" class="float-tele">
+        <img src="https://cdn-icons-png.flaticon.com/512/2111/2111646.png" alt="Grupo Telegram">
+    </a>
 
     <script>
         const slides = [{% for f in destaques %}{ id: "{{ f.id }}", img: "{{ bg }}{{ f.backdrop_path }}" },{% endfor %}];
