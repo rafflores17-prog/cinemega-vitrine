@@ -4,56 +4,98 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>{{ filme.title }} - Cine Mega</title>
+
 <style>
     * { -webkit-tap-highlight-color: transparent; box-sizing: border-box; }
-    body { margin: 0; background: #000; color: #fff; font-family: sans-serif; overflow-x: hidden; }
-    .fundo { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: url('{{ bg }}{{ filme.backdrop_path }}') center/cover; filter: blur(25px) brightness(0.2); z-index: -1; }
+    body { margin: 0; padding: 0; background: #000; color: #fff; font-family: sans-serif; overflow-x: hidden; }
+
+    /* 🖼️ FUNDO DESFOCADO */
+    .fundo-backdrop {
+        position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+        background: url('{{ bg }}{{ filme.backdrop_path }}') center/cover;
+        filter: blur(20px) brightness(0.2); z-index: -1;
+    }
+
     .container { padding: 15px; max-width: 600px; margin: 0 auto; text-align: center; }
-    .back-btn { background: #e50914; color: #fff; text-decoration: none; font-size: 13px; font-weight: bold; float: left; padding: 8px 20px; border-radius: 50px; }
-    .capinha { width: 130px; border-radius: 10px; margin: 40px auto 10px; display: block; box-shadow: 0 0 20px rgba(0,0,0,0.5); }
+
+    /* 🔴 BOTÃO VOLTAR */
+    .header-top { width: 100%; text-align: left; margin-bottom: 10px; }
+    .back-btn { 
+        background: #e50914; color: #fff; text-decoration: none; font-size: 13px; 
+        font-weight: bold; padding: 8px 16px; border-radius: 6px; display: inline-block;
+    }
+
+    /* 📱 CAPA E TÍTULO CONTROLADOS */
+    .capinha { width: 140px; border-radius: 12px; margin: 20px auto 10px; display: block; border: 1px solid rgba(255,255,255,0.2); box-shadow: 0 0 20px #000; }
+    h1 { font-size: 22px; margin: 10px 0; font-weight: bold; }
+
+    /* 🎬 PLAYER BOX */
     .player-box { width: 100%; aspect-ratio: 16/9; background: #000; border-radius: 12px; margin: 15px 0; overflow: hidden; border: 1px solid #333; position: relative; }
+    video, iframe { width: 100%; height: 100%; border: none; }
+    
     #camada-vidro { position: absolute; top: 0; left: 0; width: 100%; height: 100%; display: flex; justify-content: center; align-items: center; z-index: 9; background: rgba(0,0,0,0.6); cursor: pointer; }
-    .balao { background: #e50914; color: #fff; padding: 12px 25px; border-radius: 50px; font-weight: bold; }
-    .btn-externo { display: block; width: 100%; padding: 16px; background: linear-gradient(90deg, #0052D4, #4364F7, #6FB1FC); color: #fff; text-decoration: none; border-radius: 50px; font-weight: bold; margin: 15px 0; font-size: 13px; }
-    .sinopse { background: rgba(0,0,0,0.6); padding: 15px; border-radius: 15px; text-align: justify; font-size: 13px; border: 1px solid #333; margin-top: 20px; }
-    .rec-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-top: 15px; }
-    .rec-card img { width: 100%; border-radius: 8px; }
+    .btn-play-red { background: #e50914; color: #fff; padding: 12px 25px; border-radius: 50px; font-weight: bold; }
+
+    .btn-externo {
+        display: block; width: 100%; padding: 16px; background: linear-gradient(90deg, #0052D4, #4364F7, #6FB1FC); color: #fff; 
+        text-decoration: none; border-radius: 50px; font-weight: bold; margin: 15px 0; font-size: 13px;
+    }
+
+    .sinopse-box {
+        background: rgba(0,0,0,0.6); padding: 15px; border-radius: 15px; text-align: justify;
+        font-size: 13px; border: 1px solid #333; line-height: 1.6;
+    }
+
+    /* 🚀 RECOMENDADOS (VOCÊ PODE GOSTAR) */
+    .row-titulo { text-align: left; color: #ffcc00; font-weight: bold; margin: 25px 0 10px; font-size: 15px; border-left: 4px solid #e50914; padding-left: 10px; }
+    .rec-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; padding-bottom: 30px; }
+    .rec-card img { width: 100%; border-radius: 8px; border: 1px solid #222; }
 </style>
 </head>
 <body>
-<div class="fundo"></div>
+
+<div class="fundo-backdrop"></div>
+
 <div class="container">
-    <a href="/" class="back-btn">⬅</a>
+    <div class="header-top">
+        <a href="/" class="back-btn">⬅ VOLTAR</a>
+    </div>
+
     <img src="{{ img }}{{ filme.poster_path }}" class="capinha">
     <h1>{{ filme.title }}</h1>
-    
+
+    <div style="color: #ffcc00; font-size: 13px; font-weight: bold; margin-bottom: 15px;">
+        ⭐ {{ nota }} | {{ filme.release_date[:4] }} | {{ duracao }}
+    </div>
+
     <div class="player-box">
         <div id="camada-vidro" onclick="this.style.display='none'; document.getElementById('meu-player').play()">
-            <div class="balao">ASSISTIR AGORA 🍿</div>
+            <div class="btn-play-red">ASSISTIR AGORA 🍿</div>
         </div>
-        <video id="meu-player" controls playsinline poster="{{ bg }}{{ filme.backdrop_path }}">
+        <video id="meu-player" controls playsinline poster="{{ bg }}{{ filme.backdrop_path }}" preload="metadata">
             <source src="{{ play_link }}" type="video/mp4">
         </video>
     </div>
-
-    <button onclick="abrirNoCelular()" class="btn-externo">📲 ABRIR NO PLAYER EXTERNO</button>
+    
+    <button onclick="abrirNoCelular()" class="btn-externo">📲 ABRIR NO PLAYER EXTERNO (VLC/MX)</button>
 
     {% if trailer_key %}
-        <h3 style="color:#ffcc00; text-align:left;">📺 TRAILER</h3>
+        <div class="row-titulo">📺 TRAILER OFICIAL</div>
         <div class="player-box">
-            <iframe width="100%" height="100%" src="https://www.youtube.com/embed/{{ trailer_key }}" frameborder="0" allowfullscreen></iframe>
+            <iframe src="https://www.youtube.com/embed/{{ trailer_key }}?rel=0" allowfullscreen></iframe>
         </div>
     {% endif %}
 
-    <div class="sinopse">
-        <strong style="color:#ffcc00;">SINOPSE:</strong><br>{{ filme.overview }}
+    <div class="sinopse-box">
+        <strong style="color: #ffcc00; font-size: 11px; text-transform: uppercase;">Sinopse</strong><br>
+        {{ filme.overview or "Sinopse não disponível no momento." }}
     </div>
 
-    <h3 style="color:#ffcc00; text-align:left; margin-top:30px;">🎬 VOCÊ PODE GOSTAR:</h3>
+    <div class="row-titulo">🎬 VOCÊ PODE GOSTAR:</div>
     <div class="rec-grid">
         {% for rec in recomendados %}
             <a href="/filme/{{ rec.id }}" class="rec-card">
-                <img src="{{ img }}{{ rec.poster_path }}">
+                <img src="{{ img }}{{ rec.poster_path }}" alt="{{ rec.title }}">
             </a>
         {% endfor %}
     </div>
