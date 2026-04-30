@@ -42,11 +42,10 @@
     #camada-vidro { position: absolute; top: 0; left: 0; width: 100%; height: 100%; display: flex; justify-content: center; align-items: center; z-index: 9; background: rgba(0,0,0,0.6); cursor: pointer; }
     .btn-play-red { background: #e50914; color: #fff; padding: 12px 25px; border-radius: 50px; font-weight: bold; }
 
-    /* 🟦 SEU BOTÃO AZUL ORIGINAL */
-    .btn-externo {
-        display: block; width: 100%; padding: 16px; background: linear-gradient(90deg, #0052D4, #4364F7, #6FB1FC); color: #fff; 
-        text-decoration: none; border-radius: 50px; font-weight: bold; margin: 15px 0; font-size: 13px; border: none; cursor: pointer;
-    }
+    /* 🚀 NOVOS BOTÕES DIRETOS: VLC E MX PLAYER */
+    .botoes-externos { display: flex; gap: 10px; margin: 15px 0; }
+    .btn-vlc { flex: 1; padding: 14px; background: #FF8800; color: #fff; border: none; border-radius: 50px; font-weight: bold; font-size: 12px; cursor: pointer; }
+    .btn-mx { flex: 1; padding: 14px; background: #0052D4; color: #fff; border: none; border-radius: 50px; font-weight: bold; font-size: 12px; cursor: pointer; }
 
     .sinopse-box {
         background: rgba(0,0,0,0.6); padding: 15px; border-radius: 15px; text-align: justify;
@@ -84,7 +83,10 @@
         </video>
     </div>
     
-    <button onclick="abrirNoCelular()" class="btn-externo">📲 ABRIR NO PLAYER EXTERNO (VLC/MX)</button>
+    <div class="botoes-externos">
+        <button onclick="abrirVLC()" class="btn-vlc">🟠 ABRIR NO VLC</button>
+        <button onclick="abrirMX()" class="btn-mx">🔵 ABRIR NO MX</button>
+    </div>
 
     {% if trailer_key %}
         <div class="row-titulo">📺 TRAILER OFICIAL</div>
@@ -109,12 +111,20 @@
 </div>
 
 <script>
-    function abrirNoCelular() {
+    // CHAMA O VLC DIRETO, SEM MENU!
+    function abrirVLC() {
         let urlAtual = "{{ play_link }}";
         let urlLimpa = urlAtual.replace('https://', '').replace('http://', '');
-        
-        // Código exato para funcionar o streaming da internet no VLC/MX Player
-        window.location.href = `intent://${urlLimpa}#Intent;action=android.intent.action.VIEW;scheme=https;type=video/mp4;end`;
+        // Note o "package=org.videolan.vlc" - isso força o celular a usar o VLC
+        window.location.href = `intent://${urlLimpa}#Intent;action=android.intent.action.VIEW;scheme=https;type=video/mp4;package=org.videolan.vlc;end`;
+    }
+
+    // CHAMA O MX PLAYER DIRETO, SEM MENU!
+    function abrirMX() {
+        let urlAtual = "{{ play_link }}";
+        let urlLimpa = urlAtual.replace('https://', '').replace('http://', '');
+        // Note o "package=com.mxtech.videoplayer.ad" - isso força usar o MX Player
+        window.location.href = `intent://${urlLimpa}#Intent;action=android.intent.action.VIEW;scheme=https;type=video/mp4;package=com.mxtech.videoplayer.ad;end`;
     }
 </script>
 </body>
