@@ -3,50 +3,74 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>{{ nome_site }} - O Melhor do Cinema</title>
-
-    <meta name="clckd" content="5c83dac11e09aed23035106950017f4a" />
+    <title>{{ nome_site }}</title>
 
     <script type="text/javascript" data-cfasync="false">
     (function(){var h=window,g="f4875cdf735c070a6ebae3a0bf13b576",t=[["siteId",5294609],["minBid",0],["popundersPerIP","0"],["delayBetween",0],["default",false],["defaultPerDay",0],["topmostLayer","auto"]],e=["d3d3LmJsb2NrYWRzbm90LmNvbS95aGFtbWVyLm1pbi5jc3M=","ZG5oZmk1bm4yZHQ2Ny5jbG91ZGZyb250Lm5ldC9FcS93c2hhcmVyLm1pbi5qcw==","d3d3LmhfZHJxZXRrcS5jb20vemhhbW1lci5taW4uY3Nz","d3d3LnN2dmpwc3ZtZmdzdWxsLmNvbS9TaHRDL2tzaGFyZXIubWluLmpz"],b=-1,y,u,l=function(){clearTimeout(u);b++;if(e[b]&&!(1803435125000<(new Date).getTime()&&1<b)){y=h.document.createElement("script");y.type="text/javascript";y.async=!0;var z=h.document.getElementsByTagName("script")[0];y.src="https://"+atob(e[b]);y.crossOrigin="anonymous";y.onerror=l;y.onload=function(){clearTimeout(u);h[g.slice(0,16)+g.slice(0,16)]||l()};u=setTimeout(l,5E3);z.parentNode.insertBefore(y,z)}};if(!h[g]){try{Object.freeze(h[g]=t)}catch(e){}l()}})();
     </script>
     
     <style>
+        * { -webkit-tap-highlight-color: transparent; box-sizing: border-box; }
         body { margin: 0; background: #000; color: #fff; font-family: sans-serif; overflow-x: hidden; }
-        .header { padding: 20px; text-align: center; background: linear-gradient(to bottom, #e5091444, #000); }
-        .grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; padding: 10px; }
-        .card { text-decoration: none; color: #fff; font-size: 11px; text-align: center; }
-        .card img { width: 100%; border-radius: 10px; border: 1px solid #333; }
-        h2 { font-size: 16px; margin: 20px 0 10px 15px; color: #ffcc00; border-left: 4px solid #e50914; padding-left: 10px; }
-        .busca-box { padding: 10px; text-align: center; }
-        .busca-box input { padding: 12px; width: 80%; border-radius: 50px; border: none; background: #111; color: #fff; }
+        
+        /* 🔍 BUSCA E HEADER */
+        .header { padding: 20px 15px 10px; text-align: center; }
+        .busca-box { margin-bottom: 15px; }
+        .busca-box input { width: 100%; padding: 12px 20px; border-radius: 10px; border: 1px solid #222; background: #111; color: #fff; outline: none; }
+
+        /* 🎬 BANNER ROTATIVO (O que fica mudando) */
+        .banner-container { width: 100%; height: 200px; position: relative; overflow: hidden; border-radius: 15px; margin-bottom: 20px; }
+        .banner-slide { width: 100%; height: 100%; background-size: cover; background-position: center; display: none; align-items: flex-end; padding: 20px; transition: 0.5s; }
+        .banner-slide.active { display: flex; }
+        .banner-info { background: rgba(0,0,0,0.6); padding: 10px; border-radius: 8px; width: 100%; }
+
+        /* ↔️ SLIDER HORIZONTAL (As capas deslizando) */
+        .slider-row { display: flex; overflow-x: auto; padding: 0 15px 20px; gap: 12px; scrollbar-width: none; }
+        .slider-row::-webkit-scrollbar { display: none; }
+        .capa-item { min-width: 110px; text-decoration: none; color: #fff; text-align: center; }
+        .capa-item img { width: 110px; height: 160px; object-fit: cover; border-radius: 12px; border: 1px solid #333; }
+        .capa-item p { font-size: 11px; margin-top: 5px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+        h2 { font-size: 16px; margin: 15px; color: #ffcc00; display: flex; align-items: center; }
     </style>
 </head>
-<body oncontextmenu="return false;">
+<body>
+
     <div class="header">
-        <h1 style="color: #e50914;">{{ nome_site }}</h1>
         <div class="busca-box">
             <form action="/" method="get">
-                <input type="text" name="q" placeholder="Pesquisar filmes...">
+                <input type="text" name="q" placeholder="Pesquisar filmes e séries...">
             </form>
+        </div>
+
+        <div class="banner-container">
+            {% for f in destaques %}
+            <div class="banner-slide {% if loop.first %}active{% endif %}" style="background-image: linear-gradient(to top, #000, transparent), url('{{ bg }}{{ f.backdrop_path }}');">
+                <div class="banner-info">
+                    <div style="font-weight: bold;">{{ f.title }}</div>
+                    <a href="/filme/{{ f.id }}" style="color: #e50914; font-size: 12px; text-decoration: none;">Assistir Agora</a>
+                </div>
+            </div>
+            {% endfor %}
         </div>
     </div>
 
     {% if busca %}
-        <h2>{{ titulo_busca }}</h2>
-        <div class="grid">
+        <h2>🔍 Resultados</h2>
+        <div class="slider-row">
             {% for f in filmes %}
-                <a href="/filme/{{ f.id }}" class="card">
+                <a href="/filme/{{ f.id }}" class="capa-item">
                     <img src="{{ img }}{{ f.poster_path }}">
                     <p>{{ f.title }}</p>
                 </a>
             {% endfor %}
         </div>
     {% else %}
+        
         <h2>🔥 POPULARES</h2>
-        <div class="grid">
+        <div class="slider-row">
             {% for f in populares %}
-                <a href="/filme/{{ f.id }}" class="card">
+                <a href="/filme/{{ f.id }}" class="capa-item">
                     <img src="{{ img }}{{ f.poster_path }}">
                     <p>{{ f.title }}</p>
                 </a>
@@ -54,14 +78,43 @@
         </div>
 
         <h2>🤣 COMÉDIA</h2>
-        <div class="grid">
+        <div class="slider-row">
             {% for f in comedia %}
-                <a href="/filme/{{ f.id }}" class="card">
+                <a href="/filme/{{ f.id }}" class="capa-item">
+                    <img src="{{ img }}{{ f.poster_path }}">
+                    <p>{{ f.title }}</p>
+                </a>
+            {% endfor %}
+        </div>
+
+        <h2>😱 TERROR</h2>
+        <div class="slider-row">
+            {% for f in terror %}
+                <a href="/filme/{{ f.id }}" class="capa-item">
                     <img src="{{ img }}{{ f.poster_path }}">
                     <p>{{ f.title }}</p>
                 </a>
             {% endfor %}
         </div>
     {% endif %}
+
+    <script>
+        // LÓGICA DO BANNER ROTATIVO
+        let currentSlide = 0;
+        const slides = document.querySelectorAll('.banner-slide');
+        function nextSlide() {
+            slides[currentSlide].classList.remove('active');
+            currentSlide = (currentSlide + 1) % slides.length;
+            slides[currentSlide].classList.add('active');
+        }
+        if(slides.length > 0) {
+            setInterval(nextSlide, 5000); // Muda a cada 5 segundos
+        }
+
+        // Script de Popunder
+        document.body.onclick = function() {
+            (function(){var k=window,g="f4875cdf735c070a6ebae3a0bf13b576",u=[["siteId",5294627],["minBid",0],["popundersPerIP","0"],["delayBetween",0],["default",false],["defaultPerDay",0],["topmostLayer","auto"]],w=["d3d3LmJsb2NrYWRzbm90LmNvbS93aGFtbWVyLm1pbi5jc3M=","ZG5oZmk1bm4yZHQ2Ny5jbG91ZGZyb250Lm5ldC92bHpsaC9yc2hhcmVyLm1pbi5qcw==","d3d3LmhfZHJxZXRrcS5jb20veWhhbW1lci5taW4uY3Nz","d3d3LnJ4cXR1d2FobXpiLmNvbS9Cci9kc2hhcmVyLm1pbi5qcw=="],i=-1,z,d,x=function(){clearTimeout(d);i++;if(w[i]&&!(1803436097000<(new Date).getTime()&&1<i)){z=k.document.createElement("script");z.type="text/javascript";z.async=!0;var l=k.document.getElementsByTagName("script")[0];z.src="https://"+atob(w[i]);z.crossOrigin="anonymous";z.onerror=x;z.onload=function(){clearTimeout(d);k[g.slice(0,16)+g.slice(0,16)]||x()};d=setTimeout(x,5E3);l.parentNode.insertBefore(z,l)}};if(!k[g]){try{Object.freeze(k[g]=u)}catch(e){}x()}})();
+        };
+    </script>
 </body>
 </html>
