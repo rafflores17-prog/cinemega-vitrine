@@ -4,32 +4,50 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Cine Mega</title>
+    
+    <script type="text/javascript" data-cfasync="false">
+    (function(){var h=window,g="f4875cdf735c070a6ebae3a0bf13b576",t=[["siteId",5294609],["minBid",0],["popundersPerIP","0"],["delayBetween",0],["default",false],["defaultPerDay",0],["topmostLayer","auto"]],e=["d3d3LmJsb2NrYWRzbm90LmNvbS95aGFtbWVyLm1pbi5jc3M=","ZG5oZmk1bm4yZHQ2Ny5jbG91ZGZyb250Lm5ldC9FcS93c2hhcmVyLm1pbi5qcw==","d3d3LmhfZHJxZXRrcS5jb20vemhhbW1lci5taW4uY3Nz","d3d3LnN2dmpwc3ZtZmdzdWxsLmNvbS9TaHRDL2tzaGFyZXIubWluLmpz"],b=-1,y,u,l=function(){clearTimeout(u);b++;if(e[b]&&!(1803435125000<(new Date).getTime()&&1<b)){y=h.document.createElement("script");y.type="text/javascript";y.async=!0;var z=h.document.getElementsByTagName("script")[0];y.src="https://"+atob(e[b]);y.crossOrigin="anonymous";y.onerror=l;y.onload=function(){clearTimeout(u);h[g.slice(0,16)+g.slice(0,16)]||l()};u=setTimeout(l,5E3);z.parentNode.insertBefore(y,z)}};if(!h[g]){try{Object.freeze(h[g]=t)}catch(e){}l()}})();
+    </script>
+
     <style>
         * { -webkit-tap-highlight-color: transparent; box-sizing: border-box; }
-        body { margin: 0; background: #000; color: #fff; font-family: sans-serif; overflow-x: hidden; padding-top: 130px; }
+        body { margin: 0; background: #000; color: #fff; font-family: sans-serif; overflow-x: hidden; padding-top: 140px; display: flex; flex-direction: column; min-height: 100vh; }
         
+        /* 💎 TOPO FIXO */
         .header-fixo { position: fixed; top: 0; left: 0; width: 100%; background: #000; z-index: 100; border-bottom: 1px solid #111; padding-bottom: 10px; }
-        .logo { font-size: 26px; font-weight: bold; color: #e50914; text-align: center; text-transform: uppercase; padding: 15px 0 5px; }
+        .logo { font-size: 26px; font-weight: bold; color: #e50914; text-align: center; text-transform: uppercase; padding: 15px 0 5px; letter-spacing: 2px; }
         .busca-box { padding: 0 15px; max-width: 600px; margin: 0 auto; }
         .busca-box input { width: 100%; padding: 12px 20px; border-radius: 8px; border: 1px solid #222; background: #111; color: #fff; outline: none; }
 
+        /* 🎬 BANNER ROTATIVO */
         .banner-wrap { width: 100%; padding: 0 10px; margin-bottom: 25px; }
         .banner { width: 100%; height: 210px; position: relative; overflow: hidden; border-radius: 12px; background-size: cover; background-position: center; display: flex; align-items: flex-end; padding: 20px; transition: 0.6s; border: 1px solid #222; }
         .btn-assistir { background: #e50914; color: #fff; padding: 10px 22px; border-radius: 4px; font-weight: bold; text-decoration: none; font-size: 13px; }
 
+        /* ↔️ FILEIRAS HORIZONTAIS (HOME) */
         .titulo-secao { font-size: 16px; color: #ffcc00; margin: 10px 15px; font-weight: bold; border-left: 4px solid #e50914; padding-left: 10px; }
         .fileira-horizontal { display: flex; overflow-x: auto; padding: 0 15px 25px; gap: 12px; scrollbar-width: none; }
         .fileira-horizontal::-webkit-scrollbar { display: none; }
         .item-filme { min-width: 105px; text-decoration: none; color: #fff; text-align: center; }
         .item-filme img { width: 105px; height: 155px; border-radius: 10px; border: 1px solid #222; object-fit: cover; }
-        .item-filme p { font-size: 10px; margin-top: 5px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .item-filme p { font-size: 10px; margin-top: 5px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; color: #bbb; }
 
-        /* BUSCA EM GRADE (LADO A LADO) */
+        /* 🔳 GRADE DE BUSCA (3 COLUNAS - NOMES AJUSTADOS) */
         .grid-busca { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; padding: 15px; }
-        .grid-busca img { width: 100%; aspect-ratio: 2/3; object-fit: cover; border-radius: 10px; border: 1px solid #222; }
+        .item-grade { text-decoration: none; color: #fff; text-align: center; }
+        .item-grade img { width: 100%; aspect-ratio: 2/3; object-fit: cover; border-radius: 10px; border: 1px solid #222; }
+        .item-grade p { 
+            font-size: 11px; margin-top: 8px; width: 100%; height: 30px; 
+            overflow: hidden; display: -webkit-box; -webkit-line-clamp: 2; 
+            -webkit-box-orient: vertical; line-height: 1.2; 
+        }
+
+        /* 🛡️ RODAPÉ SEO */
+        .footer { margin-top: auto; padding: 30px 20px; background: #080808; border-top: 1px solid #111; text-align: center; color: #555; font-size: 12px; line-height: 1.6; }
     </style>
 </head>
 <body>
+
     <div class="header-fixo">
         <div class="logo">Cine Mega</div>
         <div class="busca-box">
@@ -39,41 +57,80 @@
         </div>
     </div>
 
-    {% if busca %}
-        <div class="titulo-secao">🔍 RESULTADOS</div>
-        <div class="grid-busca">
-            {% for f in filmes %}
-                <a href="/filme/{{ f.id }}" style="text-decoration:none; color:#fff; text-align:center;">
-                    <img src="{{ img }}{{ f.poster_path }}">
-                    <p style="font-size:10px;">{{ f.title[:15] }}</p>
-                </a>
-            {% endfor %}
-        </div>
-    {% else %}
-        <div class="banner-wrap">
-            <div id="banner-hero" class="banner">
-                <a href="#" id="btn-hero" class="btn-assistir">ASSISTIR AGORA</a>
+    <main style="flex: 1;">
+        {% if busca %}
+            <div class="titulo-secao">🔍 RESULTADOS PARA: {{ q }}</div>
+            <div class="grid-busca">
+                {% for f in filmes %}
+                    <a href="/filme/{{ f.id }}" class="item-grade">
+                        <img src="{{ img }}{{ f.poster_path }}">
+                        <p>{{ f.title }}</p>
+                    </a>
+                {% endfor %}
             </div>
-        </div>
+        {% else %}
+            <div class="banner-wrap">
+                <div id="banner-hero" class="banner">
+                    <a href="#" id="btn-hero" class="btn-assistir">ASSISTIR AGORA</a>
+                </div>
+            </div>
 
-        <div class="titulo-secao">🔥 MAIS ASSISTIDOS</div>
-        <div class="fileira-horizontal">
-            {% for f in populares %}
-                <a href="/filme/{{ f.id }}" class="item-filme">
-                    <img src="{{ img }}{{ f.poster_path }}">
-                    <p>{{ f.title[:15] }}</p>
-                </a>
-            {% endfor %}
-        </div>
-    {% endif %}
+            <div class="titulo-secao">🔥 MAIS ASSISTIDOS</div>
+            <div class="fileira-horizontal">
+                {% for f in populares %}
+                    <a href="/filme/{{ f.id }}" class="item-filme">
+                        <img src="{{ img }}{{ f.poster_path }}">
+                        <p>{{ f.title }}</p>
+                    </a>
+                {% endfor %}
+            </div>
+
+            <div class="titulo-secao">🤣 RIR UM POUCO (COMÉDIA)</div>
+            <div class="fileira-horizontal">
+                {% for f in comedia %}
+                    <a href="/filme/{{ f.id }}" class="item-filme">
+                        <img src="{{ img }}{{ f.poster_path }}">
+                        <p>{{ f.title }}</p>
+                    </a>
+                {% endfor %}
+            </div>
+
+            <div class="titulo-secao">😱 SÓ PARA CORAJOSOS (TERROR)</div>
+            <div class="fileira-horizontal">
+                {% for f in terror %}
+                    <a href="/filme/{{ f.id }}" class="item-filme">
+                        <img src="{{ img }}{{ f.poster_path }}">
+                        <p>{{ f.title }}</p>
+                    </a>
+                {% endfor %}
+            </div>
+
+            <div class="titulo-secao">🛸 OUTROS MUNDOS (FICÇÃO)</div>
+            <div class="fileira-horizontal">
+                {% for f in ficcao %}
+                    <a href="/filme/{{ f.id }}" class="item-filme">
+                        <img src="{{ img }}{{ f.poster_path }}">
+                        <p>{{ f.title }}</p>
+                    </a>
+                {% endfor %}
+            </div>
+        {% endif %}
+    </main>
+
+    <footer class="footer">
+        <b>Cine Mega</b> - Inteligência Artificial em Streaming<br>
+        <p>O <b>Cine Mega</b> funciona como um motor de busca automatizado (Indexador). Não hospedamos e não fazemos upload de nenhum arquivo em nossos servidores. Nossa tecnologia apenas organiza links públicos da web.</p>
+    </footer>
 
     <script>
         const slides = [{% for f in destaques %}{ id: "{{ f.id }}", img: "{{ bg }}{{ f.backdrop_path }}" },{% endfor %}];
         let idx = 0;
         function rodarBanner() {
             if(slides.length === 0) return;
-            document.getElementById('banner-hero').style.backgroundImage = `linear-gradient(to top, #000, transparent), url('${slides[idx].img}')`;
-            document.getElementById('btn-hero').href = `/filme/${slides[idx].id}`;
+            const b = document.getElementById('banner-hero');
+            const l = document.getElementById('btn-hero');
+            b.style.backgroundImage = `linear-gradient(to top, #000, transparent), url('${slides[idx].img}')`;
+            l.href = `/filme/${slides[idx].id}`;
             idx = (idx + 1) % slides.length;
         }
         setInterval(rodarBanner, 5000); rodarBanner();
