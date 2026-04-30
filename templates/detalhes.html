@@ -14,6 +14,7 @@
 </script>
 
 <style>
+    /* ... (Seu CSS permanece o mesmo) ... */
     * { -webkit-tap-highlight-color: transparent; box-sizing: border-box; }
     body { margin: 0; background: #000; color: #fff; font-family: sans-serif; overflow-x: hidden; }
     .fundo { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: url('{{ bg }}{{ filme.backdrop_path }}') center/cover; filter: blur(25px) brightness(0.2); z-index: -1; }
@@ -21,12 +22,15 @@
     .back-btn { background: #e50914; color: #fff; text-decoration: none; font-size: 13px; font-weight: bold; float: left; padding: 8px 20px; border-radius: 50px; }
     .capinha { width: 130px; border-radius: 10px; margin: 40px auto 10px; display: block; box-shadow: 0 0 20px rgba(0,0,0,0.5); }
     .info-topo { font-size: 12px; color: #aaa; margin-bottom: 10px; }
-    .tag-genero { background: rgba(255,204,0,0.1); padding: 5px 12px; border-radius: 4px; font-size: 10px; color: #ffcc00; border: 1px solid rgba(255,204,0,0.3); margin: 2px; display: inline-block; text-decoration: none; }
+    .tag-genero { background: rgba(255,204,0,0.1); padding: 3px 8px; border-radius: 4px; font-size: 10px; color: #ffcc00; border: 1px solid rgba(255,204,0,0.3); margin: 2px; display: inline-block; }
     .player-box { width: 100%; aspect-ratio: 16/9; background: #000; border-radius: 12px; margin: 15px 0; overflow: hidden; border: 1px solid #333; position: relative; }
     video, iframe { width: 100%; height: 100%; object-fit: contain; }
     #camada-vidro { position: absolute; top: 0; left: 0; width: 100%; height: 100%; display: flex; justify-content: center; align-items: center; z-index: 9; background: rgba(0,0,0,0.6); cursor: pointer; }
     .balao-clique { background: #e50914; color: #fff; padding: 12px 25px; border-radius: 50px; font-weight: bold; font-size: 14px; box-shadow: 0 5px 15px rgba(229, 9, 20, 0.5); }
     .btn-externo { display: block; width: 100%; padding: 16px; background: linear-gradient(90deg, #0052D4, #4364F7, #6FB1FC); color: #fff; text-decoration: none; border-radius: 50px; font-weight: bold; margin: 15px 0; font-size: 13px; border: none; cursor: pointer; }
+    .rec-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-top: 15px; }
+    .rec-card { text-decoration: none; color: #fff; font-size: 10px; }
+    .rec-card img { width: 100%; border-radius: 8px; margin-bottom: 5px; }
 </style>
 </head>
 <body>
@@ -38,12 +42,6 @@
     
     <div class="info-topo">
         <span style="color: #ffcc00; font-weight: bold;">★ {{ nota }}</span> | {{ duracao }} | {{ filme.release_date[:4] }}
-    </div>
-
-    <div style="margin-bottom: 10px;">
-        {% for g in generos %}
-            <a href="/genero/{{ g.id }}/{{ g.name }}" class="tag-genero">{{ g.name }}</a>
-        {% endfor %}
     </div>
 
     <div class="player-box">
