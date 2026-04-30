@@ -24,21 +24,27 @@ def home():
     if q:
         url = f"https://api.themoviedb.org/3/search/movie?api_key={TMDB_API_KEY}&language=pt-BR&query={q}"
         filmes = buscar_tmdb(url)
-        # 🔑 AJUSTE: Enviamos 'filmes' para a grade de busca
         return render_template("index.html", filmes=filmes, img=IMG, bg=BG, nome_site=NOME_SITE, busca=True, q=q)
 
-    # Dados para a Home (Slider + Banner)
-    # 🔑 AJUSTE: 'destaques' (plural) para o loop do banner rotativo
+    # Dados para a Home (Slider + Banners + Prateleiras)
     destaques = buscar_tmdb(f"https://api.themoviedb.org/3/movie/now_playing?api_key={TMDB_API_KEY}&language=pt-BR")[:5]
     populares = buscar_tmdb(f"https://api.themoviedb.org/3/movie/popular?api_key={TMDB_API_KEY}&language=pt-BR")
     comedia = buscar_tmdb(f"https://api.themoviedb.org/3/discover/movie?api_key={TMDB_API_KEY}&language=pt-BR&with_genres=35")
     terror = buscar_tmdb(f"https://api.themoviedb.org/3/discover/movie?api_key={TMDB_API_KEY}&language=pt-BR&with_genres=27")
+    
+    # 🛸 FICÇÃO (ID 878)
+    ficcao = buscar_tmdb(f"https://api.themoviedb.org/3/discover/movie?api_key={TMDB_API_KEY}&language=pt-BR&with_genres=878")
+    
+    # 🧪 FILMES TRASH (Terror + Comédia - IDs 27,35)
+    trash = buscar_tmdb(f"https://api.themoviedb.org/3/discover/movie?api_key={TMDB_API_KEY}&language=pt-BR&with_genres=27,35")
 
     return render_template("index.html", 
                            destaques=destaques, 
                            populares=populares, 
                            comedia=comedia, 
                            terror=terror, 
+                           ficcao=ficcao,
+                           trash=trash, # 🚀 ENVIANDO TRASH PARA O HTML
                            img=IMG, bg=BG, 
                            nome_site=NOME_SITE, 
                            busca=False)
@@ -57,13 +63,11 @@ def detalhes(id):
         
         titulo = data.get("title")
         ano = data.get("release_date", "")[:4]
-        # O link do play vai pro seu motor no Koyeb
         play_link = f"{MOTOR_URL}/buscar?titulo={quote(f'{titulo} ({ano})')}"
         
         videos = data.get("videos", {}).get("results", [])
         trailer = next((v["key"] for v in videos if v["site"] == "YouTube"), None)
         
-        # 🚀 AQUI ESTÁ O QUE SUMIU: Pegamos as recomendações do TMDB
         recomendados = data.get("recommendations", {}).get("results", [])[:6]
 
         return render_template("detalhes.html", 
@@ -74,7 +78,10 @@ def detalhes(id):
                                nota=round(data.get("vote_average", 0), 1),
                                duracao=f"{data.get('runtime', 0)} min",
                                trailer_key=trailer,
-                               recomendados=recomendados, # Variável enviada!
+                               recomendados=recomendados,
                                nome_site=NOME_SITE)
     except:
         return redirect("/")
+
+if __name__ == "__main__":
+    app.run(host="0.0.0.0", port=5000)
