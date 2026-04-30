@@ -1,6 +1,6 @@
 from flask import Flask, render_template, request, redirect
 import requests
-from urllib.parse import quote, unquote  # 🚀 AQUI: Adicionamos o 'unquote' para limpar os acentos
+from urllib.parse import quote, unquote
 
 app = Flask(__name__)
 
@@ -47,7 +47,6 @@ def home():
 
 @app.route("/genero/<int:id>/<string:nome>")
 def ver_genero(id, nome):
-    # 🚀 AQUI: O Python agora limpa a palavra e tira os %% antes de mandar pro HTML
     nome_limpo = unquote(nome)
     
     url = f"https://api.themoviedb.org/3/discover/movie?api_key={TMDB_API_KEY}&language=pt-BR&with_genres={id}"
@@ -58,7 +57,8 @@ def ver_genero(id, nome):
 @app.route("/filme/<int:id>")
 def detalhes(id):
     try:
-        url = f"https://api.themoviedb.org/3/movie/{id}?api_key={TMDB_API_KEY}&language=pt-BR&append_to_response=videos,recommendations"
+        # 🚀 AQUI: Adicionei ',credits' na URL para puxar o elenco
+        url = f"https://api.themoviedb.org/3/movie/{id}?api_key={TMDB_API_KEY}&language=pt-BR&append_to_response=videos,recommendations,credits"
         data = requests.get(url, timeout=10).json()
         
         titulo = data.get("title")
@@ -69,6 +69,9 @@ def detalhes(id):
         trailer = next((v["key"] for v in videos if v["site"] == "YouTube"), None)
         
         recomendados = data.get("recommendations", {}).get("results", [])[:6]
+        
+        # 🚀 AQUI: Pego os 10 primeiros atores do filme para não sobrecarregar a tela
+        elenco = data.get("credits", {}).get("cast", [])[:10]
 
         return render_template("detalhes.html", 
                                filme=data, 
@@ -79,6 +82,7 @@ def detalhes(id):
                                duracao=f"{data.get('runtime', 0)} min",
                                trailer_key=trailer,
                                recomendados=recomendados,
+                               elenco=elenco, # 🚀 AQUI: Enviei o elenco para o HTML
                                nome_site=NOME_SITE)
     except:
         return redirect("/")
