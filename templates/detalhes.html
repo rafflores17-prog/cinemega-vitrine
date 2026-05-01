@@ -2,127 +2,76 @@
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>{{ filme.title }} - Cine Mega</title>
 
 <style>
-* { -webkit-tap-highlight-color: transparent; box-sizing: border-box; }
-body { margin: 0; padding: 0; background: #000; color: #fff; font-family: sans-serif; overflow-x: hidden; }
-
-.fundo-backdrop {
-    position: fixed;
-    top: 0; left: 0;
-    width: 100%; height: 100%;
-    background: url('{{ bg }}{{ filme.backdrop_path }}') center/cover;
-    filter: blur(20px) brightness(0.2);
-    z-index: -1;
-}
-
-.container { padding: 15px; max-width: 600px; margin: 0 auto; text-align: center; }
-
-.back-btn {
-    background: #e50914;
-    color: #fff;
-    text-decoration: none;
-    font-size: 13px;
-    font-weight: bold;
-    padding: 8px 16px;
-    border-radius: 6px;
-}
-
-.capinha {
-    width: 140px;
-    border-radius: 12px;
-    margin: 20px auto 10px;
-    display: block;
-    border: 1px solid rgba(255,255,255,0.2);
-}
-
-h1 { font-size: 22px; margin: 10px 0; }
-
-.player-box {
-    width: 100%;
-    aspect-ratio: 16/9;
-    background: #000;
-    border-radius: 12px;
-    margin: 15px 0;
-    overflow: hidden;
-    border: 1px solid #333;
-    position: relative;
-}
-
-video {
-    width: 100%;
-    height: 100%;
-}
-
-#camada-vidro {
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 9;
-    background: rgba(0,0,0,0.6);
-    cursor: pointer;
-}
-
-.btn-play-red {
-    background: #e50914;
-    color: #fff;
-    padding: 12px 25px;
-    border-radius: 50px;
-    font-weight: bold;
-}
-
-.msg-erro {
-    color: #ff4444;
-    font-size: 13px;
-    margin-top: 10px;
-}
+body { margin: 0; background: #000; color: #fff; font-family: sans-serif; }
+.container { padding: 15px; max-width: 600px; margin: auto; text-align: center; }
+.capinha { width: 150px; border-radius: 10px; margin: 20px auto; display: block; }
+.player-box { width: 100%; aspect-ratio: 16/9; background: #000; border-radius: 10px; overflow: hidden; margin: 15px 0; }
+video, iframe { width: 100%; height: 100%; }
+.btn { padding: 10px; margin: 5px; border: none; border-radius: 5px; cursor: pointer; }
+.vlc { background: orange; }
+.mx { background: blue; color: #fff; }
 </style>
+
 </head>
 <body>
 
-<div class="fundo-backdrop"></div>
-
 <div class="container">
 
-    <a href="/" class="back-btn">⬅ VOLTAR</a>
+<a href="/" style="background:red;padding:10px;border-radius:5px;text-decoration:none;color:#fff;">⬅ VOLTAR</a>
 
-    <img src="{{ img }}{{ filme.poster_path }}" class="capinha">
-    <h1>{{ filme.title }}</h1>
+<img src="{{ img }}{{ filme.poster_path }}" class="capinha">
+<h2>{{ filme.title }}</h2>
 
-    <div style="color:#ffcc00; font-size:13px; margin-bottom:10px;">
-        ⭐ {{ nota }} | {{ filme.release_date[:4] }} | {{ duracao }}
-    </div>
+<div>⭐ {{ nota }} | {{ filme.release_date[:4] }} | {{ duracao }}</div>
 
-    <!-- PLAYER -->
-    <div class="player-box">
+<!-- PLAYER -->
+<div class="player-box">
+    <video controls playsinline preload="metadata">
+        <source src="{{ play_link }}" type="video/mp4">
+    </video>
+</div>
 
-        {% if play_link %}
-        <div id="camada-vidro" onclick="iniciarVideo()">
-            <div class="btn-play-red">ASSISTIR AGORA 🍿</div>
-        </div>
+<!-- BOTÕES -->
+<button class="btn vlc" onclick="abrirVLC()">Abrir no VLC</button>
+<button class="btn mx" onclick="abrirMX()">Abrir no MX Player</button>
 
-        <video id="player" controls playsinline poster="{{ bg }}{{ filme.backdrop_path }}">
-            <source src="{{ play_link }}" type="video/mp4">
-        </video>
-        {% else %}
-        <div style="display:flex;align-items:center;justify-content:center;height:100%;">
-            <div class="msg-erro">❌ Filme não encontrado na base</div>
-        </div>
-        {% endif %}
+<!-- TRAILER -->
+{% if trailer_key %}
+<h3>🎬 Trailer</h3>
+<div class="player-box">
+    <iframe src="https://www.youtube.com/embed/{{ trailer_key }}"></iframe>
+</div>
+{% endif %}
 
-    </div>
+<!-- SINOPSE -->
+<h3>📖 Sinopse</h3>
+<p>{{ filme.overview }}</p>
+
+<!-- RECOMENDADOS -->
+<h3>🔥 Você pode gostar</h3>
+<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;">
+{% for rec in recomendados %}
+<a href="/filme/{{ rec.id }}">
+<img src="{{ img }}{{ rec.poster_path }}" style="width:100%;">
+</a>
+{% endfor %}
+</div>
 
 </div>
 
 <script>
-function iniciarVideo(){
-    document.getElementById("camada-vidro").style.display = "none";
-    document.getElementById("player").play();
+function abrirVLC() {
+    let url = "{{ play_link }}";
+    window.location.href = "intent://" + url.replace("https://","") + "#Intent;package=org.videolan.vlc;end";
+}
+
+function abrirMX() {
+    let url = "{{ play_link }}";
+    window.location.href = "intent://" + url.replace("https://","") + "#Intent;package=com.mxtech.videoplayer.ad;end";
 }
 </script>
 
