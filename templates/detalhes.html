@@ -4,101 +4,69 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>{{ filme.title }} - Cine Mega</title>
-
 <link rel="stylesheet" href="https://cdn.plyr.io/3.7.8/plyr.css" />
-
 <style>
     * { -webkit-tap-highlight-color: transparent; box-sizing: border-box; }
-    body { margin: 0; padding: 0; background: #000; color: #fff; font-family: 'Segoe UI', sans-serif; overflow-x: hidden; }
-    .fundo-backdrop { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: url('{{ bg }}{{ filme.backdrop_path }}') center/cover; filter: blur(25px) brightness(0.15); z-index: -1; }
+    body { margin: 0; background: #000; color: #fff; font-family: 'Segoe UI', sans-serif; overflow-x: hidden; }
+    .fundo-backdrop { position: fixed; top: 0; width: 100%; height: 100%; background: url('{{ bg }}{{ filme.backdrop_path }}') center/cover; filter: blur(25px) brightness(0.15); z-index: -1; }
     .container { padding: 15px; max-width: 550px; margin: 0 auto; text-align: center; }
-    .header-top { width: 100%; text-align: left; margin-bottom: 10px; }
-    .back-btn { background: rgba(255,255,255,0.1); color: #fff; text-decoration: none; font-size: 12px; font-weight: bold; padding: 8px 16px; border-radius: 50px; display: inline-block; border: 1px solid rgba(255,255,255,0.2); }
-    
-    .trailer-container { width: 100%; border-radius: 15px; overflow: hidden; margin: 20px 0; border: 1px solid rgba(255,255,255,0.1); box-shadow: 0 10px 30px #000; }
-    
-    .capinha { width: 130px; border-radius: 12px; margin: -60px auto 10px; display: block; position: relative; z-index: 2; border: 2px solid rgba(255,255,255,0.1); box-shadow: 0 5px 15px #000; }
-    h1 { font-size: 26px; margin: 10px 0 5px; font-weight: 800; text-shadow: 0 2px 4px #000; }
-
-    .play-panel { background: rgba(255,255,255,0.05); border-radius: 25px; padding: 25px; margin: 25px 0; border: 1px solid rgba(255,255,255,0.1); backdrop-filter: blur(15px); }
-    .btn-principal { width: 100%; background: linear-gradient(45deg, #e50914, #ff0000); color: #fff; padding: 18px; border-radius: 15px; font-weight: 900; font-size: 18px; border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 12px; box-shadow: 0 8px 25px rgba(229, 9, 20, 0.5); margin-bottom: 15px; text-transform: uppercase; }
-
+    .trailer-container { width: 100%; border-radius: 15px; overflow: hidden; margin: 20px 0; border: 1px solid rgba(255,255,255,0.1); }
+    .capinha { width: 130px; border-radius: 12px; margin: -60px auto 10px; display: block; position: relative; z-index: 2; border: 2px solid rgba(255,255,255,0.1); }
+    h1 { font-size: 26px; margin: 10px 0; font-weight: 800; }
+    .play-panel { background: rgba(255,255,255,0.05); border-radius: 25px; padding: 25px; margin: 25px 0; backdrop-filter: blur(15px); border: 1px solid rgba(255,255,255,0.1); }
+    .btn-principal { width: 100%; background: linear-gradient(45deg, #e50914, #ff0000); color: #fff; padding: 18px; border-radius: 15px; font-weight: 900; font-size: 18px; border: none; cursor: pointer; margin-bottom: 15px; text-transform: uppercase; }
     .grid-alternativo { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
-    .btn-alt { padding: 15px; border-radius: 12px; font-weight: bold; font-size: 13px; border: none; cursor: pointer; color: #fff; display: flex; align-items: center; justify-content: center; gap: 8px; }
-
-    .sinopse-box { background: rgba(0,0,0,0.5); padding: 20px; border-radius: 20px; text-align: left; font-size: 14px; line-height: 1.6; margin-top: 20px; border: 1px solid rgba(255,255,255,0.05); }
+    .btn-alt { padding: 15px; border-radius: 12px; font-weight: bold; border: none; color: #fff; cursor: pointer; font-size: 13px; }
+    .sinopse-box { background: rgba(0,0,0,0.5); padding: 20px; border-radius: 20px; text-align: left; font-size: 14px; line-height: 1.6; margin-top: 20px; }
     .elenco-row { display: flex; overflow-x: auto; gap: 15px; padding: 10px 0; scrollbar-width: none; }
     .ator-card { min-width: 80px; text-align: center; }
-    .ator-card img { width: 70px; height: 70px; border-radius: 50%; object-fit: cover; border: 2px solid #e50914; }
-    .ator-card p { font-size: 10px; color: #bbb; margin-top: 5px; font-weight: bold; }
-
+    .ator-card img { width: 65px; height: 65px; border-radius: 50%; object-fit: cover; border: 2px solid #e50914; }
+    .ator-card p { font-size: 10px; margin-top: 5px; }
     .row-titulo { text-align: left; color: #ffcc00; font-weight: bold; margin: 25px 0 10px; font-size: 16px; border-left: 4px solid #e50914; padding-left: 10px; }
-    .rec-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; padding-bottom: 40px; }
-    .rec-card img { width: 100%; border-radius: 10px; }
+    .rec-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; padding-bottom: 30px; }
+    .rec-card img { width: 100%; border-radius: 8px; }
 </style>
 </head>
 <body>
 <div class="fundo-backdrop"></div>
 <div class="container">
-    <div class="header-top"><a href="/" class="back-btn">← VOLTAR</a></div>
-    
     <div class="trailer-container">
         {% if trailer_id %}
         <div class="plyr__video-embed" id="player">
-            <iframe src="https://www.youtube.com/embed/{{ trailer_id }}?origin=https://cinemega.online&amp;iv_load_policy=3&amp;modestbranding=1&amp;playsinline=1&amp;showinfo=0&amp;rel=0&amp;enablejsapi=1" allowfullscreen allowtransparency allow="autoplay"></iframe>
+            <iframe src="https://www.youtube.com/embed/{{ trailer_id }}?origin=https://cinemega.online&amp;iv_load_policy=3&amp;modestbranding=1&amp;playsinline=1&amp;rel=0&amp;enablejsapi=1" allowfullscreen allowtransparency allow="autoplay"></iframe>
         </div>
         {% else %}
-        <div style="height: 200px; background: url('{{ bg }}{{ filme.backdrop_path }}') center/cover; display: flex; align-items: center; justify-content: center;">
-            <div style="background: rgba(0,0,0,0.6); padding: 10px 20px; border-radius: 50px; font-size: 12px; font-weight: bold; border: 1px solid rgba(255,255,255,0.2);">🎬 PRÉVIA INDISPONÍVEL</div>
-        </div>
+        <div style="height: 200px; background: url('{{ bg }}{{ filme.backdrop_path }}') center/cover; display: flex; align-items: center; justify-content: center;">🎬 SEM PRÉVIA</div>
         {% endif %}
     </div>
 
     <img src="{{ img }}{{ filme.poster_path }}" class="capinha">
     <h1>{{ filme.title }}</h1>
-    <div style="color: #ffcc00; font-size: 14px; font-weight: bold;">⭐ {{ nota }} | {{ filme.release_date[:4] }} | {{ duracao }}</div>
+    <p style="color:#ffcc00; font-weight:bold;">⭐ {{ nota }} | {{ filme.release_date[:4] }} | {{ duracao }}</p>
 
     <div class="play-panel">
-        <button onclick="abrirPlayerExterno()" class="btn-principal">▶ ASSISTIR FILME</button>
+        <button onclick="window.location.href='{{ play_link }}'" class="btn-principal">🎬 ASSISTIR AGORA</button>
         <div class="grid-alternativo">
-            <button onclick="abrirVLC()" class="btn-alt" style="background: #FF8800;">🟠 VLC PRO</button>
-            <button onclick="abrirMX()" class="btn-alt" style="background: #0052D4;">🔵 MX PRO</button>
+            <button onclick="abrirVLC()" class="btn-alt" style="background: #FF8800;">VLC PRO</button>
+            <button onclick="abrirMX()" class="btn-alt" style="background: #0052D4;">MX PRO</button>
         </div>
     </div>
 
-    <div class="sinopse-box">
-        <b style="color:#ffcc00; display:block; margin-bottom:8px; font-size:12px; text-transform:uppercase;">Sinopse</b>
-        {{ filme.overview or "Sinopse não disponível." }}
-    </div>
+    <div class="sinopse-box"><b>Sinopse:</b><br>{{ filme.overview }}</div>
 
-    {% if elenco %}
-    <div class="row-titulo">🎭 ELENCO</div>
-    <div class="elenco-row">
-        {% for ator in elenco %}
-        {% if ator.profile_path %}
-        <div class="ator-card">
-            <img src="{{ img }}{{ ator.profile_path }}">
-            <p>{{ ator.name }}</p>
-        </div>
-        {% endif %}
-        {% endfor %}
-    </div>
-    {% endif %}
+    {% if elenco %}<div class="row-titulo">🎭 ELENCO</div><div class="elenco-row">
+        {% for ator in elenco %}{% if ator.profile_path %}<div class="ator-card"><img src="{{ img }}{{ ator.profile_path }}"><p>{{ ator.name }}</p></div>{% endif %}{% endfor %}
+    </div>{% endif %}
 
-    <div class="row-titulo">🎬 RECOMENDADOS</div>
-    <div class="rec-grid">
-        {% for rec in recomendados %}
-        <a href="/filme/{{ rec.id }}" class="rec-card"><img src="{{ img }}{{ rec.poster_path }}"></a>
-        {% endfor %}
+    <div class="row-titulo">🎬 RECOMENDADOS</div><div class="rec-grid">
+        {% for rec in recomendados %}<a href="/filme/{{ rec.id }}" class="rec-card"><img src="{{ img }}{{ rec.poster_path }}"></a>{% endfor %}
     </div>
 </div>
-
 <script src="https://cdn.plyr.io/3.7.8/plyr.js"></script>
 <script>
-const player = new Plyr('#player');
-function abrirPlayerExterno() { window.open("{{ play_link }}", '_blank'); }
-function abrirVLC() { window.location.href = `intent://{{ play_link.replace('https://','').replace('http://','') }}#Intent;action=android.intent.action.VIEW;scheme=http;type=video/mp4;package=org.videolan.vlc;end`; }
-function abrirMX() { window.location.href = `intent://{{ play_link.replace('https://','').replace('http://','') }}#Intent;action=android.intent.action.VIEW;scheme=http;type=video/mp4;package=com.mxtech.videoplayer.ad;end`; }
+const p = new Plyr('#player');
+function abrirVLC() { window.location.href = `intent://{{ play_link.replace('/play?titulo=','') }}#Intent;action=android.intent.action.VIEW;scheme=http;type=video/mp4;package=org.videolan.vlc;end`; }
+function abrirMX() { window.location.href = `intent://{{ play_link.replace('/play?titulo=','') }}#Intent;action=android.intent.action.VIEW;scheme=http;type=video/mp4;package=com.mxtech.videoplayer.ad;end`; }
 </script>
 </body>
 </html>
