@@ -22,7 +22,7 @@ def buscar_tmdb(url):
 def home():
     q = request.args.get("q")
     if q:
-        url = f"https://api.themoviedb.org/3/search/movie?api_key={TMDB_API_KEY}&language=pt-BR&query={q}"
+        url = f"https://api.themoviedb.org/3/search/movie?api_key={TMDB_API_KEY}&language=pt-BR&query={quote(q)}"
         filmes = buscar_tmdb(url)
         return render_template("index.html", filmes=filmes, img=IMG, bg=BG, nome_site=NOME_SITE, busca=True, q=q)
 
@@ -57,20 +57,17 @@ def ver_genero(id, nome):
 @app.route("/filme/<int:id>")
 def detalhes(id):
     try:
-        # 🚀 AQUI: Adicionei ',credits' na URL para puxar o elenco
         url = f"https://api.themoviedb.org/3/movie/{id}?api_key={TMDB_API_KEY}&language=pt-BR&append_to_response=videos,recommendations,credits"
         data = requests.get(url, timeout=10).json()
         
         titulo = data.get("title")
-        ano = data.get("release_date", "")[:4]
-        play_link = f"{MOTOR_URL}/buscar?titulo={quote(f'{titulo} ({ano})')}"
+        # 🚀 AQUI: Mando apenas o título limpo para não confundir o regex do motor
+        play_link = f"{MOTOR_URL}/buscar?titulo={quote(titulo)}"
         
         videos = data.get("videos", {}).get("results", [])
         trailer = next((v["key"] for v in videos if v["site"] == "YouTube"), None)
         
         recomendados = data.get("recommendations", {}).get("results", [])[:6]
-        
-        # 🚀 AQUI: Pego os 10 primeiros atores do filme para não sobrecarregar a tela
         elenco = data.get("credits", {}).get("cast", [])[:10]
 
         return render_template("detalhes.html", 
@@ -82,7 +79,7 @@ def detalhes(id):
                                duracao=f"{data.get('runtime', 0)} min",
                                trailer_key=trailer,
                                recomendados=recomendados,
-                               elenco=elenco, # 🚀 AQUI: Enviei o elenco para o HTML
+                               elenco=elenco,
                                nome_site=NOME_SITE)
     except:
         return redirect("/")
