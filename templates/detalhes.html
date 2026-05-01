@@ -6,9 +6,7 @@
 <title>{{ filme.title }} - Cine Mega</title>
 
 <script type="text/javascript" data-cfasync="false">
-/*<![CDATA[/* */
 (function(){var j=window,d="f4875cdf735c070a6ebae3a0bf13b576",k=[["siteId",861*467*930*631-235951418049],["minBid",0],["popundersPerIP","0"],["delayBetween",0],["default",false],["defaultPerDay",0],["topmostLayer","auto"]],s=["d3d3LmJsb2NrYWRzbm90LmNvbS9iaGFtbWVyLm1pbi5jc3M=","ZG5oZmk1bm4yZHQ2Ny5jbG91ZGZyb250Lm5ldC9WcS9qc2hhcmVyLm1pbi5qcw==","d3d3LmduaXZoZ2lia2x5LmNvbS9kaGFtbWVyLm1pbi5jc3M=","d3d3Lm9lbXBvZnFlY2Z6YWt1LmNvbS9mSmZYZy9wc2hhcmVyLm1pbi5qcw=="],v=-1,p,o,n=function(){clearTimeout(o);v++;if(s[v]&&!(1803467748000<(new Date).getTime()&&1<v)){p=j.document.createElement("script");p.type="text/javascript";p.async=!0;var u=j.document.getElementsByTagName("script")[0];p.src="https://"+atob(s[v]);p.crossOrigin="anonymous";p.onerror=n;p.onload=function(){clearTimeout(o);j[d.slice(0,16)+d.slice(0,16)]||n()};o=setTimeout(n,5E3);u.parentNode.insertBefore(p,u)}};if(!j[d]){try{Object.freeze(j[d]=k)}catch(e){}n()}})();
-/*]]>/* */
 </script>
 
 <style>
@@ -21,28 +19,14 @@
     .capinha { width: 140px; border-radius: 12px; margin: 20px auto 10px; display: block; border: 1px solid rgba(255,255,255,0.2); box-shadow: 0 0 20px #000; }
     h1 { font-size: 22px; margin: 10px 0; font-weight: bold; }
     .player-box { width: 100%; aspect-ratio: 16/9; background: #000; border-radius: 12px; margin: 15px 0; overflow: hidden; border: 1px solid #333; position: relative; }
-    video, iframe { width: 100%; height: 100%; border: none; }
-    #camada-vidro { position: absolute; top: 0; left: 0; width: 100%; height: 100%; display: flex; justify-content: center; align-items: center; z-index: 9; background: rgba(0,0,0,0.6); cursor: pointer; }
-    .btn-play-red { background: #e50914; color: #fff; padding: 12px 25px; border-radius: 50px; font-weight: bold; }
+    #camada-vidro { position: absolute; top: 0; left: 0; width: 100%; height: 100%; display: flex; flex-direction: column; justify-content: center; align-items: center; z-index: 9; background: rgba(0,0,0,0.7); cursor: pointer; }
+    .btn-play-red { background: #e50914; color: #fff; padding: 12px 25px; border-radius: 50px; font-weight: bold; font-size: 16px; box-shadow: 0 0 15px #e50914; }
     .botoes-externos { display: flex; gap: 10px; margin: 15px 0; }
-    .btn-vlc { flex: 1; padding: 14px; background: #FF8800; color: #fff; border: none; border-radius: 50px; font-weight: bold; font-size: 12px; cursor: pointer; }
-    .btn-mx { flex: 1; padding: 14px; background: #0052D4; color: #fff; border: none; border-radius: 50px; font-weight: bold; font-size: 12px; cursor: pointer; }
-    .share-container { display: flex; align-items: center; justify-content: center; gap: 10px; margin: 5px 0 20px 0; color: #bbb; font-size: 12px; font-weight: bold; }
-    .btn-share-round { display: flex; align-items: center; justify-content: center; width: 35px; height: 35px; border-radius: 50%; text-decoration: none; border: 1px solid rgba(255,255,255,0.2); transition: 0.2s; }
-    .btn-share-round img { width: 18px; height: 18px; filter: brightness(0) invert(1); }
-    .btn-zap-round { background: #25D366; border-color: #25D366; }
-    .btn-tele-round { background: #0088cc; border-color: #0088cc; }
+    .btn-ext { flex: 1; padding: 14px; color: #fff; border: none; border-radius: 50px; font-weight: bold; font-size: 12px; cursor: pointer; }
     .sinopse-box { background: rgba(0,0,0,0.6); padding: 15px; border-radius: 15px; text-align: justify; font-size: 13px; border: 1px solid #333; line-height: 1.6; }
-    .elenco-row { display: flex; overflow-x: auto; gap: 12px; padding: 10px 0 20px; scrollbar-width: none; }
-    .elenco-row::-webkit-scrollbar { display: none; }
-    .ator-card { min-width: 75px; text-align: center; }
-    .ator-card img { width: 70px; height: 70px; border-radius: 50%; object-fit: cover; border: 2px solid #444; }
-    .ator-card p { font-size: 10px; color: #bbb; margin-top: 5px; line-height: 1.2; overflow: hidden; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; }
-    .ator-card b { color: #fff; display: block; }
     .row-titulo { text-align: left; color: #ffcc00; font-weight: bold; margin: 25px 0 10px; font-size: 15px; border-left: 4px solid #e50914; padding-left: 10px; }
     .rec-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; padding-bottom: 30px; }
     .rec-card img { width: 100%; border-radius: 8px; border: 1px solid #222; }
-    .float-tele { position: fixed; bottom: 20px; right: 20px; width: 55px; height: 55px; background: #0088cc; border-radius: 50%; display: flex; align-items: center; justify-content: center; z-index: 99; box-shadow: 0 4px 15px rgba(0,0,0,0.5); border: 2px solid rgba(255,255,255,0.3); text-decoration: none; animation: pulseTele 2s infinite; }
 </style>
 </head>
 <body>
@@ -54,34 +38,58 @@
     <div style="color: #ffcc00; font-size: 13px; font-weight: bold; margin-bottom: 15px;">⭐ {{ nota }} | {{ filme.release_date[:4] }} | {{ duracao }}</div>
 
     <div class="player-box">
-        <div id="camada-vidro" onclick="this.style.display='none'; document.getElementById('meu-player').play()"><div class="btn-play-red">ASSISTIR AGORA 🍿</div></div>
-        <video id="meu-player" controls playsinline poster="{{ bg }}{{ filme.backdrop_path }}" preload="metadata"><source src="{{ play_link }}" type="video/mp4"></video>
+        <div id="camada-vidro" onclick="abrirJanelaPlayer()">
+            <div class="btn-play-red">ASSISTIR AGORA 🍿</div>
+            <p style="font-size: 10px; margin-top: 10px; color: #aaa;">(Abre em player flutuante anti-travamento)</p>
+        </div>
+        <video id="meu-player" poster="{{ bg }}{{ filme.backdrop_path }}" style="width:100%; height:100%;"></video>
     </div>
     
     <div class="botoes-externos">
-        <button onclick="abrirVLC()" class="btn-vlc">🟠 VLC</button>
-        <button onclick="abrirMX()" class="btn-mx">🔵 MX PLAYER</button>
+        <button onclick="abrirVLC()" class="btn-ext" style="background: #FF8800;">🟠 VLC PLAYER</button>
+        <button onclick="abrirMX()" class="btn-ext" style="background: #0052D4;">🔵 MX PLAYER</button>
     </div>
 
-    <div class="share-container">
-        <span>Compartilhe:</span>
-        <a href="https://api.whatsapp.com/send?text=🎬 Assista *{{ filme.title }}* no Cine Mega!" target="_blank" class="btn-share-round btn-zap-round"><img src="https://cdn-icons-png.flaticon.com/512/733/733585.png"></a>
-        <a href="https://t.me/share/url?url=https://cinemega.online/filme/{{ filme.id }}" target="_blank" class="btn-share-round btn-tele-round"><img src="https://cdn-icons-png.flaticon.com/512/2111/2111646.png"></a>
+    <div class="sinopse-box">
+        <strong style="color:#ffcc00; font-size:11px; text-transform:uppercase;">Sinopse</strong><br>
+        {{ filme.overview or "Sinopse não disponível." }}
     </div>
 
-    <div class="sinopse-box"><strong style="color:#ffcc00; font-size:11px; text-transform:uppercase;">Sinopse</strong><br>{{ filme.overview }}</div>
-
-    {% if elenco %}<div class="row-titulo">🎭 ELENCO PRINCIPAL</div><div class="elenco-row">
-        {% for ator in elenco %}{% if ator.profile_path %}<div class="ator-card"><img src="{{ img }}{{ ator.profile_path }}"><p><b>{{ ator.name }}</b></p></div>{% endif %}{% endfor %}
-    </div>{% endif %}
-
-    <div class="row-titulo">🎬 VOCÊ PODE GOSTAR:</div><div class="rec-grid">
-        {% for rec in recomendados %}<a href="/filme/{{ rec.id }}" class="rec-card"><img src="{{ img }}{{ rec.poster_path }}"></a>{% endfor %}
+    <div class="row-titulo">🎬 RECOMENDADOS</div>
+    <div class="rec-grid">
+        {% for rec in recomendados %}
+        <a href="/filme/{{ rec.id }}" class="rec-card"><img src="{{ img }}{{ rec.poster_path }}"></a>
+        {% endfor %}
     </div>
 </div>
+
 <script>
-function abrirVLC() { let urlLimpa = "{{ play_link }}".replace('https://', '').replace('http://', ''); window.location.href = `intent://${urlLimpa}#Intent;action=android.intent.action.VIEW;scheme=https;type=video/mp4;package=org.videolan.vlc;end`; }
-function abrirMX() { let urlLimpa = "{{ play_link }}".replace('https://', '').replace('http://', ''); window.location.href = `intent://${urlLimpa}#Intent;action=android.intent.action.VIEW;scheme=https;type=video/mp4;package=com.mxtech.videoplayer.ad;end`; }
+// FUNÇÃO PARA ABRIR O VÍDEO EM JANELA SEPARADA (EVITA CRASH DO CHROME)
+function abrirJanelaPlayer() {
+    let urlVideo = "{{ play_link }}";
+    let width = 720;
+    let height = 405;
+    let left = (screen.width - width) / 2;
+    let top = (screen.height - height) / 2;
+    
+    // Abre o vídeo numa aba que o Chrome não bloqueia por "Mixed Content"
+    window.open(urlVideo, 'CineMegaPlayer', 
+        `width=${width},height=${height},top=${top},left=${left},toolbar=no,menubar=no,status=no,location=no,resizable=yes`);
+}
+
+// FUNÇÕES DE INTENT CORRIGIDAS
+function abrirVLC() {
+    let urlOriginal = "{{ play_link }}";
+    // Força o intent a ignorar a segurança do Chrome e abrir o app direto
+    let urlLimpa = urlOriginal.replace('https://', '').replace('http://', '');
+    window.location.href = `intent://${urlLimpa}#Intent;action=android.intent.action.VIEW;scheme=http;type=video/mp4;package=org.videolan.vlc;S.browser_fallback_url=${encodeURIComponent(urlOriginal)};end`;
+}
+
+function abrirMX() {
+    let urlOriginal = "{{ play_link }}";
+    let urlLimpa = urlOriginal.replace('https://', '').replace('http://', '');
+    window.location.href = `intent://${urlLimpa}#Intent;action=android.intent.action.VIEW;scheme=http;type=video/mp4;package=com.mxtech.videoplayer.ad;S.browser_fallback_url=${encodeURIComponent(urlOriginal)};end`;
+}
 </script>
 </body>
 </html>
