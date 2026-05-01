@@ -11,49 +11,38 @@
 
     <style>
         * { -webkit-tap-highlight-color: transparent; box-sizing: border-box; }
-        
         body { margin: 0; background: #000; color: #fff; font-family: sans-serif; overflow-x: hidden; padding-top: 175px; display: flex; flex-direction: column; min-height: 100vh; }
-        
         .header-fixo { position: fixed; top: 0; left: 0; width: 100%; background: #000; z-index: 100; border-bottom: 1px solid #111; padding-bottom: 5px; }
         .logo { font-size: 26px; font-weight: bold; color: #e50914; text-align: center; text-transform: uppercase; padding: 15px 0 5px; letter-spacing: 2px; }
         .busca-box { padding: 0 15px; max-width: 600px; margin: 0 auto 10px; }
         .busca-box input { width: 100%; padding: 12px 20px; border-radius: 8px; border: 1px solid #222; background: #111; color: #fff; outline: none; }
-
         .cat-row { display: flex; overflow-x: auto; padding: 5px 15px 10px; gap: 8px; scrollbar-width: none; }
         .cat-row::-webkit-scrollbar { display: none; }
         .btn-cat { background: #1a1a1a; color: #fff; padding: 7px 16px; border-radius: 20px; text-decoration: none; font-size: 13px; border: 1px solid #333; white-space: nowrap; }
         .btn-cat.active { background: #e50914; border-color: #e50914; }
-
         .banner-wrap { width: 100%; padding: 0 10px; margin-bottom: 25px; }
         .banner { width: 100%; height: 210px; position: relative; overflow: hidden; border-radius: 12px; background-size: cover; background-position: center; display: flex; align-items: flex-end; padding: 20px; transition: 0.6s; border: 1px solid #222; }
         .btn-assistir { background: #e50914; color: #fff; padding: 10px 22px; border-radius: 4px; font-weight: bold; text-decoration: none; font-size: 13px; }
-
         .titulo-secao { font-size: 16px; color: #ffcc00; margin: 10px 15px; font-weight: bold; border-left: 4px solid #e50914; padding-left: 10px; }
         .fileira-horizontal { display: flex; overflow-x: auto; padding: 0 15px 25px; gap: 12px; scrollbar-width: none; }
         .fileira-horizontal::-webkit-scrollbar { display: none; }
-        
         .item-filme { min-width: 105px; text-decoration: none; color: #fff; text-align: center; position: relative; }
         .item-filme img { width: 105px; height: 155px; border-radius: 10px; border: 1px solid #222; object-fit: cover; }
         .item-filme p { font-size: 10px; margin-top: 5px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; color: #bbb; }
-
         .badge { position: absolute; top: 5px; right: 5px; padding: 2px 6px; border-radius: 4px; font-size: 9px; font-weight: bold; text-transform: uppercase; z-index: 2; box-shadow: 0 2px 5px rgba(0,0,0,0.5); }
         .badge-novo { background: #e50914; color: #fff; }
         .badge-4k { background: #ffcc00; color: #000; }
-
         .grid-busca { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; padding: 15px; }
         .item-grade { text-decoration: none; color: #fff; text-align: center; position: relative; }
         .item-grade img { width: 100%; aspect-ratio: 2/3; object-fit: cover; border-radius: 10px; border: 1px solid #222; }
         .item-grade p { font-size: 11px; margin-top: 8px; width: 100%; height: 30px; overflow: hidden; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; line-height: 1.2; }
-
         .footer { margin-top: auto; padding: 30px 20px; background: #080808; border-top: 1px solid #111; text-align: center; color: #555; font-size: 12px; line-height: 1.6; }
-
         .float-tele { position: fixed; bottom: 20px; right: 20px; width: 55px; height: 55px; background: #0088cc; border-radius: 50%; display: flex; align-items: center; justify-content: center; z-index: 99; box-shadow: 0 4px 15px rgba(0,0,0,0.5); border: 2px solid rgba(255,255,255,0.3); text-decoration: none; animation: pulseTele 2s infinite; }
         .float-tele img { width: 28px; height: 28px; filter: brightness(0) invert(1); }
         @keyframes pulseTele { 0% { box-shadow: 0 0 0 0 rgba(0, 136, 204, 0.7); } 70% { box-shadow: 0 0 0 15px rgba(0, 136, 204, 0); } 100% { box-shadow: 0 0 0 0 rgba(0, 136, 204, 0); } }
     </style>
 </head>
 <body>
-
     <div class="header-fixo">
         <div class="logo">Cine Mega</div>
         <div class="busca-box">
@@ -61,7 +50,6 @@
                 <input type="text" name="q" placeholder="Pesquisar filmes e séries..." value="{{ q or '' }}">
             </form>
         </div>
-        
         <div class="cat-row">
             <a href="/" class="btn-cat {% if not busca %}active{% endif %}">Início</a>
             <a href="/genero/28/Action" class="btn-cat">Ação</a>
@@ -89,7 +77,6 @@
                     <a href="#" id="btn-hero" class="btn-assistir">ASSISTIR AGORA</a>
                 </div>
             </div>
-
             <div class="titulo-secao">🔥 MAIS ASSISTIDOS</div>
             <div class="fileira-horizontal">
                 {% for f in populares %}
@@ -100,45 +87,16 @@
                     </a>
                 {% endfor %}
             </div>
-
-            <div class="titulo-secao">🤣 RIR UM POUCO (COMÉDIA)</div>
+            <div class="titulo-secao">🤣 RIR UM POUCO</div>
             <div class="fileira-horizontal">
                 {% for f in comedia %}
-                    <a href="/filme/{{ f.id }}" class="item-filme">
-                        <img src="{{ img }}{{ f.poster_path }}">
-                        <p>{{ f.title }}</p>
-                    </a>
+                    <a href="/filme/{{ f.id }}" class="item-filme"><img src="{{ img }}{{ f.poster_path }}"><p>{{ f.title }}</p></a>
                 {% endfor %}
             </div>
-
-            <div class="titulo-secao">😱 SÓ PARA CORAJOSOS (TERROR)</div>
+            <div class="titulo-secao">😱 SÓ PARA CORAJOSOS</div>
             <div class="fileira-horizontal">
                 {% for f in terror %}
-                    <a href="/filme/{{ f.id }}" class="item-filme">
-                        <img src="{{ img }}{{ f.poster_path }}">
-                        <p>{{ f.title }}</p>
-                    </a>
-                {% endfor %}
-            </div>
-
-            <div class="titulo-secao">🛸 OUTROS MUNDOS (FICÇÃO)</div>
-            <div class="fileira-horizontal">
-                {% for f in ficcao %}
-                    <a href="/filme/{{ f.id }}" class="item-filme">
-                        <img src="{{ img }}{{ f.poster_path }}">
-                        <p>{{ f.title }}</p>
-                    </a>
-                {% endfor %}
-            </div>
-
-            <div class="titulo-secao">🧪 CULT E TRASH</div>
-            <div class="fileira-horizontal">
-                {% for f in trash %}
-                    <a href="/filme/{{ f.id }}" class="item-filme">
-                        <span class="badge badge-novo">NOVO</span>
-                        <img src="{{ img }}{{ f.poster_path }}">
-                        <p>{{ f.title }}</p>
-                    </a>
+                    <a href="/filme/{{ f.id }}" class="item-filme"><img src="{{ img }}{{ f.poster_path }}"><p>{{ f.title }}</p></a>
                 {% endfor %}
             </div>
         {% endif %}
@@ -146,11 +104,11 @@
 
     <footer class="footer">
         <b>Cine Mega</b> - Inteligência Artificial em Streaming<br>
-        <p>O <b>Cine Mega</b> funciona como um motor de busca automatizado (Indexador). Não hospedamos e não fazemos upload de nenhum arquivo em nossos servidores. Nossa tecnologia apenas organiza links públicos da web.</p>
+        <p>O Cine Mega funciona como um motor de busca automatizado (Indexador).</p>
     </footer>
 
     <a href="https://t.me/pipocaeplay" target="_blank" class="float-tele">
-        <img src="https://cdn-icons-png.flaticon.com/512/2111/2111646.png" alt="Grupo Telegram">
+        <img src="https://cdn-icons-png.flaticon.com/512/2111/2111646.png" alt="Telegram">
     </a>
 
     <script>
