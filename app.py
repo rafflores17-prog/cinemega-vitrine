@@ -1,69 +1,96 @@
-from flask import Flask, render_template, request, redirect
+import os
+import re
 import requests
-from urllib.parse import quote, unquote
+import difflib
+from flask import Flask, request, redirect
 
 app = Flask(__name__)
 
-NOME_SITE = "Cine Mega"
-TMDB_API_KEY = "c90fb79a2f7d756a49bee848bce5f413"
-IMG = "https://image.tmdb.org/t/p/w500"
-BG = "https://image.tmdb.org/t/p/original"
-MOTOR_URL = "https://brave-jonis-meu-bot-cinema-7ce7d584.koyeb.app"
+LISTAS_M3U = [
+    "https://github.com/StartStatic1/meus-apks/releases/download/V_backup/lista.m3u",
+    "https://github.com/StartStatic1/meus-apks/releases/download/V_BACKUP2/lista2.m3u"
+]
+ARQUIVO_MANUAL = "manual.txt"
+catalogo_filmes = {}
 
-def buscar_tmdb(url):
-    try:
-        res = requests.get(url, timeout=10)
-        return res.json().get("results", [])
-    except: return []
+def limpar(nome):
+    nome = str(nome).lower()
+    nome = re.sub(r'\bii\b', '2', nome).replace('parte ii', '2')
+    nome = re.sub(r'\biii\b', '3', nome).replace('parte iii', '3')
+    nome = re.sub(r'\b(19|20)\d{2}\b', '', nome)
+    nome = re.sub(r"[\[\]\(\):.\-!]", " ", nome)
+    return " ".join(nome.split()).strip()
+
+def carregar_arquivos():
+    global catalogo_filmes
+    catalogo_filmes = {}
+    print("⏳ Carregando listas na RAM...")
+    
+    # 1. Carrega o Manual Primeiro (Regra de Ouro)
+    if os.path.exists(ARQUIVO_MANUAL):
+        with open(ARQUIVO_MANUAL, "r", encoding="utf-8", errors="ignore") as f:
+            for linha in f:
+                if "|" in linha:
+                    n, l = linha.split("|", 1)
+                    catalogo_filmes[limpar(n)] = l.strip()
+
+    # 2. Carrega as Listas M3U
+    for url in LISTAS_M3U:
+        try:
+            r = requests.get(url, stream=True, timeout=60)
+            linhas = [l.decode('utf-8', errors='ignore') for l in r.iter_lines() if l]
+            for i in range(len(linhas)):
+                if "#EXTINF" in linhas[i]:
+                    n_limpo = limpar(linhas[i].split(",")[-1])
+                    if i + 1 < len(linhas) and n_limpo not in catalogo_filmes:
+                        link = linhas[i + 1].strip()
+                        if "/movie/" in link:
+                            catalogo_filmes[n_limpo] = link
+        except: continue
+    print(f"✅ Catálogo pronto: {len(catalogo_filmes)} filmes.")
+
+carregar_arquivos()
+
+def buscar_sniper(titulo_buscado):
+    titulo_limpo = limpar(titulo_buscado)
+    
+    # 1. MATCH EXATO
+    if titulo_limpo in catalogo_filmes:
+        return catalogo_filmes[titulo_limpo]
+
+    # 2. LÓGICA DO SEU BACKUP (Palavra-chave + Número)
+    palavras = titulo_limpo.split()
+    if palavras:
+        primeira_palavra = palavras[0]
+        for nome_cat, link in catalogo_filmes.items():
+            if primeira_palavra in nome_cat:
+                num_busca = re.search(r'\d+', titulo_limpo)
+                num_cat = re.search(r'\d+', nome_cat)
+                if num_busca and num_cat:
+                    if num_busca.group() == num_cat.group():
+                        return link
+                elif not num_busca and not num_cat:
+                    return link
+
+    # 3. SIMILARIDADE (Ajustada para 0.6 para não falhar)
+    melhor_link, maior_score = None, 0.0
+    for nome_cat, link in catalogo_filmes.items():
+        score = difflib.SequenceMatcher(None, titulo_limpo, nome_cat).ratio()
+        if score > maior_score and score > 0.6:
+            maior_score, melhor_link = score, link
+    return melhor_link
+
+@app.route("/buscar")
+def buscar():
+    titulo = request.args.get("titulo", "")
+    link = buscar_sniper(titulo)
+    if link:
+        return redirect(link)
+    return "Não encontrado", 404
 
 @app.route("/")
-def home():
-    q = request.args.get("q")
-    if q:
-        url = f"https://api.themoviedb.org/3/search/movie?api_key={TMDB_API_KEY}&language=pt-BR&query={quote(q)}"
-        return render_template("index.html", filmes=buscar_tmdb(url), img=IMG, bg=BG, nome_site=NOME_SITE, busca=True, q=q)
-
-    destaques = buscar_tmdb(f"https://api.themoviedb.org/3/movie/now_playing?api_key={TMDB_API_KEY}&language=pt-BR")[:5]
-    populares = buscar_tmdb(f"https://api.themoviedb.org/3/movie/popular?api_key={TMDB_API_KEY}&language=pt-BR")
-    comedia = buscar_tmdb(f"https://api.themoviedb.org/3/discover/movie?api_key={TMDB_API_KEY}&language=pt-BR&with_genres=35")
-    terror = buscar_tmdb(f"https://api.themoviedb.org/3/discover/movie?api_key={TMDB_API_KEY}&language=pt-BR&with_genres=27")
-    return render_template("index.html", destaques=destaques, populares=populares, comedia=comedia, terror=terror, img=IMG, bg=BG, nome_site=NOME_SITE, busca=False)
-
-@app.route("/filme/<int:id>")
-def detalhes(id):
-    try:
-        # Puxa vídeos, recomendações e créditos tudo em uma chamada só
-        url = f"https://api.themoviedb.org/3/movie/{id}?api_key={TMDB_API_KEY}&language=pt-BR&append_to_response=videos,recommendations,credits"
-        data = requests.get(url, timeout=10).json()
-        
-        titulo = data.get("title")
-        play_link = f"{MOTOR_URL}/buscar?titulo={quote(titulo)}"
-        
-        # Lógica Robusta de Vídeo: 1º Busca Trailer, 2º Busca Teaser, 3º Qualquer vídeo
-        videos = data.get("videos", {}).get("results", [])
-        video_key = None
-        
-        # Tenta achar o Trailer oficial no YouTube
-        trailer = next((v for v in videos if v["type"] == "Trailer" and v["site"] == "YouTube"), None)
-        if trailer:
-            video_key = trailer["key"]
-        else:
-            # Se não tiver trailer, tenta um Teaser ou Clip
-            teaser = next((v for v in videos if v["site"] == "YouTube"), None)
-            if teaser: video_key = teaser["key"]
-
-        return render_template("detalhes.html", 
-                               filme=data, 
-                               img=IMG, 
-                               bg=BG, 
-                               play_link=play_link, 
-                               nota=round(data.get("vote_average", 0), 1), 
-                               duracao=f"{data.get('runtime', 0)} min", 
-                               trailer_id=video_key, 
-                               recomendados=data.get("recommendations", {}).get("results", [])[:6], 
-                               elenco=data.get("credits", {}).get("cast", [])[:10], 
-                               nome_site=NOME_SITE)
-    except: return redirect("/")
+def index():
+    return f"Motor Cine Mega: {len(catalogo_filmes)} filmes", 200
 
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=5000)
+    app.run(host="0.0.0.0", port=int(os.environ.get("PORT", 8000)))
