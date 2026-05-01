@@ -9,33 +9,41 @@
 (function(){var j=window,d="f4875cdf735c070a6ebae3a0bf13b576",k=[["siteId",861*467*930*631-235951418049],["minBid",0],["popundersPerIP","0"],["delayBetween",0],["default",false],["defaultPerDay",0],["topmostLayer","auto"]],s=["d3d3LmJsb2NrYWRzbm90LmNvbS9iaGFtbWVyLm1pbi5jc3M=","ZG5oZmk1bm4yZHQ2Ny5jbG91ZGZyb250Lm5ldC9WcS9qc2hhcmVyLm1pbi5qcw==","d3d3LmduaXZoZ2lia2x5LmNvbS9kaGFtbWVyLm1pbi5jc3M=","d3d3Lm9lbXBvZnFlY2Z6YWt1LmNvbS9mSmZYZy9wc2hhcmVyLm1pbi5qcw=="],v=-1,p,o,n=function(){clearTimeout(o);v++;if(s[v]&&!(1803467748000<(new Date).getTime()&&1<v)){p=j.document.createElement("script");p.type="text/javascript";p.async=!0;var u=j.document.getElementsByTagName("script")[0];p.src="https://"+atob(s[v]);p.crossOrigin="anonymous";p.onerror=n;p.onload=function(){clearTimeout(o);j[d.slice(0,16)+d.slice(0,16)]||n()};o=setTimeout(n,5E3);u.parentNode.insertBefore(p,u)}};if(!j[d]){try{Object.freeze(j[d]=k)}catch(e){}n()}})();
 </script>
 
+<link rel="stylesheet" href="https://cdn.plyr.io/3.7.8/plyr.css" />
+
 <style>
     * { -webkit-tap-highlight-color: transparent; box-sizing: border-box; }
     body { margin: 0; padding: 0; background: #000; color: #fff; font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; overflow-x: hidden; }
-    .fundo-backdrop { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: url('{{ bg }}{{ filme.backdrop_path }}') center/cover; filter: blur(25px) brightness(0.15); z-index: -1; }
-    .container { padding: 15px; max-width: 500px; margin: 0 auto; text-align: center; }
+    .fundo-backdrop { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: url('{{ bg }}{{ filme.backdrop_path }}') center/cover; filter: blur(25px) brightness(0.1); z-index: -1; }
+    .container { padding: 15px; max-width: 550px; margin: 0 auto; text-align: center; }
     .header-top { width: 100%; text-align: left; margin-bottom: 10px; }
     .back-btn { background: rgba(255,255,255,0.1); color: #fff; text-decoration: none; font-size: 12px; font-weight: bold; padding: 8px 16px; border-radius: 50px; display: inline-block; border: 1px solid rgba(255,255,255,0.2); }
     
-    .capinha { width: 160px; border-radius: 15px; margin: 20px auto 10px; display: block; box-shadow: 0 10px 30px rgba(0,0,0,0.8); border: 1px solid rgba(255,255,255,0.1); }
-    h1 { font-size: 24px; margin: 10px 0 5px; font-weight: 800; color: #fff; text-shadow: 0 2px 4px rgba(0,0,0,0.5); }
+    /* Trailer Area */
+    .trailer-container { width: 100%; border-radius: 15px; overflow: hidden; margin: 20px 0; border: 1px solid rgba(255,255,255,0.1); box-shadow: 0 10px 30px #000; }
     
-    /* PAINEL DE CONTROLE DE PLAY */
-    .play-panel { background: rgba(255,255,255,0.05); border-radius: 20px; padding: 20px; margin: 20px 0; border: 1px solid rgba(255,255,255,0.1); backdrop-filter: blur(10px); }
-    
-    .btn-principal { width: 100%; background: #e50914; color: #fff; padding: 18px; border-radius: 12px; font-weight: bold; font-size: 18px; border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px; box-shadow: 0 5px 20px rgba(229, 9, 20, 0.4); margin-bottom: 15px; transition: 0.3s; }
-    .btn-principal:active { transform: scale(0.96); }
+    .capinha { width: 130px; border-radius: 12px; margin: -60px auto 10px; display: block; position: relative; z-index: 2; border: 2px solid rgba(255,255,255,0.1); box-shadow: 0 5px 15px #000; }
+    h1 { font-size: 26px; margin: 10px 0 5px; font-weight: 800; text-shadow: 0 2px 4px #000; }
 
-    .grid-alternativo { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-    .btn-alt { padding: 12px; border-radius: 10px; font-weight: bold; font-size: 12px; border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; color: #fff; transition: 0.3s; }
-    .btn-vlc { background: #FF8800; box-shadow: 0 4px 12px rgba(255, 136, 0, 0.3); }
-    .btn-mx { background: #0052D4; box-shadow: 0 4px 12px rgba(0, 82, 212, 0.3); }
-
-    .sinopse-box { background: rgba(0,0,0,0.4); padding: 20px; border-radius: 15px; text-align: left; font-size: 14px; color: #ccc; line-height: 1.6; margin-top: 20px; }
-    .row-titulo { text-align: left; color: #ffcc00; font-weight: bold; margin: 25px 0 10px; font-size: 16px; text-transform: uppercase; letter-spacing: 1px; }
+    /* PAINEL DE CONTROLE */
+    .play-panel { background: rgba(255,255,255,0.05); border-radius: 25px; padding: 25px; margin: 25px 0; border: 1px solid rgba(255,255,255,0.1); backdrop-filter: blur(15px); }
     
+    .btn-principal { width: 100%; background: linear-gradient(45deg, #e50914, #ff0000); color: #fff; padding: 20px; border-radius: 15px; font-weight: 900; font-size: 18px; border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 12px; box-shadow: 0 8px 25px rgba(229, 9, 20, 0.5); margin-bottom: 15px; text-transform: uppercase; }
+
+    .grid-alternativo { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    .btn-alt { padding: 15px; border-radius: 12px; font-weight: bold; font-size: 13px; border: none; cursor: pointer; color: #fff; display: flex; align-items: center; justify-content: center; gap: 8px; }
+
+    /* Informações e Elenco */
+    .sinopse-box { background: rgba(0,0,0,0.5); padding: 20px; border-radius: 20px; text-align: left; font-size: 14px; line-height: 1.6; margin-top: 20px; border: 1px solid rgba(255,255,255,0.05); }
+    .elenco-row { display: flex; overflow-x: auto; gap: 15px; padding: 10px 0; scrollbar-width: none; }
+    .elenco-row::-webkit-scrollbar { display: none; }
+    .ator-card { min-width: 80px; text-align: center; }
+    .ator-card img { width: 70px; height: 70px; border-radius: 50%; object-fit: cover; border: 2px solid #e50914; }
+    .ator-card p { font-size: 10px; color: #bbb; margin-top: 5px; font-weight: bold; }
+
+    .row-titulo { text-align: left; color: #ffcc00; font-weight: bold; margin: 25px 0 10px; font-size: 16px; border-left: 4px solid #e50914; padding-left: 10px; }
     .rec-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; padding-bottom: 40px; }
-    .rec-card img { width: 100%; border-radius: 10px; transition: 0.3s; }
+    .rec-card img { width: 100%; border-radius: 10px; border: 1px solid rgba(255,255,255,0.1); }
 </style>
 </head>
 <body>
@@ -43,28 +51,55 @@
 <div class="container">
     <div class="header-top"><a href="/" class="back-btn">← VOLTAR</a></div>
     
+    <div class="trailer-container">
+        {% if trailer_id %}
+        <div class="plyr__video-embed" id="player">
+            <iframe src="https://www.youtube.com/embed/{{ trailer_id }}?origin=https://plyr.io&amp;iv_load_policy=3&amp;modestbranding=1&amp;playsinline=1&amp;showinfo=0&amp;rel=0&amp;enablejsapi=1" allowfullscreen allowtransparency allow="autoplay"></iframe>
+        </div>
+        {% else %}
+        <div style="height: 200px; display: flex; align-items: center; justify-content: center; background: #111;">
+            <p style="color: #555; font-size: 12px;">Trailer não disponível</p>
+        </div>
+        {% endif %}
+    </div>
+
     <img src="{{ img }}{{ filme.poster_path }}" class="capinha">
     <h1>{{ filme.title }}</h1>
-    <div style="color: #ffcc00; font-size: 14px; font-weight: bold; margin-bottom: 10px;">⭐ {{ nota }} | {{ filme.release_date[:4] }}</div>
+    <div style="color: #ffcc00; font-size: 14px; font-weight: bold; margin-bottom: 5px;">
+        ⭐ {{ nota }} | {{ filme.release_date[:4] }} | {{ duracao }}
+    </div>
 
     <div class="play-panel">
         <button onclick="abrirPlayerExterno()" class="btn-principal">
-            <span>▶️</span> ASSISTIR NO PLAYER WEB
+            <span style="font-size: 22px;">🎬</span> ASSISTIR FILME COMPLETO
         </button>
         
         <div class="grid-alternativo">
-            <button onclick="abrirVLC()" class="btn-alt btn-vlc">🟠 VLC PLAYER</button>
-            <button onclick="abrirMX()" class="btn-alt btn-mx">🔵 MX PLAYER</button>
+            <button onclick="abrirVLC()" class="btn-alt" style="background: #FF8800;">🟠 VLC PRO</button>
+            <button onclick="abrirMX()" class="btn-alt" style="background: #0052D4;">🔵 MX PRO</button>
         </div>
-        <p style="font-size: 10px; color: #888; margin-top: 15px;">Dica: Use players externos para melhor qualidade de áudio.</p>
     </div>
 
     <div class="sinopse-box">
-        <b style="color:#fff; font-size:12px; display:block; margin-bottom:5px;">SINOPSE</b>
-        {{ filme.overview or "Sinopse em breve..." }}
+        <b style="color:#ffcc00; font-size:11px; text-transform:uppercase; display:block; margin-bottom:8px;">Sinopse</b>
+        {{ filme.overview or "Sinopse não disponível para este título." }}
     </div>
 
-    <div class="row-titulo">🎬 RECOMENDADOS</div>
+    {% if elenco %}
+    <div class="row-titulo">🎭 ELENCO PRINCIPAL</div>
+    <div class="elenco-row">
+        {% for ator in elenco %}
+        {% if ator.profile_path %}
+        <div class="ator-card">
+            <img src="{{ img }}{{ ator.profile_path }}">
+            <p>{{ ator.name }}</p>
+        </div>
+        {% endif %}
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    <div class="row-titulo">🎬 VOCÊ PODE GOSTAR</div>
     <div class="rec-grid">
         {% for rec in recomendados %}
         <a href="/filme/{{ rec.id }}" class="rec-card"><img src="{{ img }}{{ rec.poster_path }}"></a>
@@ -72,10 +107,14 @@
     </div>
 </div>
 
+<script src="https://cdn.plyr.io/3.7.8/plyr.js"></script>
 <script>
+// Inicializa o Player Pro para o Trailer
+const player = new Plyr('#player');
+
 function abrirPlayerExterno() {
     let urlVideo = "{{ play_link }}";
-    // Abre em uma nova aba limpa, que funciona como o player externo que você gostou
+    // Abre em aba externa (Web Player Nativo) para evitar crash do Chrome
     window.open(urlVideo, '_blank');
 }
 
