@@ -11,48 +11,57 @@
 
 <style>
     * { -webkit-tap-highlight-color: transparent; box-sizing: border-box; }
-    body { margin: 0; padding: 0; background: #000; color: #fff; font-family: sans-serif; overflow-x: hidden; }
-    .fundo-backdrop { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: url('{{ bg }}{{ filme.backdrop_path }}') center/cover; filter: blur(20px) brightness(0.2); z-index: -1; }
-    .container { padding: 15px; max-width: 600px; margin: 0 auto; text-align: center; }
+    body { margin: 0; padding: 0; background: #000; color: #fff; font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; overflow-x: hidden; }
+    .fundo-backdrop { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: url('{{ bg }}{{ filme.backdrop_path }}') center/cover; filter: blur(25px) brightness(0.15); z-index: -1; }
+    .container { padding: 15px; max-width: 500px; margin: 0 auto; text-align: center; }
     .header-top { width: 100%; text-align: left; margin-bottom: 10px; }
-    .back-btn { background: #e50914; color: #fff; text-decoration: none; font-size: 13px; font-weight: bold; padding: 8px 16px; border-radius: 6px; display: inline-block; }
-    .capinha { width: 140px; border-radius: 12px; margin: 20px auto 10px; display: block; border: 1px solid rgba(255,255,255,0.2); box-shadow: 0 0 20px #000; }
-    h1 { font-size: 22px; margin: 10px 0; font-weight: bold; }
-    .player-box { width: 100%; aspect-ratio: 16/9; background: #000; border-radius: 12px; margin: 15px 0; overflow: hidden; border: 1px solid #333; position: relative; }
-    #camada-vidro { position: absolute; top: 0; left: 0; width: 100%; height: 100%; display: flex; flex-direction: column; justify-content: center; align-items: center; z-index: 9; background: rgba(0,0,0,0.7); cursor: pointer; }
-    .btn-play-red { background: #e50914; color: #fff; padding: 12px 25px; border-radius: 50px; font-weight: bold; font-size: 16px; box-shadow: 0 0 15px #e50914; }
-    .botoes-externos { display: flex; gap: 10px; margin: 15px 0; }
-    .btn-ext { flex: 1; padding: 14px; color: #fff; border: none; border-radius: 50px; font-weight: bold; font-size: 12px; cursor: pointer; }
-    .sinopse-box { background: rgba(0,0,0,0.6); padding: 15px; border-radius: 15px; text-align: justify; font-size: 13px; border: 1px solid #333; line-height: 1.6; }
-    .row-titulo { text-align: left; color: #ffcc00; font-weight: bold; margin: 25px 0 10px; font-size: 15px; border-left: 4px solid #e50914; padding-left: 10px; }
-    .rec-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; padding-bottom: 30px; }
-    .rec-card img { width: 100%; border-radius: 8px; border: 1px solid #222; }
+    .back-btn { background: rgba(255,255,255,0.1); color: #fff; text-decoration: none; font-size: 12px; font-weight: bold; padding: 8px 16px; border-radius: 50px; display: inline-block; border: 1px solid rgba(255,255,255,0.2); }
+    
+    .capinha { width: 160px; border-radius: 15px; margin: 20px auto 10px; display: block; box-shadow: 0 10px 30px rgba(0,0,0,0.8); border: 1px solid rgba(255,255,255,0.1); }
+    h1 { font-size: 24px; margin: 10px 0 5px; font-weight: 800; color: #fff; text-shadow: 0 2px 4px rgba(0,0,0,0.5); }
+    
+    /* PAINEL DE CONTROLE DE PLAY */
+    .play-panel { background: rgba(255,255,255,0.05); border-radius: 20px; padding: 20px; margin: 20px 0; border: 1px solid rgba(255,255,255,0.1); backdrop-filter: blur(10px); }
+    
+    .btn-principal { width: 100%; background: #e50914; color: #fff; padding: 18px; border-radius: 12px; font-weight: bold; font-size: 18px; border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px; box-shadow: 0 5px 20px rgba(229, 9, 20, 0.4); margin-bottom: 15px; transition: 0.3s; }
+    .btn-principal:active { transform: scale(0.96); }
+
+    .grid-alternativo { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+    .btn-alt { padding: 12px; border-radius: 10px; font-weight: bold; font-size: 12px; border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; color: #fff; transition: 0.3s; }
+    .btn-vlc { background: #FF8800; box-shadow: 0 4px 12px rgba(255, 136, 0, 0.3); }
+    .btn-mx { background: #0052D4; box-shadow: 0 4px 12px rgba(0, 82, 212, 0.3); }
+
+    .sinopse-box { background: rgba(0,0,0,0.4); padding: 20px; border-radius: 15px; text-align: left; font-size: 14px; color: #ccc; line-height: 1.6; margin-top: 20px; }
+    .row-titulo { text-align: left; color: #ffcc00; font-weight: bold; margin: 25px 0 10px; font-size: 16px; text-transform: uppercase; letter-spacing: 1px; }
+    
+    .rec-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; padding-bottom: 40px; }
+    .rec-card img { width: 100%; border-radius: 10px; transition: 0.3s; }
 </style>
 </head>
 <body>
 <div class="fundo-backdrop"></div>
 <div class="container">
-    <div class="header-top"><a href="/" class="back-btn">⬅ VOLTAR</a></div>
+    <div class="header-top"><a href="/" class="back-btn">← VOLTAR</a></div>
+    
     <img src="{{ img }}{{ filme.poster_path }}" class="capinha">
     <h1>{{ filme.title }}</h1>
-    <div style="color: #ffcc00; font-size: 13px; font-weight: bold; margin-bottom: 15px;">⭐ {{ nota }} | {{ filme.release_date[:4] }} | {{ duracao }}</div>
+    <div style="color: #ffcc00; font-size: 14px; font-weight: bold; margin-bottom: 10px;">⭐ {{ nota }} | {{ filme.release_date[:4] }}</div>
 
-    <div class="player-box">
-        <div id="camada-vidro" onclick="abrirJanelaPlayer()">
-            <div class="btn-play-red">ASSISTIR AGORA 🍿</div>
-            <p style="font-size: 10px; margin-top: 10px; color: #aaa;">(Abre em player flutuante anti-travamento)</p>
+    <div class="play-panel">
+        <button onclick="abrirPlayerExterno()" class="btn-principal">
+            <span>▶️</span> ASSISTIR NO PLAYER WEB
+        </button>
+        
+        <div class="grid-alternativo">
+            <button onclick="abrirVLC()" class="btn-alt btn-vlc">🟠 VLC PLAYER</button>
+            <button onclick="abrirMX()" class="btn-alt btn-mx">🔵 MX PLAYER</button>
         </div>
-        <video id="meu-player" poster="{{ bg }}{{ filme.backdrop_path }}" style="width:100%; height:100%;"></video>
-    </div>
-    
-    <div class="botoes-externos">
-        <button onclick="abrirVLC()" class="btn-ext" style="background: #FF8800;">🟠 VLC PLAYER</button>
-        <button onclick="abrirMX()" class="btn-ext" style="background: #0052D4;">🔵 MX PLAYER</button>
+        <p style="font-size: 10px; color: #888; margin-top: 15px;">Dica: Use players externos para melhor qualidade de áudio.</p>
     </div>
 
     <div class="sinopse-box">
-        <strong style="color:#ffcc00; font-size:11px; text-transform:uppercase;">Sinopse</strong><br>
-        {{ filme.overview or "Sinopse não disponível." }}
+        <b style="color:#fff; font-size:12px; display:block; margin-bottom:5px;">SINOPSE</b>
+        {{ filme.overview or "Sinopse em breve..." }}
     </div>
 
     <div class="row-titulo">🎬 RECOMENDADOS</div>
@@ -64,31 +73,22 @@
 </div>
 
 <script>
-// FUNÇÃO PARA ABRIR O VÍDEO EM JANELA SEPARADA (EVITA CRASH DO CHROME)
-function abrirJanelaPlayer() {
+function abrirPlayerExterno() {
     let urlVideo = "{{ play_link }}";
-    let width = 720;
-    let height = 405;
-    let left = (screen.width - width) / 2;
-    let top = (screen.height - height) / 2;
-    
-    // Abre o vídeo numa aba que o Chrome não bloqueia por "Mixed Content"
-    window.open(urlVideo, 'CineMegaPlayer', 
-        `width=${width},height=${height},top=${top},left=${left},toolbar=no,menubar=no,status=no,location=no,resizable=yes`);
+    // Abre em uma nova aba limpa, que funciona como o player externo que você gostou
+    window.open(urlVideo, '_blank');
 }
 
-// FUNÇÕES DE INTENT CORRIGIDAS
 function abrirVLC() {
     let urlOriginal = "{{ play_link }}";
-    // Força o intent a ignorar a segurança do Chrome e abrir o app direto
     let urlLimpa = urlOriginal.replace('https://', '').replace('http://', '');
-    window.location.href = `intent://${urlLimpa}#Intent;action=android.intent.action.VIEW;scheme=http;type=video/mp4;package=org.videolan.vlc;S.browser_fallback_url=${encodeURIComponent(urlOriginal)};end`;
+    window.location.href = `intent://${urlLimpa}#Intent;action=android.intent.action.VIEW;scheme=http;type=video/mp4;package=org.videolan.vlc;end`;
 }
 
 function abrirMX() {
     let urlOriginal = "{{ play_link }}";
     let urlLimpa = urlOriginal.replace('https://', '').replace('http://', '');
-    window.location.href = `intent://${urlLimpa}#Intent;action=android.intent.action.VIEW;scheme=http;type=video/mp4;package=com.mxtech.videoplayer.ad;S.browser_fallback_url=${encodeURIComponent(urlOriginal)};end`;
+    window.location.href = `intent://${urlLimpa}#Intent;action=android.intent.action.VIEW;scheme=http;type=video/mp4;package=com.mxtech.videoplayer.ad;end`;
 }
 </script>
 </body>
